@@ -22,8 +22,7 @@ export const Home = () => {
                     <div className="home__frame__page__content">
                         <p className="home__frame__page__content__title">A simple lightweight onchain DeFi derivative
                             protocol </p>
-                        <p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized
-                            perpetual derivatives</p>
+                        <p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>
                         <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
                     </div>
                     <div className="home__frame__page__bg">
