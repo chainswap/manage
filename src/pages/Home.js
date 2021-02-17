@@ -8,6 +8,10 @@ import Block2 from '../assets/image/block2.svg'
 import Bottom1 from '../assets/image/bottom1.svg'
 import Bottom2 from '../assets/image/bottom2.svg'
 import Bottom3 from '../assets/image/bottom3.svg'
+import Title from '../assets/image/title.svg'
+import SubTitle from '../assets/image/sub-title.svg'
+import Calu from '../assets/image/calu.svg'
+
 
 export const Home = () => {
     return (
@@ -20,10 +24,13 @@ export const Home = () => {
 
                 <div className="home__frame__page">
                     <div className="home__frame__page__content">
-                        <p className="home__frame__page__content__title">A simple lightweight onchain DeFi derivative
-                            protocol </p>
-                        <p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>
-                        <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
+                        {/*<p className="home__frame__page__content__title">A simple lightweight onchain DeFi derivative*/}
+                        {/*    protocol </p>*/}
+                        <img src={Title}/>
+                        <img style={{marginTop: 18}} src={SubTitle}/>
+                        <img style={{marginTop: 29}} src={Calu}/>
+                        {/*<p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>*/}
+                        {/*<div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>*/}
                     </div>
                     <div className="home__frame__page__bg">
                         <video
