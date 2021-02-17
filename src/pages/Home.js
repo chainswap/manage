@@ -5,12 +5,11 @@ import LogoLineWhite from '../assets/image/logo-line-white.svg'
 import LogoLineBlack from '../assets/image/logo-line-black.svg'
 import Block1 from '../assets/image/block1.svg'
 import Block2 from '../assets/image/block2.svg'
+import MobileBlock from '../assets/image/mobile-block.svg'
 import Bottom1 from '../assets/image/bottom1.svg'
 import Bottom2 from '../assets/image/bottom2.svg'
 import Bottom3 from '../assets/image/bottom3.svg'
-import Title from '../assets/image/title.svg'
-import SubTitle from '../assets/image/sub-title.svg'
-import Calu from '../assets/image/calu.svg'
+import MediaQuery from 'react-responsive';
 
 
 export const Home = () => {
@@ -24,13 +23,11 @@ export const Home = () => {
 
                 <div className="home__frame__page">
                     <div className="home__frame__page__content">
-                        {/*<p className="home__frame__page__content__title">A simple lightweight onchain DeFi derivative*/}
-                        {/*    protocol </p>*/}
-                        <img src={Title}/>
-                        <img style={{marginTop: 18}} src={SubTitle}/>
-                        <img style={{marginTop: 29}} src={Calu}/>
-                        {/*<p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>*/}
-                        {/*<div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>*/}
+                        <div className="home__frame__page__content__title">A simple lightweight onchain DeFi derivative protocol </div>
+                        <p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>
+                        <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
+
+                        <a>launch app coming soon</a>
                     </div>
                     <div className="home__frame__page__bg">
                         <video
@@ -43,10 +40,20 @@ export const Home = () => {
                 </div>
             </div>
 
-            <div className="home__frame" style={{height: 'fit-content'}}>
-                <img style={{width: '100%'}} src={Block1}/>
-                <img style={{width: '100%'}} src={Block2}/>
-            </div>
+
+
+            <MediaQuery query='(min-device-width:1224px)'>
+                <div className="home__frame" style={{height: 'fit-content'}}>
+                    <img style={{width: '100%'}} src={Block1}/>
+                    <img style={{width: '100%'}} src={Block2}/>
+                </div>
+            </MediaQuery>
+
+            <MediaQuery query='(max-device-width:750px)'>
+                <div className="home__frame" style={{height: 'fit-content'}}>
+                    <img style={{width: '100%'}} src={MobileBlock}/>
+                </div>
+            </MediaQuery>
 
             <div className="home__frame" style={{height: 'fit-content'}}>
                 <div className="home__frame__bottom">
