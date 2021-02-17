@@ -13,6 +13,7 @@
       }
 
       a {
+        font-family: Jost;
         height: 36px;
         line-height: 36px;
         border-radius: 100px;
@@ -28,9 +29,8 @@
       align-items: center;
       gap: 48px;
       padding-left: 125px;
-      &__bg{
+      margin: auto;
 
-      }
 
       &__content {
         &__title {
@@ -56,6 +56,10 @@
         }
 
         &__calc {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 20px;
           width: fit-content;
           border: 1.4px solid rgba(255, 255, 255, 0.2);
           box-sizing: border-box;
