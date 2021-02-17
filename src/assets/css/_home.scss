@@ -1,0 +1,111 @@
+.home {
+  &__frame {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    header{
+      display: flex;
+      justify-content: space-between;
+      margin: 45px 60px 0 43px;
+
+      img{
+        width: 170px;
+      }
+
+      a {
+        height: 36px;
+        line-height: 36px;
+        border-radius: 100px;
+        padding: 0 18px;
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    &__page {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 48px;
+
+      &__bg{
+
+      }
+
+      &__content {
+        &__title {
+          font-family: Jost;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 46px;
+          max-width: 642px;
+          z-index: 9;
+        }
+
+        &__sub_title{
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 24px;
+          line-height: 36px;
+          margin-top: 18px;
+          margin-bottom: 28px;
+          opacity: 0.6;
+          z-index: 9;
+        }
+
+        &__calc {
+          width: fit-content;
+          border: 1.4px solid rgba(255, 255, 255, 0.2);
+          box-sizing: border-box;
+          padding: 16px 30px;
+          z-index: 9;
+        }
+      }
+
+
+    }
+
+    &__bottom {
+      padding-top: 170px;
+      font-family: Jost;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 50px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &__backed {
+        display: flex;
+        gap: 122px;
+        margin-top: 106px;
+      }
+
+      &__divider{
+        width: 1px;
+        height: 46px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &__footer{
+        width: 100%;
+        height: 159px;
+        margin-top: 251px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 62px 70px;
+
+        ul{
+          display: flex;
+          gap: 48px;
+        }
+      }
+    }
+
+  }
+}

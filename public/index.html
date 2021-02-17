@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description"
+        content="The first community-powered NFT workshop | Mine exclusive NFTs | All artists get rewarded | #GLF" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>Antimatter</title>
+    <script src="https://use.fontawesome.com/4af80ceeb3.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <style>
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f2f0e8;
+        }
+
+        .loader-text {
+            font-family: sans-serif;
+            color: #1d1d1d;
+            margin: 0 auto;
+        }
+
+        .loader-text-wrapper {
+            display: flex;
+            position: relative;
+        }
+
+        .stage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            animation: logoimg 1s infinite;
+        }
+
+        @keyframes logoimg {
+            0% {
+                transform: scale(1) translate(-50%, -50%);
+                transform-origin: left;
+            }
+
+            50% {
+                transform: scale(0.75) translate(-50%, -50%);
+                transform-origin: left;
+            }
+
+            100% {
+                transform: scale(1) translate(-50%, -50%);
+                transform-origin: left;
+            }
+        }
+
+        .dot-elastic,
+        .dot-elastic::before,
+        .dot-elastic::after {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #1d1d1d;
+            color: #1d1d1d;
+        }
+
+        .dot-elastic {
+            position: relative;
+            animation: dot-elastic 1s infinite linear;
+            right: 70px;
+            top: 9px;
+        }
+
+        .dot-elastic::before,
+        .dot-elastic::after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+        }
+
+        .dot-elastic::before {
+            left: -9px;
+            animation: dot-elastic-before 1s infinite linear;
+        }
+
+        .dot-elastic::after {
+            left: 9px;
+            animation: dot-elastic-after 1s infinite linear;
+        }
+
+        @keyframes dot-elastic-before {
+            0% {
+                transform: scale(1, 1);
+            }
+
+            25% {
+                transform: scale(1, 1.5);
+            }
+
+            50% {
+                transform: scale(1, 0.67);
+            }
+
+            75% {
+                transform: scale(1, 1);
+            }
+
+            100% {
+                transform: scale(1, 1);
+            }
+        }
+
+        @keyframes dot-elastic {
+            0% {
+                transform: scale(1, 1);
+            }
+
+            25% {
+                transform: scale(1, 1);
+            }
+
+            50% {
+                transform: scale(1, 1.5);
+            }
+
+            75% {
+                transform: scale(1, 1);
+            }
+
+            100% {
+                transform: scale(1, 1);
+            }
+        }
+
+        @keyframes dot-elastic-after {
+            0% {
+                transform: scale(1, 1);
+            }
+
+            25% {
+                transform: scale(1, 1);
+            }
+
+            50% {
+                transform: scale(1, 0.67);
+            }
+
+            75% {
+                transform: scale(1, 1.5);
+            }
+
+            100% {
+                transform: scale(1, 1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div class="loader-container">
+        <div class="stage">
+            <div>
+            </div>
+            <div class="loader-text-wrapper">
+                <span class="loader-text">is loading</span>
+                <div class="dot-elastic"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
