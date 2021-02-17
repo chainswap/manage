@@ -25,10 +25,9 @@
     &__page {
       flex: 1;
       display: flex;
-      justify-content: center;
       align-items: center;
       gap: 48px;
-
+      padding-left: 125px;
       &__bg{
 
       }
@@ -41,6 +40,7 @@
           font-size: 46px;
           max-width: 642px;
           z-index: 9;
+          width: 642px;
         }
 
         &__sub_title{
@@ -103,6 +103,17 @@
         ul{
           display: flex;
           gap: 48px;
+
+          li{
+            a {
+              svg {
+                fill: #7a7f82;
+              }
+              &:hover svg {
+                fill: #ffffff;
+              }
+            }
+          }
         }
       }
     }
