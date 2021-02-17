@@ -18,7 +18,7 @@ export const Home = () => {
             <div className="home__frame">
                 <header>
                     <img src={LogoLineWhite} alt=""/>
-                    <a>app coming soon</a>
+                    <a>App coming soon</a>
                 </header>
 
                 <div className="home__frame__page">
@@ -27,7 +27,7 @@ export const Home = () => {
                         <p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>
                         <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
 
-                        <a>app coming soon</a>
+                        <a>App coming soon</a>
                     </div>
                     <div className="home__frame__page__bg">
                         <video
