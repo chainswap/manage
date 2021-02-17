@@ -5,12 +5,9 @@ import LogoLineWhite from '../assets/image/logo-line-white.png'
 import LogoLineBlack from '../assets/image/logo-line-black.svg'
 import Block1 from '../assets/image/block1.svg'
 import Block2 from '../assets/image/block2.svg'
-import Circle1 from '../assets/image/circle1.svg'
-import Circle2 from '../assets/image/circle2.svg'
 import Bottom1 from '../assets/image/bottom1.svg'
 import Bottom2 from '../assets/image/bottom2.svg'
 import Bottom3 from '../assets/image/bottom3.svg'
-import Animation from '../assets/animation.mp4'
 
 export const Home = () => {
     return (
