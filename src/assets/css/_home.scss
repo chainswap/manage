@@ -80,11 +80,12 @@
           font-size: 18px;
           line-height: 44px;
           border-radius: 100px;
-          padding: 0 18px;
           color: #ffffff;
+          text-align: center;
           background: rgba(255, 255, 255, 0.1);
           margin-top: 44px;
           margin-bottom: 46px;
+          width: 260px;
           @media (min-width: 748px) {
             display: none;
           }
