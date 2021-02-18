@@ -6,7 +6,6 @@
     margin: auto;
     background-repeat: no-repeat;
     background-size: 100%;
-    background-position: 0 -10rem;
 
     h2 {
       font-family: Jost;
@@ -88,6 +87,10 @@
         display: flex;
         width: 100%;
         top: 35px;
+
+        img {
+          transform:rotate(-5deg);
+        }
       }
 
       &__team{

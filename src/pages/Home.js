@@ -24,17 +24,6 @@ import MediaQuery from 'react-responsive';
 
 export const Home = () => {
 
-    const videoRef = useRef(null)
-
-    const autoPlay = () => {
-        console.log("videoRef", videoRef.current)
-        videoRef.current.play()
-    }
-
-    // useEffect(()=>{
-    //     autoPlay()
-    // },[videoRef])
-
     return (
         <div className="home">
             <div className="home__frame">
@@ -56,9 +45,8 @@ export const Home = () => {
                     </div>
                     <div className="home__frame__page__bg">
                         <video
-                            ref={videoRef}
+                            playsInline
                             muted
-                            controls={null}
                             src={require("../assets/animation.mp4")}
                             autoPlay='autoPlay'
                             loop='loop'
@@ -146,7 +134,7 @@ export const Home = () => {
                     <div className="home__frame__teams" style={{backgroundColor: '#EAEAEA', height: 'fit-content'}}>
                         <div className="bg">
                             <img src={LeftLines}/>
-                            <img src={RightLines}/>
+                            <img src={RightLines} style={{marginLeft: -10}}/>
                         </div>
                         <div className="home__frame__teams__team team1">
                             <img src={Comp}/>
