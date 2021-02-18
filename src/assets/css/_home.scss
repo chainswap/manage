@@ -8,6 +8,17 @@
     background-size: 100%;
     background-position: 0 8rem;
 
+    h2 {
+      font-family: Jost;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 50px;
+      margin-top: 115px;
+      width: 100%;
+      text-align: center;
+      color: #000000;
+    }
+
     &_blocks{
       width: 1200px;
       margin: auto;
@@ -61,6 +72,46 @@
       }
 
 
+    }
+
+    &__teams {
+      display: flex;
+      justify-content: center;
+      gap: 205px;
+
+      &__team{
+        border-radius: 1000px;
+        width: 401px;
+        height: 401px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        img{
+          width: 60px;
+        }
+
+        h3{
+          font-family: Roboto-bold;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 30px;
+          line-height: 134%;
+          margin-top: 12px;
+        }
+
+        p{
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 22px;
+          line-height: 124%;
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+
+      }
     }
 
     @media #{$smWidth $xsWidth} {
@@ -335,4 +386,15 @@
   margin-top: 203px;
   margin-bottom: 418px;
   margin-left: -136px;
+}
+
+.team1{
+  background: linear-gradient(180deg, #000000 43.44%, #000000 136.15%);
+  margin-top: 46px;
+}
+
+.team2{
+  background: linear-gradient(180deg, #232121 43.44%, rgba(35, 33, 33, 0) 136.15%);
+  margin-top: 128px;
+  margin-bottom: 103px;
 }

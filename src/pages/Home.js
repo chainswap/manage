@@ -13,6 +13,7 @@ import BlockIcon3 from '../assets/image/block-icon-3.svg'
 import BlockIcon4 from '../assets/image/block-icon-4.svg'
 import BlockIcon5 from '../assets/image/block-icon-5.svg'
 import BlockIcon6 from '../assets/image/block-icon-6.svg'
+import Comp from '../assets/image/comp.svg'
 
 
 import MediaQuery from 'react-responsive';
@@ -127,10 +128,27 @@ export const Home = () => {
                            <p></p>
                        </div>
                    </div>
-
                 </div>
 
+            <div className="home__frame" style={{backgroundColor: '#EAEAEA',height: 'fit-content'}} >
+                <h2>Antimatter Contributors</h2>
+            <div className="home__frame__teams">
 
+                <div className="home__frame__teams__team team1">
+                    <img src={Comp}/>
+                    <h3>Jack Lu</h3>
+                    <p style={{marginTop: 20}}>Creator of Bounce.Finance</p>
+                </div>
+
+                <div className="home__frame__teams__team team2">
+                    <img src={Comp}/>
+                    <h3>Robert Hu</h3>
+                    <p style={{marginTop: 20}}>Creator of S.finance and</p>
+                    <p>Helmet.Insurance</p>
+
+                </div>
+            </div>
+            </div>
             {/*<MediaQuery query='(min-device-width:1224px)'>*/}
             {/*    <div className="home__frame" style={{height: 'fit-content'}}>*/}
             {/*        <img style={{width: '100%'}} src={Block1}/>*/}
