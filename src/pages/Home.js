@@ -58,6 +58,7 @@ export const Home = () => {
                             autoplay
                             data-autoplay="true"
                             loop='loop'
+                            controls={null}
                         />
                     </div>
                 </div>
