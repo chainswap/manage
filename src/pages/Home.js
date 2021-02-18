@@ -25,7 +25,9 @@ import MediaQuery from 'react-responsive';
 export const Home = () => {
 
     useEffect(()=>{
-        document.getElementById('video').play()
+        setTimeout(()=>{
+            document.getElementById('animation-video').play()
+        },1000)
     },[])
 
     return (
@@ -49,11 +51,12 @@ export const Home = () => {
                     </div>
                     <div className="home__frame__page__bg">
                         <video
-                            id='video'
-                            width="100%"
+                            id='animation-video'
                             muted
                             src="animation.mp4"
-                            autoPlay='autoPlay'
+                            autoPlay='true'
+                            autoplay
+                            data-autoplay="true"
                             loop='loop'
                         />
                     </div>
