@@ -78,6 +78,14 @@
       display: flex;
       justify-content: center;
       gap: 205px;
+      width: fit-content;
+      margin: auto;
+      position: relative;
+
+      img {
+        position: absolute;
+        z-index: 9;
+      }
 
       &__team{
         border-radius: 1000px;
@@ -90,6 +98,7 @@
 
         img{
           width: 60px;
+          position: relative;
         }
 
         h3{
@@ -160,6 +169,7 @@
         flex-direction: column-reverse;
         gap: 0;
         margin-top: 12px;
+        width: 100%;
         video{
           width: 100%;
         }
@@ -306,6 +316,14 @@
         justify-content: space-between;
         align-items: center;
         padding: 62px 70px;
+        position: relative;
+
+        p{
+          position: absolute;
+          left: 70px;
+          top: 110px;
+          font-size: 15px;
+        }
 
         @media #{$smWidth $xsWidth} {
           margin-top: 60px;
