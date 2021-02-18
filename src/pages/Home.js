@@ -14,7 +14,7 @@ import BlockIcon4 from '../assets/image/block-icon-4.svg'
 import BlockIcon5 from '../assets/image/block-icon-5.svg'
 import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
-import TeamBG from '../assets/image/team-bg.svg'
+import Animation from '../assets/animation.gif'
 import LeftLines from '../assets/image/left-lines.svg'
 import RightLines from '../assets/image/right-lines.svg'
 
@@ -45,8 +45,6 @@ export const Home = () => {
                     </div>
                     <div className="home__frame__page__bg">
                         <video
-                            preload
-                            playsinline
                             muted
                             src={require("../assets/animation.mp4")}
                             autoPlay='autoPlay'
