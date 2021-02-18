@@ -44,12 +44,13 @@ export const Home = () => {
                         <a>App Coming Soon</a>
                     </div>
                     <div className="home__frame__page__bg">
-                        <video
-                            muted
-                            src={require("../assets/animation.mp4")}
-                            autoPlay='autoPlay'
-                            loop='loop'
-                        />
+                        {/*<video*/}
+                        {/*    muted*/}
+                        {/*    src={require("../assets/animation.mp4")}*/}
+                        {/*    autoPlay='autoPlay'*/}
+                        {/*    loop='loop'*/}
+                        {/*/>*/}
+                        <img className="circle" src={Animation}/>
                     </div>
                 </div>
             </div>
