@@ -24,6 +24,10 @@ import MediaQuery from 'react-responsive';
 
 export const Home = () => {
 
+    useEffect(()=>{
+        document.getElementById('video').play()
+    },[])
+
     return (
         <div className="home">
             <div className="home__frame">
@@ -44,13 +48,14 @@ export const Home = () => {
                         <a>App Coming Soon</a>
                     </div>
                     <div className="home__frame__page__bg">
-                        {/*<video*/}
-                        {/*    muted*/}
-                        {/*    src={require("../assets/animation.mp4")}*/}
-                        {/*    autoPlay='autoPlay'*/}
-                        {/*    loop='loop'*/}
-                        {/*/>*/}
-                        <img className="circle" src={Animation}/>
+                        <video
+                            id='video'
+                            width="100%"
+                            muted
+                            src="animation.mp4"
+                            autoPlay='autoPlay'
+                            loop='loop'
+                        />
                     </div>
                 </div>
             </div>

@@ -353,6 +353,7 @@
           display: flex;
           gap: 48px;
 
+
           li{
             @media #{$smWidth $xsWidth} {
               flex: 1;
