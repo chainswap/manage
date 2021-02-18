@@ -4,17 +4,27 @@ import Circle from '../../assets/icon/circle.svg'
 import Success from '../../assets/icon/success.svg'
 import Warning from '../../assets/icon/warning.svg'
 import metamask from '../../assets/icon/metamask.png';
+import {ReactComponent as Copy} from '../../assets/icon/copy.svg';
+
 import walletConnect from '../../assets/icon/walletConnect.png';
 import {useWeb3React} from "@web3-react/core";
-import {GALLERY_SELECT_WEB3_CONTEXT, HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, waitingForApprove} from "../../const";
+import {
+    GALLERY_SELECT_WEB3_CONTEXT, HANDLE_SHOW_FAILED_TRANSACTION_MODAL, HANDLE_SHOW_TRANSACTION_MODAL,
+    HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
+    waitingForInit,
+    waitingPending
+} from "../../const";
 import {InjectedConnector} from "@web3-react/injected-connector";
 import {WalletConnectConnector} from "@web3-react/walletconnect-connector";
-import {formatAddress, formatAmount} from "../../utils/format";
+import {formatAddress, formatAmount, fromWei} from "../../utils/format";
 import BigNumber from "bignumber.js";
 import {getContract} from "../../web3";
 import ERC20 from "../../web3/abi/ERC20.json";
+import Offer from "../../web3/abi/Offer.json";
+
 import {MATTER_ADDRESS, OFFERING_ADDRESS, USDT_ADDRESS} from "../../web3/address";
-import {useQuota} from "./Hooks";
+import {useAmount, useQuota} from "./Hooks";
+import {useBalance} from "../Hooks";
 
 
 const injected = new InjectedConnector({
@@ -44,8 +54,7 @@ const MODE_TYPE = {
     NOT_ELIGIBLE: "NOT_ELIGIBLE",
     CONTRIBUTE_SUCCESS: "CONTRIBUTE_SUCCESS",
     CONTRIBUTED: "CONTRIBUTED",
-    WAITING: "WAITING",
-
+    WAITING: "WAITING"
 }
 
 export const Investment = () => {
@@ -63,33 +72,112 @@ export const Investment = () => {
 
     const [walletModal, setWalletModal] = useState(false)
     const [connecting, setConnecting] = useState(false)
-    const [modalType, setModalType] = useState('INIT')
+    const [modalType, setModalType] = useState()
+    const [approve, setApprove] = useState(0)
+    const [contribute, setContribute] = useState(0)
+    const [claim, setClaim] = useState(0)
 
-    const {quota} = useQuota()
+
+    const {quota, volume, unLocked} = useQuota()
+    const {balance, allowance} = useAmount()
+    const usdtBalance = useBalance(USDT_ADDRESS(chainId))
+
+    console.log('usdtBalance', usdtBalance)
 
     useEffect(() => {
-        console.log('account', account, active)
+        console.log('account', volume)
         if (account) {
-            setModalType(MODE_TYPE.CONTRIBUTION)
+            if (volume && new BigNumber(volume).isGreaterThan('0')) {
+                setModalType(MODE_TYPE.CONTRIBUTED)
+            } else {
+                if (quota && new BigNumber(quota).isEqualTo('0')) {
+                    setModalType(MODE_TYPE.NOT_ELIGIBLE)
+                } else {
+                    setModalType(MODE_TYPE.CONTRIBUTION)
+                }
+            }
+
         } else {
             setModalType(MODE_TYPE.INIT)
         }
-    }, [account])
+    }, [account, volume])
 
-    const OnContribute = async () => {
+    useEffect(() => {
+        if (quota && allowance && new BigNumber(allowance).isGreaterThan(quota)) {
+            setApprove(2)
+        }
+    }, [allowance, quota])
+
+    const onApprove = async () => {
         const tokenContract = getContract(library, ERC20.abi, USDT_ADDRESS(chainId));
-        const contract = getContract(library, ERC20.abi, OFFERING_ADDRESS(chainId));
-        setModalType(MODE_TYPE.WAITING)
+        setApprove(1)
         try {
             const allowance = await tokenContract.methods.allowance(account, OFFERING_ADDRESS(chainId)).call()
-            if (!new BigNumber(allowance).isGreaterThan('0')) {
+            console.log('approving', allowance)
+
+            if (!new BigNumber(allowance).isGreaterThan(quota)) {
                 await tokenContract.methods
-                    .approve(MATTER_ADDRESS(chainId), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-                    .send({from: account});
+                    .approve(OFFERING_ADDRESS(chainId), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+                    .send({from: account})
+                    .on('transactionHash', hash => {
+
+                    })
+                    .on('receipt', (_, receipt) => {
+                        setApprove(2)
+                    })
+                    .on('error', (err, receipt) => {
+
+                    });
             }
+        } catch (e) {
+            setApprove(0)
+            console.log('approve  error--->')
+        }
+
+    }
+
+
+    const OnContribute = async () => {
+        const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId));
+        setContribute(1)
+        try {
+            contract.methods.offer().send({from: account})
+                .on('transactionHash', hash => {
+
+                })
+                .on('receipt', (_, receipt) => {
+                    setModalType(MODE_TYPE.CONTRIBUTE_SUCCESS)
+                })
+                .on('error', (err, receipt) => {
+                    setContribute(0)
+                })
 
         } catch (e) {
+            setContribute(0)
+            console.log('contribute error', e)
+        }
 
+    }
+
+
+    const onClaim = async () => {
+        const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId));
+        setClaim(1)
+        try {
+            contract.methods.offer().send({from: account})
+                .on('transactionHash', hash => {
+
+                })
+                .on('receipt', (_, receipt) => {
+                    setClaim(0)
+                })
+                .on('error', (err, receipt) => {
+                    setContribute(0)
+                })
+
+        } catch (e) {
+            setClaim(0)
+            console.log('contribute error', e)
         }
 
     }
@@ -101,8 +189,12 @@ export const Investment = () => {
                 <img src={LogoLineWhite} alt=""/>
                 {active && account && (
                     <div className="wallet">
-                        <p className="wallet__balance">1.24 MATTER</p>
-                        <p className="wallet__address">{formatAddress(account)}</p>
+                        <p className="wallet__balance">{balance ? formatAmount(balance) : '--'} MATTER</p>
+                        <p className="wallet__address">
+                            <div className="dot"/>
+                            {formatAddress(account)}
+                            <Copy/>
+                        </p>
                     </div>
                 )}
             </header>
@@ -212,11 +304,19 @@ export const Investment = () => {
 
                 {modalType === MODE_TYPE.CONTRIBUTION && (
                     <div className="investment__modal">
-                        <p>Your Contribution Amount is: {quota? formatAmount(quota, 6): '--'} USDT</p>
-                        <button style={{marginTop: 50}} onClick={() => {
+                        <p>Your Contribution Amount is: {quota ? formatAmount(quota, 6) : '--'} USDT</p>
+                        <div className="btn_group">
+                            <button disabled={approve !== 0 || new BigNumber(allowance).isGreaterThan(quota)}
+                                    style={{marginTop: 50}} onClick={onApprove}>
+                                {approve === 1 ? 'Approving...' : ' Approve USDT'}
+                            </button>
+                            <button
+                                disabled={approve !== 2 || contribute === 1 || new BigNumber(quota).isGreaterThan(usdtBalance)}
+                                style={{marginTop: 50}} onClick={OnContribute}>
+                                {contribute === 1 ? 'Contributing' : new BigNumber(quota).isGreaterThan(usdtBalance) ? 'insufficient balance' : 'Contribute'}
+                            </button>
+                        </div>
 
-                        }}>Contribute
-                        </button>
                     </div>
                 )}
 
@@ -225,11 +325,11 @@ export const Investment = () => {
                         <div className="investment__contribution__balls">
                             <div className="investment__contribution__balls__ball">
                                 <span>USDT Allocation</span>
-                                <span>12,500 USDT</span>
+                                <span>{quota ? formatAmount(quota, 6) : '--'} USDT</span>
                             </div>
                             <div className="investment__contribution__balls__ball">
                                 <p>MATTER token allocation</p>
-                                <p>1,200 MATTER</p>
+                                <p>{volume ? formatAmount(volume) : '--'} MATTER</p>
                             </div>
                         </div>
 
@@ -244,19 +344,18 @@ export const Investment = () => {
                                 </li>
                                 <li>
                                     <p>Round</p>
-                                    <p>{''}</p>
+                                    <p>{'private'}</p>
                                 </li>
                                 <li>
-                                    <p>USDT invested</p>
-                                    <p>{''}</p>
+                                    <p>MATTER in wallet</p>
+                                    <p>{balance ? formatAmount(balance) : '--'}</p>
                                 </li>
                                 <li>
-                                    <p>USDT in wallet</p>
-                                    <p>{''}</p>
-                                </li>
-                                <li>
-                                    <p>DWZ in wallet</p>
-                                    <p>{''}</p>
+                                    <p>Claimable balance</p>
+                                    <p>{unLocked ? formatAmount(unLocked) : '--'} MATTER
+                                        <button disabled={!unLocked || new BigNumber(unLocked).isEqualTo('0')} onClick={onClaim}>
+                                            {claim === 1 ? 'Claiming' : 'claim'}
+                                        </button></p>
                                 </li>
                             </ul>
                         </div>

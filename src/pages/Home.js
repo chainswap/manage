@@ -14,7 +14,6 @@ import BlockIcon4 from '../assets/image/block-icon-4.svg'
 import BlockIcon5 from '../assets/image/block-icon-5.svg'
 import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
-import Animation from '../assets/animation.gif'
 import LeftLines from '../assets/image/left-lines.svg'
 import RightLines from '../assets/image/right-lines.svg'
 
@@ -26,7 +25,7 @@ export const Home = () => {
 
     useEffect(()=>{
         setTimeout(()=>{
-            document.getElementById('animation-video').play()
+            //document.getElementById('animation-video').play()
         },1000)
     },[])
 
@@ -53,13 +52,16 @@ export const Home = () => {
                         <video
                             id='animation-video'
                             muted
-                            src="animation.mp4"
                             autoPlay='true'
                             autoplay
                             data-autoplay="true"
                             loop='loop'
                             controls={null}
-                        />
+                        >
+                            <source src="../assets/animation.webm" type="video/webm"/>
+                            <source src="../assets/animation.mp4" type="video/mp4"/>
+                            our browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
             </div>

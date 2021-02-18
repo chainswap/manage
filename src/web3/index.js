@@ -8,6 +8,5 @@ export function getContract(library, abi, address) {
 
 export const useActiveWeb3React =() => {
     const context = useWeb3ReactCore()
-    const contextNetwork = useWeb3ReactCore()
-    return context.active ? context : contextNetwork
+    return context
 }

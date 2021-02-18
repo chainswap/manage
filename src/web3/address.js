@@ -306,8 +306,8 @@ export function MATTER_ADDRESS(chainId) {
     switch (chainId) {
         case 1:
             return  '0xdac17f958d2ee523a2206206994597c13d831ec7'
-        case 4:
-            return  '0x101194a3FF67f83A05B3E15AfA52D45D588614ca'
+        case 3:
+            return  '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
         default:
             return '0xdac17f958d2ee523a2206206994597c13d831ec7'
     }
@@ -323,3 +323,7 @@ export function OFFERING_ADDRESS(chainId) {
             return '0xdac17f958d2ee523a2206206994597c13d831ec7'
     }
 }
+
+export const SEED_ADDRESSES = [
+
+]

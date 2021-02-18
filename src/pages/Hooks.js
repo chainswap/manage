@@ -48,5 +48,5 @@ export const useBalance = (address) =>{
         }
     },[active])
 
-    return {balance}
+    return balance
 }
