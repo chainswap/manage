@@ -3,6 +3,64 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-size: 100%;
+
+    &_blocks{
+      width: 1200px;
+      margin: auto;
+      height: 862px;
+      display: flex;
+      position: relative;
+      color: #000000;
+
+      h2 {
+        font-family: Jost;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 50px;
+        position: absolute;
+        margin: auto;
+        top: 421px;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    &__block{
+      text-align: center;
+      border-radius: 1000px;
+      width: 237px;
+      height: 237px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      display: inline-flex;
+
+      img{
+        margin-bottom: 11px;
+      }
+
+      h5{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 123.19%;
+      }
+
+      p{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 134.69%;
+      }
+
+
+    }
 
     @media #{$smWidth $xsWidth} {
       height: fit-content;
@@ -41,8 +99,8 @@
       display: flex;
       align-items: center;
       gap: 48px;
-      padding-left: 125px;
       margin: auto;
+      width: 1200px;
 
       @media #{$smWidth $xsWidth} {
         flex: none;
@@ -236,4 +294,43 @@
     }
 
   }
+}
+
+.block1 {
+  background: linear-gradient(213.92deg, #FFFFFF 23.05%, rgba(255, 255, 255, 0) 86.8%);
+  margin-top: 364px;
+  margin-bottom: 257px;
+}
+
+.block2 {
+  background: linear-gradient(251.9deg, #FFFFFF 18.8%, rgba(255, 255, 255, 0) 90.96%);
+  margin-top: 156px;
+  margin-bottom: 465px;
+
+}
+
+.block3 {
+  background: linear-gradient(105.22deg, #FFFFFF 8.89%, rgba(255, 255, 255, 0) 93.32%);
+  margin-top: 545px;
+  margin-bottom: 76px;
+
+}
+
+.block4 {
+  background: linear-gradient(279.55deg, #FFFFFF 12.34%, rgba(255, 255, 255, 0) 94.05%);
+  margin-top: 122px;
+  margin-bottom: 499px;
+}
+
+.block5 {
+  background: linear-gradient(57.31deg, #FFFFFF 10.78%, rgba(255, 255, 255, 0) 83.71%);
+  margin-top: 502px;
+  margin-bottom: 119px;
+}
+
+.block6 {
+  background: linear-gradient(17.22deg, #FFFFFF 5.24%, rgba(255, 255, 255, 0) 90.68%);
+  margin-top: 203px;
+  margin-bottom: 418px;
+  margin-left: -136px;
 }

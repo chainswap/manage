@@ -1,24 +1,42 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import '../assets/css/animator.css'
 import '../styles.css'
 import LogoLineWhite from '../assets/image/logo-line-white.svg'
 import LogoLineBlack from '../assets/image/logo-line-black.svg'
-import Block1 from '../assets/image/block1.svg'
-import Block2 from '../assets/image/block2.svg'
 import MobileBlock from '../assets/image/mobile-block.svg'
 import Bottom1 from '../assets/image/bottom1.svg'
 import Bottom2 from '../assets/image/bottom2.svg'
 import Bottom3 from '../assets/image/bottom3.svg'
+import BlockIcon1 from '../assets/image/block-icon-1.svg'
+import BlockIcon2 from '../assets/image/block-icon-2.svg'
+import BlockIcon3 from '../assets/image/block-icon-3.svg'
+import BlockIcon4 from '../assets/image/block-icon-4.svg'
+import BlockIcon5 from '../assets/image/block-icon-5.svg'
+import BlockIcon6 from '../assets/image/block-icon-6.svg'
+
+
 import MediaQuery from 'react-responsive';
 
 
 export const Home = () => {
+
+    const videoRef = useRef(null)
+
+    const autoPlay = () => {
+        console.log("videoRef",videoRef.current)
+        videoRef.current.play()
+    }
+
+    // useEffect(()=>{
+    //     autoPlay()
+    // },[videoRef])
+
     return (
         <div className="home">
             <div className="home__frame">
                 <header>
                     <img src={LogoLineWhite} alt=""/>
-                    <a>App coming soon</a>
+                    <a>App Coming Soon</a>
                 </header>
 
                 <div className="home__frame__page">
@@ -27,11 +45,13 @@ export const Home = () => {
                         <p className="home__frame__page__content__sub_title">Polarized token mechanism with tokenized perpetual derivatives</p>
                         <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
 
-                        <a>App coming soon</a>
+                        <a>App Coming Soon</a>
                     </div>
                     <div className="home__frame__page__bg">
                         <video
+                            ref={videoRef}
                             muted
+                            controls={null}
                             src={require("../assets/animation.mp4")}
                             autoPlay='autoPlay'
                             loop='loop'
@@ -40,14 +60,82 @@ export const Home = () => {
                 </div>
             </div>
 
+                <div className="home__frame" style={{backgroundColor: '#EAEAEA',height: 'fit-content', backgroundImage: "url(" + require("../assets/image/block1.svg") + ") "}} >
+                   <div className="home__frame_blocks">
+                       <h2>Protocol Features</h2>
+                       <div className="home__frame__block block1">
+                           <img src={BlockIcon1}/>
+                           <h5>Innovative and</h5>
+                           <h5>elegant DeFi</h5>
+                           <h5>mechanism</h5>
 
+                           <p style={{marginTop: 5}}>Execute put and call</p>
+                           <p>strategies fully</p>
+                           <p>fully on-chain</p>
+                       </div>
 
-            <MediaQuery query='(min-device-width:1224px)'>
-                <div className="home__frame" style={{height: 'fit-content'}}>
-                    <img style={{width: '100%'}} src={Block1}/>
-                    <img style={{width: '100%'}} src={Block2}/>
+                       <div className="home__frame__block block2">
+                           <img src={BlockIcon2}/>
+                           <h5>Auto rebalancing</h5>
+                           <h5>polarized token</h5>
+                           <h5>mechanism</h5>
+
+                           <p style={{marginTop: 5}}>Funding, feedistrubution</p>
+                           <p>and rebalancing</p>
+                           <p>happens automatically</p>
+                       </div>
+
+                       <div className="home__frame__block block3">
+                           <img src={BlockIcon3}/>
+                           <h5>Cross chain</h5>
+                           <h5>compatible</h5>
+
+                           <p style={{marginTop: 5}}>Polkadot/Binance</p>
+                           <p>Smart Chain and more</p>
+                       </div>
+
+                       <div className="home__frame__block block4">
+                           <img src={BlockIcon4}/>
+                           <h5>Secondary market</h5>
+                           <h5>opportunities</h5>
+                           <h5>across products</h5>
+
+                           <p style={{marginTop: 5}}>Market making, arbitrage</p>
+                           <p>and passive yield</p>
+                           <p>opportunities</p>
+                       </div>
+
+                       <div className="home__frame__block block5">
+                           <img src={BlockIcon5}/>
+                           <h5>Self-sustainable and</h5>
+                           <h5>community governed</h5>
+
+                           <p style={{marginTop: 5}}>Fees from products and</p>
+                           <p>protocol usage used to</p>
+                           <p>buyback MATTER.</p>
+                       </div>
+
+                       <div className="home__frame__block block6">
+                           <img src={BlockIcon6}/>
+                           <h5>Simple and </h5>
+                           <h5>intuitive to use</h5>
+
+                           <p style={{marginTop: 5}}>All Antimatter products are perpetual</p>
+                           <p>options without experyt</p>
+                           <p>Built for mass adpotion</p>
+                           <p></p>
+                       </div>
+                   </div>
+
                 </div>
-            </MediaQuery>
+
+
+            {/*<MediaQuery query='(min-device-width:1224px)'>*/}
+            {/*    <div className="home__frame" style={{height: 'fit-content'}}>*/}
+            {/*        <img style={{width: '100%'}} src={Block1}/>*/}
+            {/*        <img style={{width: '100%'}} src={Block2}/>*/}
+            {/*    </div>*/}
+            {/*</MediaQuery>*/}
 
             <MediaQuery query='(max-device-width:750px)'>
                 <div className="home__frame" style={{height: 'fit-content'}}>
