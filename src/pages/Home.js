@@ -15,6 +15,8 @@ import BlockIcon5 from '../assets/image/block-icon-5.svg'
 import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
 import TeamBG from '../assets/image/team-bg.svg'
+import LeftLines from '../assets/image/left-lines.svg'
+import RightLines from '../assets/image/right-lines.svg'
 
 
 import MediaQuery from 'react-responsive';
@@ -66,98 +68,101 @@ export const Home = () => {
             </div>
 
             <MediaQuery query='(min-device-width:1200px)'>
-            <div className="home__frame" style={{
-                backgroundColor: '#EAEAEA',
-                height: 'fit-content',
-                backgroundImage: "url(" + require("../assets/image/block1.svg") + ") "
-            }}>
-                <div className="home__frame_blocks">
-                    <h2>Protocol Features</h2>
-                    <div className="home__frame__block block1">
-                        <img src={BlockIcon1}/>
-                        <h5>Innovative and </h5>
-                        <h5>elegant DeFi </h5>
-                        <h5>mechanism</h5>
+                <div className="home__frame" style={{
+                    backgroundColor: '#EAEAEA',
+                    height: 'fit-content',
+                    backgroundImage: "url(" + require("../assets/image/block1.svg") + ") "
+                }}>
+                    <div className="home__frame_blocks">
+                        <h2>Protocol Features</h2>
+                        <div className="home__frame__block block1">
+                            <img src={BlockIcon1}/>
+                            <h5>Innovative and </h5>
+                            <h5>elegant DeFi </h5>
+                            <h5>mechanism</h5>
 
-                        <p style={{marginTop: 5}}>Execute put and call</p>
-                        <p>strategies fully</p>
-                        <p>on-chain</p>
-                    </div>
+                            <p style={{marginTop: 5}}>Execute put and call</p>
+                            <p>strategies fully</p>
+                            <p>on-chain</p>
+                        </div>
 
-                    <div className="home__frame__block block2">
-                        <img src={BlockIcon2}/>
-                        <h5>Auto rebalancing </h5>
-                        <h5>polarized token</h5>
-                        <h5>mechanism</h5>
+                        <div className="home__frame__block block2">
+                            <img src={BlockIcon2}/>
+                            <h5>Auto rebalancing </h5>
+                            <h5>polarized token</h5>
+                            <h5>mechanism</h5>
 
-                        <p style={{marginTop: 5}}>Funding, fee distribution</p>
-                        <p>and rebalancing happens</p>
-                        <p>automatically</p>
-                    </div>
+                            <p style={{marginTop: 5}}>Funding, fee distribution</p>
+                            <p>and rebalancing happens</p>
+                            <p>automatically</p>
+                        </div>
 
-                    <div className="home__frame__block block3">
-                        <img src={BlockIcon3}/>
-                        <h5>Cross chain</h5>
-                        <h5>compatible</h5>
+                        <div className="home__frame__block block3">
+                            <img src={BlockIcon3}/>
+                            <h5>Cross chain</h5>
+                            <h5>compatible</h5>
 
-                        <p style={{marginTop: 5}}>Polkadot/Binance</p>
-                        <p>Smart Chain and more</p>
-                    </div>
+                            <p style={{marginTop: 5}}>Polkadot/Binance</p>
+                            <p>Smart Chain and more</p>
+                        </div>
 
-                    <div className="home__frame__block block4">
-                        <img src={BlockIcon4}/>
-                        <h5>Secondary market</h5>
-                        <h5>opportunities</h5>
-                        <h5>across products</h5>
+                        <div className="home__frame__block block4">
+                            <img src={BlockIcon4}/>
+                            <h5>Secondary market</h5>
+                            <h5>opportunities</h5>
+                            <h5>across products</h5>
 
-                        <p style={{marginTop: 5}}>Market making, arbitrage</p>
-                        <p>and passive yield</p>
-                        <p>opportunities</p>
-                    </div>
+                            <p style={{marginTop: 5}}>Market making, arbitrage</p>
+                            <p>and passive yield</p>
+                            <p>opportunities</p>
+                        </div>
 
-                    <div className="home__frame__block block5">
-                        <img src={BlockIcon5}/>
-                        <h5>Self-sustainable and</h5>
-                        <h5>community governed</h5>
+                        <div className="home__frame__block block5">
+                            <img src={BlockIcon5}/>
+                            <h5>Self-sustainable and</h5>
+                            <h5>community governed</h5>
 
-                        <p style={{marginTop: 5}}>Fees from products and</p>
-                        <p>protocol usage used to</p>
-                        <p>buyback MATTER.</p>
-                    </div>
+                            <p style={{marginTop: 5}}>Fees from products and</p>
+                            <p>protocol usage used to</p>
+                            <p>buyback MATTER.</p>
+                        </div>
 
-                    <div className="home__frame__block block6">
-                        <img src={BlockIcon6}/>
-                        <h5>Simple and </h5>
-                        <h5>intuitive to use</h5>
+                        <div className="home__frame__block block6">
+                            <img src={BlockIcon6}/>
+                            <h5>Simple and </h5>
+                            <h5>intuitive to use</h5>
 
-                        <p style={{marginTop: 5}}>All Antimatter products are</p>
-                        <p>perpetual options without expiry</p>
-                        <p>dates or added complexity.</p>
-                        <p>Built for mass adoption</p>
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-
-            <div className="home__frame" style={{backgroundColor: '#EAEAEA', height: 'fit-content'}}>
-                <h2>Antimatter Contributors</h2>
-                <div className="home__frame__teams" style={{backgroundColor: '#EAEAEA', height: 'fit-content'}}>
-                    <img src={TeamBG}/>
-                    <div className="home__frame__teams__team team1">
-                        <img src={Comp}/>
-                        <h3>Jack Lu</h3>
-                        <p style={{marginTop: 20}}>Creator of Bounce.Finance</p>
-                    </div>
-
-                    <div className="home__frame__teams__team team2">
-                        <img src={Comp}/>
-                        <h3>Robert Hu</h3>
-                        <p style={{marginTop: 20}}>Creator of Helmet.Insure</p>
-                        <p>and UU.Finance</p>
-
+                            <p style={{marginTop: 5}}>All Antimatter products are</p>
+                            <p>perpetual options without expiry</p>
+                            <p>dates or added complexity.</p>
+                            <p>Built for mass adoption</p>
+                            <p></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+                <div className="home__frame" style={{backgroundColor: '#EAEAEA', height: 'fit-content'}}>
+                    <h2>Antimatter Contributors</h2>
+                    <div className="home__frame__teams" style={{backgroundColor: '#EAEAEA', height: 'fit-content'}}>
+                        <div className="bg">
+                            <img src={LeftLines}/>
+                            <img src={RightLines}/>
+                        </div>
+                        <div className="home__frame__teams__team team1">
+                            <img src={Comp}/>
+                            <h3>Jack Lu</h3>
+                            <p style={{marginTop: 20}}>Creator of Bounce.Finance</p>
+                        </div>
+
+                        <div className="home__frame__teams__team team2">
+                            <img src={Comp}/>
+                            <h3>Robert Hu</h3>
+                            <p style={{marginTop: 20}}>Creator of Helmet.Insure</p>
+                            <p>and UU.Finance</p>
+
+                        </div>
+                    </div>
+                </div>
             </MediaQuery>
             {/*<MediaQuery query='(min-device-width:1224px)'>*/}
             {/*    <div className="home__frame" style={{height: 'fit-content'}}>*/}

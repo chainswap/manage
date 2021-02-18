@@ -9,11 +9,12 @@ import {useWeb3React} from "@web3-react/core";
 import {GALLERY_SELECT_WEB3_CONTEXT, HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL, waitingForApprove} from "../../const";
 import {InjectedConnector} from "@web3-react/injected-connector";
 import {WalletConnectConnector} from "@web3-react/walletconnect-connector";
-import {formatAddress} from "../../utils/format";
+import {formatAddress, formatAmount} from "../../utils/format";
 import BigNumber from "bignumber.js";
 import {getContract} from "../../web3";
 import ERC20 from "../../web3/abi/ERC20.json";
-import {MATTER_ADDRESS, USDT_ADDRESS} from "../../web3/address";
+import {MATTER_ADDRESS, OFFERING_ADDRESS, USDT_ADDRESS} from "../../web3/address";
+import {useQuota} from "./Hooks";
 
 
 const injected = new InjectedConnector({
@@ -62,30 +63,32 @@ export const Investment = () => {
 
     const [walletModal, setWalletModal] = useState(false)
     const [connecting, setConnecting] = useState(false)
-    const [modalType, setModalType] = useState()
+    const [modalType, setModalType] = useState('INIT')
 
-    useEffect(()=>{
-        console.log('account',account, active)
-        if(account){
+    const {quota} = useQuota()
+
+    useEffect(() => {
+        console.log('account', account, active)
+        if (account) {
             setModalType(MODE_TYPE.CONTRIBUTION)
-        }else {
+        } else {
             setModalType(MODE_TYPE.INIT)
         }
-    },[account])
+    }, [account])
 
     const OnContribute = async () => {
         const tokenContract = getContract(library, ERC20.abi, USDT_ADDRESS(chainId));
-        const contract = getContract(library, ERC20.abi, MATTER_ADDRESS(chainId));
+        const contract = getContract(library, ERC20.abi, OFFERING_ADDRESS(chainId));
         setModalType(MODE_TYPE.WAITING)
         try {
-            const allowance = await tokenContract.methods.allowance(account, MATTER_ADDRESS(chainId)).call()
-            if(!new BigNumber(allowance).isGreaterThan('0')){
+            const allowance = await tokenContract.methods.allowance(account, OFFERING_ADDRESS(chainId)).call()
+            if (!new BigNumber(allowance).isGreaterThan('0')) {
                 await tokenContract.methods
                     .approve(MATTER_ADDRESS(chainId), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-                    .send({ from: account });
+                    .send({from: account});
             }
 
-        }catch (e) {
+        } catch (e) {
 
         }
 
@@ -106,15 +109,25 @@ export const Investment = () => {
 
             <div className="investment__init">
                 {modalType === MODE_TYPE.INIT && (
-                    <>
-                        <p className="investment__init__title">Investment Portal</p>
-                        <p className="investment__init__sub_title">Welcome to Antimatter family! Please connect your
-                            wallet to see if you are eligible for contribution</p>
-                        <button className="button" onClick={() => {
-                            setModalType(MODE_TYPE.WALLETS)
-                        }}>Connect Wallet
-                        </button>
-                    </>
+                    <div className="investment__init__frame">
+                        <div>
+                            <p className="investment__init__title">Investment Portal</p>
+                            <p className="investment__init__sub_title">Welcome to Antimatter family! Please connect your
+                                wallet to see if you are eligible for contribution</p>
+                            <button className="button" onClick={() => {
+                                setModalType(MODE_TYPE.WALLETS)
+                            }}>Connect Wallet
+                            </button>
+                        </div>
+                        <video
+                            muted
+                            controls={null}
+                            src={require("../../assets/animation.mp4")}
+                            autoPlay='autoPlay'
+                            loop='loop'
+                            style={{height: 680, marginTop: -180}}
+                        />
+                    </div>
                 )}
 
                 {modalType === MODE_TYPE.WALLETS && (
@@ -170,16 +183,18 @@ export const Investment = () => {
                     <div className="investment__modal">
                         <img className="investment__modal__icon" src={Success} alt=""/>
                         <p>Your wallet was succesfully connected</p>
-                        <button style={{marginTop: 50}} onClick={()=>{
+                        <button style={{marginTop: 50}} onClick={() => {
                             setModalType(MODE_TYPE.CONTRIBUTION)
-                        }}>Continue</button>
+                        }}>Continue
+                        </button>
                     </div>
                 )}
 
                 {modalType === MODE_TYPE.NOT_ELIGIBLE && (
                     <div className="investment__modal">
                         <img src={Warning} alt=""/>
-                        <p style={{marginTop: 19}}>Sorry! You are not eligible for contribution. Please switch your wallet</p>
+                        <p style={{marginTop: 19}}>Sorry! You are not eligible for contribution. Please switch your
+                            wallet</p>
                     </div>
                 )}
 
@@ -188,33 +203,35 @@ export const Investment = () => {
                         <img src={Success}/>
                         <p style={{marginTop: 20}}>Congratulations!</p>
                         <p>You successfully join the Antimatter family</p>
-                        <button style={{marginTop: 50}} onClick={()=>{
+                        <button style={{marginTop: 50}} onClick={() => {
                             setModalType(MODE_TYPE.CONTRIBUTED)
-                        }}>Confirm</button>
+                        }}>Confirm
+                        </button>
                     </div>
                 )}
 
                 {modalType === MODE_TYPE.CONTRIBUTION && (
                     <div className="investment__modal">
-                        <p>Your Contribution Amount is: 10,000 USDT</p>
-                        <button style={{marginTop: 50}} onClick={()=>{
+                        <p>Your Contribution Amount is: {quota? formatAmount(quota, 6): '--'} USDT</p>
+                        <button style={{marginTop: 50}} onClick={() => {
 
-                        }}>Contribute</button>
+                        }}>Contribute
+                        </button>
                     </div>
                 )}
 
                 {modalType === MODE_TYPE.CONTRIBUTED && (
                     <div className="investment__contribution">
-                       <div className="investment__contribution__balls">
-                           <div className="investment__contribution__balls__ball">
-                               <span>USDT Allocation</span>
-                               <span>12,500 USDT</span>
-                           </div>
-                           <div className="investment__contribution__balls__ball">
-                               <p>MATTER token allocation</p>
-                               <p>1,200 MATTER</p>
-                           </div>
-                       </div>
+                        <div className="investment__contribution__balls">
+                            <div className="investment__contribution__balls__ball">
+                                <span>USDT Allocation</span>
+                                <span>12,500 USDT</span>
+                            </div>
+                            <div className="investment__contribution__balls__ball">
+                                <p>MATTER token allocation</p>
+                                <p>1,200 MATTER</p>
+                            </div>
+                        </div>
 
                         <div className="investment__contribution__table">
                             <p className="investment__contribution__table__title">
