@@ -65,24 +65,24 @@ export const Home = () => {
                        <h2>Protocol Features</h2>
                        <div className="home__frame__block block1">
                            <img src={BlockIcon1}/>
-                           <h5>Innovative and</h5>
-                           <h5>elegant DeFi</h5>
+                           <h5>Innovative and </h5>
+                           <h5>elegant DeFi </h5>
                            <h5>mechanism</h5>
 
                            <p style={{marginTop: 5}}>Execute put and call</p>
                            <p>strategies fully</p>
-                           <p>fully on-chain</p>
+                           <p>on-chain</p>
                        </div>
 
                        <div className="home__frame__block block2">
                            <img src={BlockIcon2}/>
-                           <h5>Auto rebalancing</h5>
+                           <h5>Auto rebalancing  </h5>
                            <h5>polarized token</h5>
                            <h5>mechanism</h5>
 
-                           <p style={{marginTop: 5}}>Funding, feedistrubution</p>
-                           <p>and rebalancing</p>
-                           <p>happens automatically</p>
+                           <p style={{marginTop: 5}}>Funding, fee distribution</p>
+                           <p>and rebalancing happens</p>
+                           <p>automatically</p>
                        </div>
 
                        <div className="home__frame__block block3">
@@ -120,9 +120,10 @@ export const Home = () => {
                            <h5>Simple and </h5>
                            <h5>intuitive to use</h5>
 
-                           <p style={{marginTop: 5}}>All Antimatter products are perpetual</p>
-                           <p>options without experyt</p>
-                           <p>Built for mass adpotion</p>
+                           <p style={{marginTop: 5}}>All Antimatter products are</p>
+                           <p>perpetual options without expiry</p>
+                           <p>dates or added complexity.</p>
+                           <p>Built for mass adoption</p>
                            <p></p>
                        </div>
                    </div>
