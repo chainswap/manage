@@ -16,18 +16,13 @@ import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
 import LeftLines from '../assets/image/left-lines.svg'
 import RightLines from '../assets/image/right-lines.svg'
+import MobileBG from '../assets/image/mobile-bg.jpg'
 
 
 import MediaQuery from 'react-responsive';
 
 
 export const Home = () => {
-
-    useEffect(()=>{
-        setTimeout(()=>{
-            //document.getElementById('animation-video').play()
-        },1000)
-    },[])
 
     return (
         <div className="home">
@@ -36,6 +31,10 @@ export const Home = () => {
                     <img src={LogoLineWhite} alt=""/>
                     <a>App Coming Soon</a>
                 </header>
+
+                <MediaQuery query='(max-device-width:750px)'>
+                    <img src={MobileBG}/>
+                </MediaQuery>
 
                 <div className="home__frame__page">
                     <div className="home__frame__page__content">
@@ -48,23 +47,20 @@ export const Home = () => {
 
                         <a>App Coming Soon</a>
                     </div>
-                    <div className="home__frame__page__bg">
-                        <video
-                            id='animation-video'
-                            muted
-                            autoPlay='true'
-                            autoplay
-                            data-autoplay="true"
-                            loop='loop'
-                            controls={null}
-                        >
-                            <source src="../assets/animation.webm" type="video/webm"/>
-                            <source src="../assets/animation.mp4" type="video/mp4"/>
-                            our browser does not support the video tag.
-                        </video>
-                    </div>
+
+                    <video
+                        muted
+                        autoPlay='true'
+                        data-autoplay="true"
+                        loop='loop'
+                        controls={null}
+                    >
+                        <source src="../assets/animation.mp4" type="video/mp4"/>
+                        <source src="../assets/animation.webm" type="video/webm"/>
+                    </video>
                 </div>
             </div>
+
 
             <MediaQuery query='(min-device-width:1200px)'>
                 <div className="home__frame" style={{
