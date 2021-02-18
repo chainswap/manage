@@ -45,7 +45,8 @@ export const Home = () => {
                     </div>
                     <div className="home__frame__page__bg">
                         <video
-                            playsInline
+                            preload
+                            playsinline
                             muted
                             src={require("../assets/animation.mp4")}
                             autoPlay='autoPlay'
