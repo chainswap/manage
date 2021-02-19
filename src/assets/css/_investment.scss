@@ -38,6 +38,7 @@
       &__balance {
         padding-right: 16px;
         border-right: 1px #ffffff solid;
+        font-size: 13px;
       }
 
       &__address {
@@ -46,6 +47,11 @@
         display: flex;
         align-items: center;
         cursor: pointer;
+        font-size: 12px;
+
+        &:hover {
+          opacity: 0.9;
+        }
 
         @media #{$smWidth $xsWidth} {
           p {
@@ -109,7 +115,7 @@
       font-family: Futura PT;
       font-style: normal;
       font-weight: bold;
-      font-size: 46px;
+      font-size: 49px;
       @media #{$smWidth $xsWidth} {
         font-size: 36px;
       }
@@ -184,7 +190,7 @@
       &__ball {
         width: 183px;
         height: 183px;
-        font-size: 14px;
+        font-size: 16px;
         background: linear-gradient(180deg, #000000 43.44%, #FFFFFF 207.92%);
         border-radius: 91.5px;
         display: flex;
@@ -192,6 +198,8 @@
         align-items: center;
         justify-content: center;
         gap: 12px;
+        padding-top: 12px;
+        font-family: Roboto-Regular;
 
         @media #{$smWidth $xsWidth} {
           width: 142px;
@@ -239,7 +247,7 @@
           padding: 0 52px;
           border-top: 1px solid rgba(255, 255, 255, 0.2);
           word-break: break-all;
-          font-family: Roboto;
+          font-family: Roboto-Regular;
           font-style: normal;
           font-weight: normal;
           font-size: 16px;
@@ -256,6 +264,7 @@
 
           p:first-child {
             color: rgba(255, 255, 255, 0.5);
+            font-family: Roboto;
           }
 
           p {
@@ -344,6 +353,10 @@
 .modal-wallets {
   @media #{$smWidth $xsWidth} {
     justify-content: flex-start;
+  }
+
+  button:hover {
+    opacity: 0.6;
   }
 }
 

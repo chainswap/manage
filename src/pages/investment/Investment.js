@@ -9,10 +9,7 @@ import {ReactComponent as Copy} from '../../assets/icon/copy.svg';
 import walletConnect from '../../assets/icon/walletConnect.png';
 import {useWeb3React} from "@web3-react/core";
 import {
-    GALLERY_SELECT_WEB3_CONTEXT, HANDLE_SHOW_FAILED_TRANSACTION_MODAL, HANDLE_SHOW_TRANSACTION_MODAL,
-    HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL,
-    waitingForInit,
-    waitingPending
+    GALLERY_SELECT_WEB3_CONTEXT
 } from "../../const";
 import {InjectedConnector} from "@web3-react/injected-connector";
 import {WalletConnectConnector} from "@web3-react/walletconnect-connector";
@@ -121,19 +118,17 @@ export const Investment = () => {
 
                     })
                     .on('receipt', (_, receipt) => {
-                        setApprove(2)
+                        window.location.reload()
                     })
                     .on('error', (err, receipt) => {
-
+                        setApprove(0)
                     });
             }
         } catch (e) {
             setApprove(0)
             console.log('approve  error--->')
         }
-
     }
-
 
     const OnContribute = async () => {
         const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId));
@@ -157,7 +152,6 @@ export const Investment = () => {
 
     }
 
-
     const onClaim = async () => {
         const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId));
         setClaim(1)
@@ -167,19 +161,17 @@ export const Investment = () => {
 
                 })
                 .on('receipt', (_, receipt) => {
-                    setClaim(0)
+                    window.location.reload()
                 })
                 .on('error', (err, receipt) => {
-                    setContribute(0)
+                    setClaim(0)
                 })
 
         } catch (e) {
             setClaim(0)
             console.log('contribute error', e)
         }
-
     }
-
 
     return (
         <div className="investment">
@@ -344,7 +336,7 @@ export const Investment = () => {
                                 </li>
                                 <li>
                                     <p>Round</p>
-                                    <p>{'private'}</p>
+                                    <p>{'PRIVATE'}</p>
                                 </li>
                                 <li>
                                     <p>MATTER in wallet</p>
