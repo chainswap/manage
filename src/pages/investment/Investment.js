@@ -66,6 +66,16 @@ const MODE_TYPE = {
     WAITING: "WAITING"
 }
 
+const SEED_ADDRESS = [
+    "0xC881Ed8F18259272f1cBb8852719743669F794FE",
+    "0xfDB3519f49149ffBd787927cd09792eeacCdd56C",
+    "0x16da609341ed67750A8BCC5AAa2005471006Cd77",
+    "0x238e673496D857d00BB4AB35719f5786f6332818",
+    "0x5D2AC86b1D199dB89E6fa59efEb5cbaa4Cf0ff7c",
+    "0x53b562B842Bfacd6117Be9072fffAa6Aa177734e",
+    "0x626cc92a30Fc915c8705B0fFB1289304d0e765FB"
+]
+
 export const Investment = () => {
 
     const context = useWeb3React();
@@ -404,7 +414,7 @@ export const Investment = () => {
                                         </li>
                                         <li>
                                             <p>Round</p>
-                                            <p>{'PRIVATE'}</p>
+                                            <p>{SEED_ADDRESS.indexOf(account) === -1 ?'PRIVATE': 'SEED'}</p>
                                         </li>
                                         <li>
                                             <p>MATTER in wallet</p>
