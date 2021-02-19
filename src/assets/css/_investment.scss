@@ -2,14 +2,28 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  font-family: Roboto;
 
   header {
     display: flex;
     justify-content: space-between;
     margin: 45px 60px 0 43px;
 
+    @media #{$smWidth $xsWidth} {
+      margin: 30px 24px;
+
+      img{
+        width: 136px;
+      }
+    }
+
     img {
       width: 170px;
+
+      @media #{$smWidth $xsWidth} {
+          width: 136px;
+      }
+
     }
 
     .wallet {
@@ -33,6 +47,12 @@
         align-items: center;
         cursor: pointer;
 
+        @media #{$smWidth $xsWidth} {
+          p {
+            display: none;
+          }
+        }
+
         .dot {
           width: 12px;
           height: 12px;
@@ -47,7 +67,12 @@
           width: 16px;
           margin-left: 6px;
           cursor: pointer;
-          &:hover{
+
+          @media #{$smWidth $xsWidth} {
+           display: none;
+          }
+
+          &:hover {
             g {
               opacity: 1;
             }
@@ -64,16 +89,30 @@
     padding-left: 125px;
     flex-direction: column;
 
+    @media #{$smWidth $xsWidth} {
+      padding-left: 0;
+    }
+
     &__frame {
       display: flex;
       margin: auto;
+      @media #{$smWidth $xsWidth} {
+        justify-content: center;
+        padding: 0 24px;
+        word-break: break-all;
+        text-align: center;
+        align-items: center;
+      }
     }
 
     &__title {
-      font-family: Jost;
+      font-family: Futura PT;
       font-style: normal;
       font-weight: bold;
       font-size: 46px;
+      @media #{$smWidth $xsWidth} {
+        font-size: 36px;
+      }
     }
 
     &__sub_title {
@@ -86,6 +125,11 @@
       margin-bottom: 40px;
       width: 578px;
       opacity: 0.6;
+      @media #{$smWidth $xsWidth} {
+        width: fit-content;
+        font-size: 16px;
+        line-height: 132%;
+      }
     }
   }
 
@@ -105,13 +149,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    @media #{$smWidth $xsWidth} {
+      width: 100%;
+    }
 
     &:hover {
       border: 1px solid rgba(255, 255, 255, 0.6);
     }
 
     &:disabled {
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.3);
     }
 
     img {
@@ -129,6 +177,10 @@
       justify-content: center;
       gap: 145px;
 
+      @media #{$smWidth $xsWidth} {
+        gap: 27px
+      }
+
       &__ball {
         width: 183px;
         height: 183px;
@@ -140,6 +192,12 @@
         align-items: center;
         justify-content: center;
         gap: 12px;
+
+        @media #{$smWidth $xsWidth} {
+          width: 142px;
+          height: 142px;
+          text-align: center;
+        }
       }
 
     }
@@ -152,17 +210,27 @@
       width: 800px;
       margin-top: 47px;
 
+      @media #{$smWidth $xsWidth} {
+        width: 100%
+      }
+
       &__title {
-        font-family: Jost;
+        font-family: Futura PT;
         font-style: normal;
         font-weight: 500;
         font-size: 32px;
         height: 90px;
         line-height: 90px;
         text-align: center;
+        @media #{$smWidth $xsWidth} {
+          font-size: 24px;
+        }
       }
 
       ul {
+        @media #{$smWidth $xsWidth} {
+          width: 100vw
+        }
         li {
           display: flex;
           height: 60px;
@@ -170,11 +238,27 @@
           align-items: center;
           padding: 0 52px;
           border-top: 1px solid rgba(255, 255, 255, 0.2);
+          word-break: break-all;
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 16px;
+          line-height: 148.69%;
+          @media #{$smWidth $xsWidth} {
+            flex-direction: column;
+            text-align: left;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 8px;
+            padding: 18px 24px;
+            height: fit-content;
+          }
 
           p:first-child {
             color: rgba(255, 255, 255, 0.5);
           }
-          p{
+
+          p {
             display: flex;
             align-items: center;
 
@@ -205,6 +289,17 @@
     flex-direction: column;
     align-items: center;
     padding-bottom: 50px;
+    position: relative;
+    @media #{$smWidth $xsWidth} {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      padding: 48px 24px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      justify-content: center;
+      font-size: 24px;
+    }
 
     p {
       max-width: 405px;
@@ -233,4 +328,54 @@
 .btn_group {
   display: flex;
   gap: 12px;
+
+  button {
+    margin-top: 50px;
+    @media #{$smWidth $xsWidth} {
+      margin-top: 0;
+    }
+  }
+
+  @media #{$smWidth $xsWidth} {
+    flex-direction: column;
+  }
+}
+
+.modal-wallets {
+  @media #{$smWidth $xsWidth} {
+    justify-content: flex-start;
+  }
+}
+
+.connecting {
+  @media #{$smWidth $xsWidth} {
+    justify-content: center;
+  }
+}
+
+.connected {
+  @media #{$smWidth $xsWidth} {
+    justify-content: center;
+    padding: 0 60px;
+  }
+
+  button {
+    margin-top: 50px;
+    @media #{$smWidth $xsWidth} {
+      margin: auto;
+      margin-bottom: 48px;
+    }
+  }
+
+
+}
+
+.modal_bottom {
+  @media #{$smWidth $xsWidth} {
+    position: absolute;
+    top: auto;
+    bottom: 48px;
+    width: inherit;
+    padding: 0 60px;
+  }
 }

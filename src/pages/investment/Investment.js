@@ -70,8 +70,6 @@ export const Investment = () => {
         chainId
     } = context;
 
-    const [walletModal, setWalletModal] = useState(false)
-    const [connecting, setConnecting] = useState(false)
     const [modalType, setModalType] = useState()
     const [approve, setApprove] = useState(0)
     const [contribute, setContribute] = useState(0)
@@ -192,7 +190,7 @@ export const Investment = () => {
                         <p className="wallet__balance">{balance ? formatAmount(balance) : '--'} MATTER</p>
                         <p className="wallet__address">
                             <div className="dot"/>
-                            {formatAddress(account)}
+                            <p>{formatAddress(account)}</p>
                             <Copy/>
                         </p>
                     </div>
@@ -211,20 +209,20 @@ export const Investment = () => {
                             }}>Connect Wallet
                             </button>
                         </div>
-                        <video
-                            muted
-                            controls={null}
-                            src={require("../../assets/animation.mp4")}
-                            autoPlay='autoPlay'
-                            loop='loop'
-                            style={{height: 680, marginTop: -180}}
-                        />
+                        {/*<video*/}
+                        {/*    muted*/}
+                        {/*    controls={null}*/}
+                        {/*    src={require("../../assets/animation.mp4")}*/}
+                        {/*    autoPlay='autoPlay'*/}
+                        {/*    loop='loop'*/}
+                        {/*    style={{height: 680, marginTop: -180}}*/}
+                        {/*/>*/}
                     </div>
                 )}
 
                 {modalType === MODE_TYPE.WALLETS && (
                     <>
-                        <div style={{paddingBottom: 40}} className="investment__modal">
+                        <div style={{paddingBottom: 40}} className="investment__modal modal-wallets">
                             <p className="investment__modal__title">Connect to a wallet</p>
                             <button onClick={() => {
                                 setModalType(MODE_TYPE.CONNECTING)
@@ -265,20 +263,22 @@ export const Investment = () => {
                 )}
 
                 {modalType === MODE_TYPE.CONNECTING && (
-                    <div className="investment__modal">
+                    <div className="investment__modal connecting">
                         <p className="investment__modal__title">Please wait a little...</p>
                         <img className="investment__modal__loading" src={Circle} alt=""/>
                     </div>
                 )}
 
                 {modalType === MODE_TYPE.CONNECTED && (
-                    <div className="investment__modal">
+                    <div className="investment__modal connected">
                         <img className="investment__modal__icon" src={Success} alt=""/>
                         <p>Your wallet was succesfully connected</p>
-                        <button style={{marginTop: 50}} onClick={() => {
-                            setModalType(MODE_TYPE.CONTRIBUTION)
-                        }}>Continue
-                        </button>
+                        <div className="modal_bottom">
+                            <button onClick={() => {
+                                setModalType(MODE_TYPE.CONTRIBUTION)
+                            }}>Continue
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -305,14 +305,14 @@ export const Investment = () => {
                 {modalType === MODE_TYPE.CONTRIBUTION && (
                     <div className="investment__modal">
                         <p>Your Contribution Amount is: {quota ? formatAmount(quota, 6) : '--'} USDT</p>
-                        <div className="btn_group">
+                        <div className="btn_group modal_bottom">
                             <button disabled={approve !== 0 || new BigNumber(allowance).isGreaterThan(quota)}
-                                    style={{marginTop: 50}} onClick={onApprove}>
+                                     onClick={onApprove}>
                                 {approve === 1 ? 'Approving...' : ' Approve USDT'}
                             </button>
                             <button
                                 disabled={approve !== 2 || contribute === 1 || new BigNumber(quota).isGreaterThan(usdtBalance)}
-                                style={{marginTop: 50}} onClick={OnContribute}>
+                                 onClick={OnContribute}>
                                 {contribute === 1 ? 'Contributing' : new BigNumber(quota).isGreaterThan(usdtBalance) ? 'insufficient balance' : 'Contribute'}
                             </button>
                         </div>
@@ -353,7 +353,8 @@ export const Investment = () => {
                                 <li>
                                     <p>Claimable balance</p>
                                     <p>{unLocked ? formatAmount(unLocked) : '--'} MATTER
-                                        <button disabled={!unLocked || new BigNumber(unLocked).isEqualTo('0')} onClick={onClaim}>
+                                        <button disabled={!unLocked || new BigNumber(unLocked).isEqualTo('0')}
+                                                onClick={onClaim}>
                                             {claim === 1 ? 'Claiming' : 'claim'}
                                         </button></p>
                                 </li>
@@ -363,8 +364,6 @@ export const Investment = () => {
                 )}
 
             </div>
-            }
-
 
         </div>
     )

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React from 'react'
 import '../assets/css/animator.css'
 import '../styles.css'
 import LogoLineWhite from '../assets/image/logo-line-white.svg'
@@ -50,13 +50,11 @@ export const Home = () => {
 
                     <video
                         muted
-                        autoPlay='true'
-                        data-autoplay="true"
+                        autoPlay='autoPlay'
                         loop='loop'
                         controls={null}
                     >
-                        <source src="../assets/animation.mp4" type="video/mp4"/>
-                        <source src="../assets/animation.webm" type="video/webm"/>
+                        <source src="../assets/animation.mp4"/>
                     </video>
                 </div>
             </div>
