@@ -358,3 +358,19 @@ a[href^='tel'],
     display: flex;
     justify-content: flex-end;
 }
+
+canvas{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: auto;
+    right: 0;
+    cursor: crosshair;
+    width: 40vw;
+    height: 100vh;
+}
+
+
+.dg.ac{
+    display: none!important;
+}
