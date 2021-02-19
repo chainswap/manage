@@ -9,46 +9,35 @@ export const useQuota = () =>{
     const [ quota, setQuota] = useState()
     const [ volume, setVolume] = useState()
     const [ unLocked, setUnLocked] = useState()
+    const [ loading, setLoading] = useState(false)
+
+    const query = async () => {
+        try{
+            const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId))
+
+            const quotaRes = await contract.methods.getQuota(account).call()
+            setQuota(quotaRes)
+
+            const volumeRes = await contract.methods.getVolume(account).call()
+            setVolume(volumeRes)
+
+            const unLockRes = await contract.methods.unlockCapacity(account).call()
+            setUnLocked(unLockRes)
+        }catch (e) {
+            console.log('load token balance error:',e)
+        }
+    }
 
     useEffect(()=>{
-        if(active){
-            try{
-                const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId))
-                contract.methods.getQuota(account).call().then(res =>{
-                    console.log('getQuota:',res)
-                    setQuota(res)
-                })
-            }catch (e) {
-                console.log('load token balance error:',e)
-
-            }
-
-            try{
-                const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId))
-                contract.methods.getVolume(account).call().then(res =>{
-                    console.log('getQuota:',res)
-                    setVolume(res)
-                })
-            }catch (e) {
-                console.log('load token balance error:',e)
-
-            }
-
-            try{
-                const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId))
-                contract.methods.unlockCapacity(account).call().then(res =>{
-                    console.log('getQuota:',res)
-                    setUnLocked(res)
-                })
-            }catch (e) {
-                console.log('load token balance error:',e)
-
-            }
-
+        if(active && account){
+            setLoading(true)
+            query().then(()=>{
+                setLoading(false)
+            })
         }
     },[active, account])
 
-    return {quota, volume, unLocked}
+    return {quota, volume, unLocked, loading}
 }
 
 export const useAmount = () =>{

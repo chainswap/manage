@@ -9,16 +9,20 @@
     justify-content: space-between;
     margin: 45px 60px 0 43px;
 
+
     @media #{$smWidth $xsWidth} {
       margin: 30px 24px;
 
       img{
         width: 136px;
+        height: 32px;
+        object-fit: contain;
       }
     }
 
     img {
       width: 170px;
+      height: 40px;
 
       @media #{$smWidth $xsWidth} {
           width: 136px;
@@ -180,10 +184,16 @@
     &__balls {
       display: flex;
       justify-content: center;
-      gap: 145px;
+      margin: -145px;
+      & > * {
+        margin: 145px;
+      }
 
       @media #{$smWidth $xsWidth} {
-        gap: 27px
+        margin: -27px;
+        & > * {
+          margin: 27px;
+        }
       }
 
       &__ball {
@@ -196,9 +206,9 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 12px;
         padding-top: 12px;
         font-family: Roboto-Regular;
+        line-height: 28px;
 
         @media #{$smWidth $xsWidth} {
           width: 142px;
@@ -256,9 +266,12 @@
             text-align: left;
             align-items: flex-start;
             justify-content: center;
-            gap: 8px;
             padding: 18px 24px;
             height: fit-content;
+            margin: -8px;
+            & > * {
+              margin: 8px;
+            }
           }
 
           p:first-child {
@@ -335,7 +348,10 @@
 
 .btn_group {
   display: flex;
-  gap: 12px;
+  margin: -12px;
+  & > * {
+    margin: 12px;
+  }
 
   button {
     margin-top: 50px;
@@ -346,6 +362,10 @@
 
   @media #{$smWidth $xsWidth} {
     flex-direction: column;
+    margin: -12px;
+    & > * {
+      margin: 12px;
+    }
   }
 }
 
