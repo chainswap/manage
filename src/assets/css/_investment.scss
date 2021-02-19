@@ -413,6 +413,9 @@
 }
 
 .init_layout {
-  flex-direction: column;
-  justify-content: flex-start;
+
+  @media #{$smWidth $xsWidth} {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 }

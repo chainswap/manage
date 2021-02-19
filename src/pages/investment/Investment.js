@@ -79,7 +79,7 @@ export const Investment = () => {
         chainId
     } = context;
 
-    const [modalType, setModalType] = useState('INIT')
+    const [modalType, setModalType] = useState()
     const [approve, setApprove] = useState(0)
     const [contribute, setContribute] = useState(0)
     const [claim, setClaim] = useState(0)
