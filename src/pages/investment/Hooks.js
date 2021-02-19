@@ -1,7 +1,7 @@
 import {getContract, useActiveWeb3React} from "../../web3";
 import {useEffect, useState} from "react";
 import Offer from "../../web3/abi/Offer.json";
-import {OFFERING_ADDRESS, USDT_ADDRESS} from "../../web3/address";
+import {MATTER_ADDRESS, OFFERING_ADDRESS, USDT_ADDRESS} from "../../web3/address";
 import ERC20 from "../../web3/abi/ERC20.json";
 
 export const useQuota = () =>{
@@ -59,7 +59,7 @@ export const useAmount = () =>{
     useEffect(()=>{
         if(active){
             try{
-                const contract = getContract(library, ERC20.abi, USDT_ADDRESS(chainId));
+                const contract = getContract(library, ERC20.abi, MATTER_ADDRESS(chainId));
                 contract.methods.balanceOf(account).call().then(res =>{
                     console.log('getQuota:',res)
                     setBalance(res)

@@ -162,7 +162,7 @@ export const Investment = () => {
         const contract = getContract(library, Offer, OFFERING_ADDRESS(chainId));
         setClaim(1)
         try {
-            contract.methods.offer().send({from: account})
+            contract.methods.unlock().send({from: account})
                 .on('transactionHash', hash => {
 
                 })
@@ -353,7 +353,7 @@ export const Investment = () => {
                                 <li>
                                     <p>Claimable balance</p>
                                     <p>{unLocked ? formatAmount(unLocked) : '--'} MATTER
-                                        <button disabled={!unLocked || new BigNumber(unLocked).isEqualTo('0')}
+                                        <button disabled={!unLocked || claim === 1 || new BigNumber(unLocked).isEqualTo('0')}
                                                 onClick={onClaim}>
                                             {claim === 1 ? 'Claiming' : 'claim'}
                                         </button></p>
