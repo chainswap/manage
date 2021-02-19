@@ -92,7 +92,6 @@
     flex: 1;
     display: flex;
     justify-content: center;
-    padding-left: 125px;
     flex-direction: column;
 
     @media #{$smWidth $xsWidth} {
