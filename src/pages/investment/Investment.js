@@ -254,6 +254,8 @@ export const Investment = () => {
 
                     <div className="investment__init">
                         {modalType === MODE_TYPE.INIT && (
+                            <>
+
                             <div className="investment__init__frame init_layout">
                                 <MediaQuery query='(max-device-width:1200px)'>
                                     <div>
@@ -261,10 +263,10 @@ export const Investment = () => {
                                     </div>
                                 </MediaQuery>
                                 <div>
+
                                     <p className="investment__init__title">Investment Portal</p>
-                                    <p className="investment__init__sub_title">Welcome to Antimatter family! Please
-                                        connect your
-                                        wallet to see if you are eligible for contribution</p>
+                                    <p className="investment__init__sub_title">Welcome to Antimatter family! Please connect your wallet to see if you are eligible for contribution</p>
+
                                     <button className="button" onClick={() => {
                                         setModalType(MODE_TYPE.WALLETS)
                                     }}>Connect Wallet
@@ -274,6 +276,7 @@ export const Investment = () => {
                                     <Lottie style={{marginTop: -86}} width={800} height={470} options={defaultOptions}/>
                                 </MediaQuery>
                             </div>
+                            </>
                         )}
 
                         {modalType === MODE_TYPE.WALLETS && (
