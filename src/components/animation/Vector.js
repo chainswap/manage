@@ -1,359 +1,276 @@
+import React from "react";
 
-//vector class
-class Vector {
 
-    constructor(x = 0, y = 0) {
-        this.x = x;
-        this.y = y;
-        this.magnitude = Math.sqrt(x * x + y * y);
-        this.angle = Math.atan2(y, x);
+
+
+export const Animation = () =>{
+
+    window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+        };
+    })();
+    var c = document.createElement('canvas');
+    document.body.appendChild(c);
+    var $ = c.getContext('2d');
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+
+    window.addEventListener("mousemove", msMove, false);
+    c.addEventListener("mousedown", msDown, false);
+    window.addEventListener("mouseup", msUp, false);
+
+    var w = c.width;
+    var h = c.height;
+    var min = (w < h) ? w : h;   //min canvas size
+    var ms = [];  //mouse position array
+
+    var walls;      //cube walls
+    var ppos, pvel;  //particle position, partical velocity
+
+
+    var pt2d, pt3d;  //2D && 3D points
+    var side_dots;   //dots per side
+    var parts;      //particles
+    var rots = [];  //rotation array
+
+    let thisx, thisy, thisz, thiscol ,thiss, thisrotY, thisrotZ, thisrotX
+
+    function Pt2D(x, y, col, s) {  //x, y, color, size
+        thisx = x;
+        thisy = y;
+        thiscol = col || "rgba(255,255,255,1)";
+        thiss = s || 1;
     }
 
-    add(v) {
-        this.x = this.x + v.x;
-        this.y = this.y + v.y;
-        this.magnitude = Math.sqrt(this.x * this.x + this.y * this.y);
-        this.angle = Math.atan2(this.y, this.x);
-        return this;
+    function Pt3D(x, y, z, col, s) {
+        thisx = x;
+        thisy = y;
+        thisz = z;
+
+        thiscol = col || "rgba(255,255,255,1)";
+        thiss = s || 1;
+        //OR:
+        // if (this.col === undefined) {
+        //     this.col = "rgba(255,255,255,1)";
+        // }
+
+        // if (this.s === undefined) {
+        //     this.s = 5;
+        // }
+
+        this.rotX = 0;
+        this.rotY = 0;
+        this.rotZ = 0;
+
+        //rotate and 2d transform
+        this.rotate = function() {
+            var rx = thisx * Math.cos(this.rotX + rots.x) * Math.cos(thisrotY + rots.y) - thisy * Math.sin(thisrotX + rots.x) * Math.cos(thisrotY + rots.y) - thisz * Math.sin(thisrotY + rots.y);
+            var ry = thisy * Math.cos(this.rotX + rots.x) * Math.cos(thisrotZ + rots.z) + thisx * Math.sin(thisrotX + rots.x) * Math.cos(thisrotZ + rots.z) - thisz * Math.cos(thisrotY + rots.y) * Math.sin(thisrotZ + rots.z) - thisx * Math.cos(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.sin(thisrotZ + rots.z) + thisy * Math.sin(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.sin(thisrotZ + rots.z);
+            var rz = thisy * Math.cos(this.rotX + rots.x) * Math.sin(thisrotZ + rots.z) + thisx * Math.sin(thisrotX + rots.x) * Math.sin(thisrotZ + rots.z) + thisz * Math.cos(thisrotY + rots.y) * Math.cos(thisrotZ + rots.z) + thisx * Math.cos(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.cos(thisrotZ + rots.z) - y * Math.sin(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.cos(thisrotZ + rots.z);
+
+            return new Pt3D(rx, ry, rz, thiscol, thiss);
+        };
+        //current point location
+        this.loc = function() {
+            var f = min / (4 + thisz);
+
+            return new Pt2D(thisx * f + w / 2, thisy * f + h / 2, thiscol, thiss);
+        };
     }
-
-    subtract(v) {
-        this.x = this.x - v.x;
-        this.y = this.y - v.y;
-        this.magnitude = Math.sqrt(this.x * this.x + this.y * this.y);
-        this.angle = Math.atan2(this.y, this.x);
-        return this;
+    //mousdown
+    function msDown(e) {
+        ms.lastY = e.clientX - c.getBoundingClientRect().left;
+        ms.lastX = e.clientY - c.getBoundingClientRect().top;
+        ms.msDragged = true;
     }
+    //mousemove
+    function msMove(e) {
+        ms.x = e.clientX - c.getBoundingClientRect().left;
+        ms.y = e.clientY - c.getBoundingClientRect().top;
 
-    setAngle(angle) {
-        this.angle = angle;
-        this.x = this.magnitude * Math.cos(angle);
-        this.y = this.magnitude * Math.sin(angle);
-        return this;
-    }
-
-    setMagnitude(magnitude) {
-        this.magnitude = magnitude;
-        this.x = Math.cos(this.angle) * magnitude;
-        this.y = Math.sin(this.angle) * magnitude;
-        return this;
-    }}
-
-
-
-//particle class
-class Particle {
-
-    constructor(opts) {
-        this.x = opts.x || Math.random() * cW;
-        this.y = opts.y || Math.random() * cH;
-        this.radius = opts.radius || 15;
-        this.v = opts.v || new Vector();
-        this.acc = opts.acc || new Vector();
-        this.mass = opts.mass || 40;
-        this.color = opts.color || 320;
-        this.maxV = opts.maxV || 8;
-        this.maxA = opts.maxA || 0.5;
-        this.tasteTheRainbow = opts.tasteTheRainbow || false;
-        if (opts.trail) {
-            this.trail = true;
-            this.trailLength = opts.trailLength || 10;
-            this.trajPoints = new Queue([]);
-        }
-    }
-
-    accelerate() {
-        this.acc.magnitude = this.acc.magnitude > this.maxA ? this.acc.setMagnitude(this.maxA) : this.acc.magnitude;
-        this.v.add(this.acc);
-    }
-
-    isOnScreen() {
-        return this.x <= cW || this.x >= 0 || this.y <= cH || this.y >= 0;
-    }
-
-    update() {
-        if (this.acc.magnitude) {this.accelerate();}
-        if (this.trail) {
-            let point = {
-                x: this.x,
-                y: this.y };
-
-            this.trajPoints.enqueue(point);
-            if (this.trajPoints.getLength() >= this.trailLength) {this.trajPoints.dequeue();}
-        }
-        this.v.magnitude = this.v.magnitude > this.maxV ? this.v.setMagnitude(this.maxV) : this.v.magnitude;
-        this.x += this.v.x;
-        this.y += this.v.y;
-        if (this.tasteTheRainbow) {this.color = this.color <= 360 ? ++this.color : 1;}
-    }
-
-    render(context, trailContext = null) {
-        context.beginPath();
-        context.fillStyle = `hsl(${this.color}, 100%, 50%)`;
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        context.fill();
-        context.closePath();
-        if (this.trail && trailContext) {
-            let trajectory = this.trajPoints;
-            trailContext.beginPath();
-            trailContext.strokeStyle = `hsl(${this.color}, 100%, 50%)`;
-            trailContext.lineWidth = 0.2;
-            trailContext.moveTo(trajectory.queue[0].x, trajectory.queue[0].y);
-            for (let i = 1, len = trajectory.getLength(); i < len; i++) {
-                trailContext.lineTo(trajectory.queue[i].x, trajectory.queue[i].y);
+        if (ms.msDragged) {
+            var toRad = Math.PI / 180;
+            rots.z = ((ms.lastY - ms.y) * toRad) % 20;
+            rots.x = ((ms.lastX - ms.x) * toRad) % 20;
+            if (rots.z >= Math.PI * 2) {
+                rots.z -= Math.PI;
             }
-            trailContext.stroke();
-            trailContext.closePath();
-        }
-    }}
-
-
-
-class Planet extends Particle {
-
-    gravitate(p) {
-        if (Particle.prototype.isPrototypeOf(p)) {
-            const d = Math.sqrt((this.x - p.x) * (this.x - p.x) + (this.y - p.y) * (this.y - p.y));
-            const attractiveForce = p.mass * this.mass / (d * d);
-            this.acc.setAngle(Math.atan2(p.y - this.y, p.x - this.x)).setMagnitude(attractiveForce);
-        } else {
-            throw new Error("The argument passed to the gravitate function must be a particle");
-        }
-        this.update();
-    }
-
-    gravitateStarCluster(cluster) {
-        let gV = new Vector();
-        for (let i = 0; i < cluster.length; i++) {
-            let star = cluster[i];
-            if (Particle.prototype.isPrototypeOf(star)) {
-                let v = new Vector();
-                const d = Math.sqrt((this.x - star.x) * (this.x - star.x) + (this.y - star.y) * (this.y - star.y));
-                const attractiveForce = star.mass * this.mass / (d * d);
-                v.setAngle(Math.atan2(star.y - this.y, star.x - this.x)).setMagnitude(attractiveForce);
-                gV = gV.add(v);
-            } else {
-                throw new Error("The argument supplied to the gravitateStarCluster function must be an array of particles");
+            if (rots.z <= -Math.PI * 2) {
+                rots.z += Math.PI;
+            }
+            if (rots.x >= Math.PI * 2) {
+                rots.x -= Math.PI;
+            }
+            if (rots.x <= -Math.PI * 2) {
+                rots.x += Math.PI;
             }
         }
-        this.acc.setAngle(gV.angle).setMagnitude(gV.magnitude);
-        this.update();
-    }}
+    }
+    //mouseup
+    function msUp(e) {
+        ms.msDragged = false;
+        ms.lastX = undefined;
+        ms.lastY = undefined;
+    }
 
+    function run() {
+        window.requestAnimFrame(update);
+        window.requestAnimFrame(draw);
+        window.requestAnimFrame(run);
+    }
 
+    go();
+    run();
 
-class Queue {
+    function go() {
+        rots.x = Math.random()*Math.PI;
+        rots.y = Math.random()*Math.PI;
+        rots.z = Math.random()*Math.PI;
 
-    constructor(array) {this.queue = array;}
+        side_dots = 30;  //dots per side
+        var parts = 60;  //total particles
 
-    getLength() {return this.queue.length;}
+        walls = new Array();
+        ppos = new Array();
+        pvel = new Array();
 
-    enqueue(element) {this.queue.unshift(element);}
+        for (var i = 0; i < parts; i++) {
 
-    dequeue() {this.queue.pop();}
-
-    display() {
-        for (let i = 0; i < this.getLength; i++) {
-            console.log(this.queue[i]);
+            ppos.push(new Pt3D(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1, "rgba(" + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + 1 + ")", 5));
+            pvel.push(new Pt3D((Math.round(Math.random()) > 0) ? 0.01 : -0.01, (Math.round(Math.random()) > 0) ? 0.01 : -0.01, (Math.round(Math.random()) > 0) ? 0.01 : -0.01, undefined, undefined));
         }
-    }}
+        var angle;
+        //dots per line
+        var dots_line = Math.floor(Math.sqrt(side_dots));
+        var colRot = 0;  //color rotations for individual rainbow cells
+        var colChng = 0;  //hue changes for outside walls
+        for (var i = 0; i <= dots_line; i++) {
+            for (var j = 0; j <= dots_line; j++) {
 
+                for (var k = 0; k <= dots_line; k++) {
+                    var axis1 = (i / dots_line) * 2 - 1;
+                    var axis2 = (j / dots_line) * 2 - 1;
+                    var axis3 = (k / dots_line) * 2 - 1;
 
+                    if (axis1 === -1 || axis1 === 1 || axis2 === -1 || axis2 === 1 || axis3 === -1 || axis3 == 1) {
+                        colChng -= 0.5;
+                        //using a hue change variable to slowly change the color of the outside walls as object rotates
+                        var clr = "hsla(" + (colChng % 360) + ",100%,50%,0.75)";
+                        var dotSize = 3;
+                    } else {
+                        //and individual rainbow created by the color rotation var for inside walls and free cells
+                        var clr = "hsla(" + colRot + ",100%,50%,0.4)";
+                        var dotSize = 5;
+                    }
 
-//util function to paint entire canvas of specified color
-function paintCanvas(color, context) {
-    const W = context.canvas.clientWidth;
-    const H = context.canvas.clientHeight;
-    context.save();
-    context.fillStyle = color;
-    context.fillRect(0, 0, W, H);
-    context.restore();
-}
-
-//util function that returns a random number in a given range
-function randomInRange(min, max) {
-    const result = min + Math.random() * (max - min);
-    return result;
-}
-
-//////////////////////////////////////
-// -- THIS ANIMATION'S VARIABLES -- //
-//////////////////////////////////////
-
-//canvas
-const trailCanvas = document.getElementById('trails');
-const particlesCanvas = document.getElementById('particles');
-const trailCtx = trailCanvas.getContext('2d');
-const particleCtx = particlesCanvas.getContext('2d');
-
-let cW = particlesCanvas.width = trailCanvas.width = window.innerWidth;
-let cH = particlesCanvas.height = trailCanvas.height = window.innerHeight;
-
-//animation constants
-const settings = {
-
-    STAR_MASS: 1500,
-    PLANET_MASS: 20,
-    PLANET_V_X: 2,
-    P_TRAIL: true,
-    P_MAX_VELOCITY: 8,
-    P_MAX_ACC: 0.5,
-    P_MIN_VELOCITY: 5,
-    PARTICLE_NUM: 70,
-    BOUNDS: false,
-    TRAIL_LENGTH: 90,
-    TRAIL_CNVS: trailCanvas,
-    PARTICLE_CNVS: particlesCanvas,
-    COLOR: 0,
-    TRAIL_CTXT: trailCtx,
-    TASTETHERAINBOW: true,
-    PARTICLE_CTXT: particleCtx };
-
-
-
-window.addEventListener('resize', function () {
-    cW = particlesCanvas.width = trailCanvas.width = window.innerWidth;
-    cH = particlesCanvas.height = trailCanvas.height = window.innerHeight;
-});
-
-//mouse events and stuff
-let mX = -1;
-let mY = -1;
-let draggingStar = false;
-
-document.addEventListener('mousemove', function (e) {
-    mX = e.clientX;
-    mY = e.clientY;
-});
-
-settings.PARTICLE_CNVS.addEventListener('click', function () {
-    draggingStar = !draggingStar;
-});
-
-//stars and particles
-let s = [];
-let p = [];
-
-let star = new Particle({
-    x: cW / 2,
-    y: cH / 2,
-    radius: 15,
-    color: settings.COLOR,
-    tasteTheRainbow: settings.TASTETHERAINBOW,
-    mass: settings.STAR_MASS });
-
-
-for (let i = 0; i < settings.PARTICLE_NUM; i++) {
-
-    const planet = new Planet({
-        x: Math.random() * cW,
-        y: Math.random() * cH,
-        radius: 2,
-        mass: settings.PLANET_MASS,
-        trail: settings.P_TRAIL,
-        trailLength: settings.TRAIL_LENGTH,
-        color: settings.COLOR,
-        maxV: settings.P_MAX_VELOCITY,
-        maxA: settings.P_MAX_ACC,
-        tasteTheRainbow: settings.TASTETHERAINBOW,
-        v: new Vector(Math.random() < 0.5 ? -settings.P_MIN_VELOCITY : settings.P_MIN_VELOCITY, 0) });
-
-
-    p.push(planet);
-
-}
-
-//animation function
-function animate() {
-
-    settings.PARTICLE_CTXT.clearRect(0, 0, cW, cH);
-
-    settings.TRAIL_CTXT.clearRect(0, 0, cW, cH);
-    paintCanvas('black', settings.TRAIL_CTXT);
-
-    star.update();
-    star.render(settings.PARTICLE_CTXT);
-
-    for (let i = 0; i < p.length; i++) {
-        p[i].gravitate(star);
-        if (settings.BOUNDS) {
-            if (p[i].x > cW) {p[i].x = cW;}
-            if (p[i].x < 0) {p[i].x = 0;}
-            if (p[i].y > cH) {p[i].y = cH;}
-            if (p[i].y < 0) {p[i].y = 0;}
+                    colRot += 1;
+                    if (colRot > 360) {
+                        colRot = 0;
+                    }
+                    walls.push(new Pt3D(axis1, axis2, axis3, clr, dotSize));
+                }
+            }
         }
-        if (p[i].isOnScreen()) {
-            p[i].render(settings.PARTICLE_CTXT, settings.TRAIL_CTXT);
+    }
+    //range values
+    function rng(val, begin, halt, _begin, _halt) {
+        return _begin + (_halt - _begin) * ((val - begin) / (halt - begin));
+    }
+
+    function update() {
+
+        for (var i = 0; i < ppos.length; i++) {
+            ppos[i].x += pvel[i].x;
+            ppos[i].y += pvel[i].y;
+            ppos[i].z += pvel[i].z;
+
+            if (ppos[i].x > 1) {
+                ppos[i].x = 1;
+                pvel[i].x *= -1;
+            }
+            if (ppos[i].x < -1) {
+                ppos[i].x = -1;
+                pvel[i].x *= -1;
+            }
+
+            if (ppos[i].y > 1) {
+                ppos[i].y = 1;
+                pvel[i].y *= -1;
+            }
+            if (ppos[i].y < -1) {
+                ppos[i].y = -1;
+                pvel[i].y *= -1;
+            }
+
+            if (ppos[i].z > 1) {
+                ppos[i].z = 1;
+                pvel[i].z *= -1;
+            }
+            if (ppos[i].z < -1) {
+                ppos[i].z = -1;
+                pvel[i].z *= -1;
+            }
+        }
+
+        if (!ms.msDragged) {
+            rots.x += 0.02;
+            rots.y += 0.01;
         }
     }
 
-    if (draggingStar) {
-        star.x += (mX - star.x) * 0.1;
-        star.y += (mY - star.y) * 0.1;
+    function rotate(point) {
+        var rx = thisx * Math.cos(thisrotX + rots.x) * Math.cos(thisrotY + rots.y) - thisy * Math.sin(thisrotX + rots.x) * Math.cos(thisrotY + rots.y) - thisz * Math.sin(thisrotY + rots.y);
+
+        var ry = thisy * Math.cos(thisrotX + rots.x) * Math.cos(thisrotZ + rots.z) + thisx * Math.sin(thisrotX + rots.x) * Math.cos(thisrotZ + rots.z) - thisz * Math.cos(thisrotY + rots.y) * Math.sin(thisrotZ + rots.z) - thisx * Math.cos(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.sin(thisrotZ + rots.z) + thisy * Math.sin(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.sin(thisrotZ + rots.z);
+
+        var rz = thisy * Math.cos(thisrotX + rots.x) * Math.sin(thisrotZ + rots.z) + thisx * Math.sin(thisrotX + rots.x) * Math.sin(thisrotZ + rots.z) + thisz * Math.cos(thisrotY + rots.y) * Math.cos(thisrotZ + rots.z) + thisx * Math.cos(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.cos(thisrotZ + rots.z) - thisy * Math.sin(thisrotX + rots.x) * Math.sin(thisrotY + rots.y) * Math.cos(thisrotZ + rots.z);
+
     }
 
-    requestAnimationFrame(animate);
+    function draw() {
+        go()
+        run()
+        //control the motion blur with the fillstyle opacity.  higher or 1 will give less / no blur,  lower than .5 = superBlur
+        $.fillStyle = "hsla(0, 0%, 0%, .75)";
+        $.fillRect(0, 0, w, h);
 
+
+        for (var i = 0; i < walls.length; i++) {
+
+            pt3d = walls[i].rotate();
+            pt2d = pt3d.loc();
+            $.beginPath();
+            $.fillStyle = pt2d.col;
+            $.arc(pt2d.x, pt2d.y, pt2d.s, 0, Math.PI * 2, true);
+            $.fill();
+            $.closePath();
+        }
+
+
+        for (var i = 0; i < ppos.length; i++) {
+
+            pt3d = ppos[i].rotate();
+            pt2d = pt3d.loc();
+
+            $.beginPath();
+
+            var RGBA = pt2d.col;
+            RGBA = RGBA.replace(/[^\d,]/g, '').split(',');
+            for (var j = 0; j < RGBA.length; j++) {
+                RGBA[j] = +RGBA[j];
+            }
+
+            $.fillStyle = "rgba(" + RGBA[0] + "," + RGBA[1] + "," + RGBA[2] + "," + rng(pt3d.z, 1, -1, 0.4, 1) + ")";
+
+            $.arc(pt2d.x, pt2d.y, pt2d.s, 0, Math.PI * 2, true);
+            $.fill();
+            $.closePath();
+
+        }
+
+    }
+
+    draw()
 }
-
-//start loop!
-animate();
-
-//instructions panel script
-const instructionsPanel = document.querySelector('#instructions');
-const closeButton = document.querySelector('#instructions > i');
-
-closeButton.addEventListener('click', function () {
-    instructionsPanel.classList.add('hidden');
-});
-
-//datgui thangs
-const gui = new dat.GUI();
-gui.add(settings, 'STAR_MASS', 500, 10000).name('star mass').onFinishChange(function () {
-    star.mass = settings.STAR_MASS;
-});
-gui.add(settings, 'P_TRAIL').name('particle trail').onFinishChange(function () {
-    for (let i = 0; i < settings.PARTICLE_NUM; i++) {
-        p[i].trail = settings.P_TRAIL;
-        p[i].trajPoints = new Queue([]);
-    }
-});
-gui.add(settings, 'P_MAX_VELOCITY', 4, 14).name('max velocity').onFinishChange(function () {
-    for (let i = 0; i < settings.PARTICLE_NUM; i++) {
-        p[i].maxV = settings.P_MAX_VELOCITY;
-    }
-});
-gui.add(settings, 'P_MAX_ACC', 0.2, 2).name('max acceleration').onFinishChange(function () {
-    for (let i = 0; i < settings.PARTICLE_NUM; i++) {
-        p[i].maxA = settings.P_MAX_ACC;
-    }
-});
-gui.add(settings, 'PARTICLE_NUM', 1, 250).name('particles number').onFinishChange(function () {
-    p = [];
-    settings.TRAIL_CTXT.clearRect(0, 0, cW, cH);
-    for (let i = 0; i < settings.PARTICLE_NUM; i++) {
-        const planet = new Planet({
-            x: Math.random() * cW,
-            y: Math.random() * cH,
-            radius: 2,
-            mass: settings.PLANET_MASS,
-            trail: settings.P_TRAIL,
-            trailLength: settings.TRAIL_LENGTH,
-            color: settings.COLOR,
-            maxV: settings.P_MAX_VELOCITY,
-            maxA: settings.P_MAX_ACC,
-            tasteTheRainbow: settings.TASTETHERAINBOW,
-            v: new Vector(Math.random() < 0.5 ? -settings.P_MIN_VELOCITY : settings.P_MIN_VELOCITY, 0) });
-
-        p.push(planet);
-    }
-    star.color = settings.COLOR;
-});
-gui.add(settings, 'BOUNDS').name('bounds');
-gui.add(settings, 'TRAIL_LENGTH', 10, 200).name('trail length').onFinishChange(function () {
-    settings.TRAIL_CTXT.clearRect(0, 0, cW, cH);
-    for (let i = 0; i < settings.PARTICLE_NUM; i++) {
-        p[i].trajPoints = new Queue([]);
-        p[i].trailLength = settings.TRAIL_LENGTH;
-    }
-});

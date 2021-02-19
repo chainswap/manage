@@ -22,6 +22,8 @@ import Offer from "../../web3/abi/Offer.json";
 import {MATTER_ADDRESS, OFFERING_ADDRESS, USDT_ADDRESS} from "../../web3/address";
 import {useAmount, useQuota} from "./Hooks";
 import {useBalance} from "../Hooks";
+import MobileBG from "../../assets/image/mobile-bg.jpg";
+import MediaQuery from "react-responsive";
 
 
 const injected = new InjectedConnector({
@@ -67,7 +69,7 @@ export const Investment = () => {
         chainId
     } = context;
 
-    const [modalType, setModalType] = useState()
+    const [modalType, setModalType] = useState('INIT')
     const [approve, setApprove] = useState(0)
     const [contribute, setContribute] = useState(0)
     const [claim, setClaim] = useState(0)
@@ -85,17 +87,17 @@ export const Investment = () => {
 
         if (account) {
             if (volume && new BigNumber(volume).isGreaterThan('0')) {
-                setModalType(MODE_TYPE.CONTRIBUTED)
+                //setModalType(MODE_TYPE.CONTRIBUTED)
             } else {
                 if (quota && new BigNumber(quota).isGreaterThan('0')) {
-                    setModalType(MODE_TYPE.CONTRIBUTION)
+                    //setModalType(MODE_TYPE.CONTRIBUTION)
                 } else {
-                    setModalType(MODE_TYPE.NOT_ELIGIBLE)
+                    //setModalType(MODE_TYPE.NOT_ELIGIBLE)
                 }
             }
 
         } else {
-            setModalType(MODE_TYPE.INIT)
+            //setModalType(MODE_TYPE.INIT)
         }
     }, [account, volume])
 
@@ -243,6 +245,9 @@ export const Investment = () => {
                     <div className="investment__init">
                         {modalType === MODE_TYPE.INIT && (
                             <div className="investment__init__frame">
+                                <MediaQuery query='(max-device-width:750px)'>
+                                    <img src={MobileBG}/>
+                                </MediaQuery>
                                 <div>
                                     <p className="investment__init__title">Investment Portal</p>
                                     <p className="investment__init__sub_title">Welcome to Antimatter family! Please
@@ -253,14 +258,13 @@ export const Investment = () => {
                                     }}>Connect Wallet
                                     </button>
                                 </div>
-                                {/*<video*/}
-                                {/*    muted*/}
-                                {/*    controls={null}*/}
-                                {/*    src={require("../../assets/animation.mp4")}*/}
-                                {/*    autoPlay='autoPlay'*/}
-                                {/*    loop='loop'*/}
-                                {/*    style={{height: 680, marginTop: -180}}*/}
-                                {/*/>*/}
+                                <video
+                                    muted
+                                    controls={null}
+                                    src={require("../../assets/animation.mp4")}
+                                    autoPlay='autoPlay'
+                                    loop='loop'
+                                />
                             </div>
                         )}
 
