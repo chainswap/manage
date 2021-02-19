@@ -97,17 +97,17 @@ export const Investment = () => {
 
         if (account) {
             if (volume && new BigNumber(volume).isGreaterThan('0')) {
-                //setModalType(MODE_TYPE.CONTRIBUTED)
+                setModalType(MODE_TYPE.CONTRIBUTED)
             } else {
                 if (quota && new BigNumber(quota).isGreaterThan('0')) {
-                    //setModalType(MODE_TYPE.CONTRIBUTION)
+                    setModalType(MODE_TYPE.CONTRIBUTION)
                 } else {
-                    //setModalType(MODE_TYPE.NOT_ELIGIBLE)
+                    setModalType(MODE_TYPE.NOT_ELIGIBLE)
                 }
             }
 
         } else {
-            //setModalType(MODE_TYPE.INIT)
+            setModalType(MODE_TYPE.INIT)
         }
     }, [account, volume])
 
