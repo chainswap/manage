@@ -44,7 +44,7 @@ export const Home = () => {
 
                 <MediaQuery query='(max-device-width:1200px)'>
                     <div>
-                    <Lottie  width={400} height={236} options={defaultOptions}/>
+                    <Lottie  width={'100%'} height={236} options={defaultOptions}/>
                     </div>
                 </MediaQuery>
 
@@ -60,7 +60,7 @@ export const Home = () => {
                         <a>App Coming Soon</a>
                     </div>
                     <MediaQuery query='(min-device-width:1200px)'>
-                        <Lottie width={400} height={236} options={defaultOptions}/>
+                        <Lottie width={800} height={470} options={defaultOptions}/>
                     </MediaQuery>
                 </div>
             </div>

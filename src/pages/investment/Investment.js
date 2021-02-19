@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import LogoLineWhite from '../../assets/image/logo-line-white.png'
+import LogoLineWhite from '../../assets/image/logo-line-white.svg'
 import Circle from '../../assets/icon/circle.svg'
 import Success from '../../assets/icon/success.svg'
 import Warning from '../../assets/icon/warning.svg'
@@ -24,7 +24,17 @@ import {useAmount, useQuota} from "./Hooks";
 import {useBalance} from "../Hooks";
 import MobileBG from "../../assets/image/mobile-bg.jpg";
 import MediaQuery from "react-responsive";
+import Animation from '../../assets/animation.json'
+import Lottie from "react-lottie";
 
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: Animation,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 const injected = new InjectedConnector({
     supportedChainIds: [1, 3, 4, 5, 42, 128],
@@ -244,9 +254,11 @@ export const Investment = () => {
 
                     <div className="investment__init">
                         {modalType === MODE_TYPE.INIT && (
-                            <div className="investment__init__frame">
-                                <MediaQuery query='(max-device-width:750px)'>
-                                    <img src={MobileBG}/>
+                            <div className="investment__init__frame init_layout">
+                                <MediaQuery query='(max-device-width:1200px)'>
+                                    <div>
+                                        <Lottie  width={'100%'} height={236} options={defaultOptions}/>
+                                    </div>
                                 </MediaQuery>
                                 <div>
                                     <p className="investment__init__title">Investment Portal</p>
@@ -258,13 +270,9 @@ export const Investment = () => {
                                     }}>Connect Wallet
                                     </button>
                                 </div>
-                                <video
-                                    muted
-                                    controls={null}
-                                    src={require("../../assets/animation.mp4")}
-                                    autoPlay='autoPlay'
-                                    loop='loop'
-                                />
+                                <MediaQuery query='(min-device-width:1200px)'>
+                                    <Lottie style={{marginTop: -86}} width={800} height={470} options={defaultOptions}/>
+                                </MediaQuery>
                             </div>
                         )}
 
