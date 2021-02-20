@@ -156,8 +156,8 @@ export const Home = () => {
                         <div className="home__frame__teams__team team2">
                             <img src={Comp}/>
                             <h3>Robert Hu</h3>
-                            <p style={{marginTop: 20}}>Creator of Helmet.Insure</p>
-                            <p>and UU.Finance</p>
+                            <p style={{marginTop: 20}}>Helmet.Insure Contributor</p>
+                            <p>and creator of UU.Finance</p>
 
                         </div>
                     </div>
