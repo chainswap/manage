@@ -107,7 +107,7 @@ export const Investment = () => {
         console.log('quota', quota)
 
         if (account) {
-            if (volume && new BigNumber(volume).isGreaterThan('0')) {
+            if ( (volume && new BigNumber(volume).isGreaterThan('0')) ) {
                 setModalType(MODE_TYPE.CONTRIBUTED)
             } else {
                 if (quota && new BigNumber(quota).isGreaterThan('0')) {
@@ -373,7 +373,7 @@ export const Investment = () => {
                                 <p style={{marginTop: 20}}>Congratulations!</p>
                                 <p>You successfully join the Antimatter family</p>
                                 <button style={{marginTop: 50}} onClick={() => {
-                                    setModalType(MODE_TYPE.CONTRIBUTED)
+                                    window.location.reload()
                                 }}>Confirm
                                 </button>
                             </div>
@@ -405,7 +405,7 @@ export const Investment = () => {
                                         <span>{quota ? formatAmount(quota, 6) : '--'} USDT</span>
                                     </div>
                                     <div className="investment__contribution__balls__ball">
-                                        <p>MATTER token allocation</p>
+                                        <p>MATTER Token Allocation</p>
                                         <p>{volume ? formatAmount(volume, 18, 2) : '--'} MATTER</p>
                                     </div>
                                 </div>

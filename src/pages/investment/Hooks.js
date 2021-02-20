@@ -19,6 +19,7 @@ export const useQuota = () =>{
             setQuota(quotaRes)
 
             const volumeRes = await contract.methods.getVolume(account).call()
+            console.log('volumeRes', volumeRes)
             setVolume(volumeRes)
 
             const unLockRes = await contract.methods.unlockCapacity(account).call()
