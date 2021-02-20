@@ -294,7 +294,7 @@ export function WETH_ADDRESS(chainId) {
 export function USDT_ADDRESS(chainId) {
     switch (chainId) {
         case 1:
-            return  '0xdac17f958d2ee523a2206206994597c13d831ec7'
+            return  '0xdAC17F958D2ee523a2206206994597C13D831ec7'
         case 3:
             return  '0x17cdbae3ae402da0886f95a7402a181ce465c41c'
         default:
@@ -305,25 +305,21 @@ export function USDT_ADDRESS(chainId) {
 export function MATTER_ADDRESS(chainId) {
     switch (chainId) {
         case 1:
-            return  '0xdac17f958d2ee523a2206206994597c13d831ec7'
+            return  '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
         case 3:
             return  '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
         default:
-            return '0xdac17f958d2ee523a2206206994597c13d831ec7'
+            return '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
     }
 }
 
 export function OFFERING_ADDRESS(chainId) {
     switch (chainId) {
         case 1:
-            return  '0xdac17f958d2ee523a2206206994597c13d831ec7'
+            return  '0x6c9d4B938A119f91e7eEaCd97cB4BEd2b8F5D1af'
         case 3:
             return  '0x6c9d4B938A119f91e7eEaCd97cB4BEd2b8F5D1af'
         default:
-            return '0xdac17f958d2ee523a2206206994597c13d831ec7'
+            return '0x6c9d4B938A119f91e7eEaCd97cB4BEd2b8F5D1af'
     }
 }
-
-export const SEED_ADDRESSES = [
-
-]
