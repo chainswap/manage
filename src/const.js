@@ -19,7 +19,7 @@ export const HANDLE_SHOW_TRANSACTION_MODAL = "HANDLE_SHOW_TRANSACTION_MODAL"
 
 export const REQUESTING_DATA = "--"
 
-export const GALLERY_SELECT_WEB3_CONTEXT = "ANTIMATTER_SELECT_WEB3_CONTEXT"
+export const GALLERY_SELECT_WEB3_CONTEXT = "ANTIMATTER_SELECT_WEB3_CONTEXT_RELEASE"
 
 export const waitingForInit = {show: false, title: 'Waiting' ,content: '', link: null};
 

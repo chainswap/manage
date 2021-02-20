@@ -26,6 +26,7 @@ import MobileBG from "../../assets/image/mobile-bg.jpg";
 import MediaQuery from "react-responsive";
 import Animation from '../../assets/animation.json'
 import Lottie from "react-lottie";
+import {CopyToClipboard} from "react-copy-to-clipboard";
 
 const defaultOptions = {
     loop: true,
@@ -256,7 +257,13 @@ export const Investment = () => {
                                 <p className="wallet__address">
                                     <div className="dot"/>
                                     <p>{formatAddress(account)}</p>
+                                    <CopyToClipboard
+                                        text={account}
+                                        onCopy={() => {
+                                            // alert('copy success!')
+                                        }}>
                                     <Copy/>
+                                    </CopyToClipboard>
                                 </p>
                             </div>
                         )}
