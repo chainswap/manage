@@ -298,7 +298,7 @@ export function USDT_ADDRESS(chainId) {
         case 3:
             return  '0x17cdbae3ae402da0886f95a7402a181ce465c41c'
         default:
-            return '0xdac17f958d2ee523a2206206994597c13d831ec7'
+            return '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     }
 }
 
