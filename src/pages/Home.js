@@ -16,7 +16,7 @@ import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
 import LeftLines from '../assets/image/left-lines.svg'
 import RightLines from '../assets/image/right-lines.svg'
-import MobileBG from '../assets/image/mobile-bg.jpg'
+import Morningstar from '../assets/image/morningstar-white-clear.png'
 
 
 import MediaQuery from 'react-responsive';
@@ -158,7 +158,6 @@ export const Home = () => {
                             <h3>Robert Hu</h3>
                             <p style={{marginTop: 20}}>Helmet.Insure Contributor</p>
                             <p>and creator of UU.Finance</p>
-
                         </div>
                     </div>
                 </div>
@@ -186,6 +185,8 @@ export const Home = () => {
                         <img src={Bottom2}/>
                         <div className="home__frame__bottom__divider"/>
                         <img src={Bottom3}/>
+                        <div className="home__frame__bottom__divider"/>
+                        <img src={Morningstar}/>
                     </div>
 
                     <div className="home__frame__bottom__footer">

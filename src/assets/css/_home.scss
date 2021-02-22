@@ -299,13 +299,18 @@
         display: flex;
         gap: 122px;
         margin-top: 106px;
+        align-items: center;
+
+        img {
+          width: 108px;
+        }
 
         @media #{$smWidth $xsWidth} {
           flex-direction: column;
           gap: 0;
           margin-top: 0;
           img {
-            width: 108px;
+            height: 108px;
             margin-top: 53px;
           }
         }
