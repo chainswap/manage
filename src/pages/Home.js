@@ -16,7 +16,6 @@ import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
 import LeftLines from '../assets/image/left-lines.svg'
 import RightLines from '../assets/image/right-lines.svg'
-import Morningstar from '../assets/image/morningstar-white-clear.png'
 
 
 import MediaQuery from 'react-responsive';
