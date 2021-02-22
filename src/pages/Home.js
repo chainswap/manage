@@ -185,8 +185,6 @@ export const Home = () => {
                         <img src={Bottom2}/>
                         <div className="home__frame__bottom__divider"/>
                         <img src={Bottom3}/>
-                        <div className="home__frame__bottom__divider"/>
-                        <img src={Morningstar}/>
                     </div>
 
                     <div className="home__frame__bottom__footer">
