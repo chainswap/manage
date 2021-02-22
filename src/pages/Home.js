@@ -56,7 +56,11 @@ export const Home = () => {
                             perpetual derivatives</p>
                         <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
 
-                        <a>App Coming Soon</a>
+                        <a style={{background: '#fff', color: '#000'}} href="https://docsend.com/view/zv9wjb23xqbhu2w7" target="_blank">Summary</a>
+
+                        <a className="coming">App Coming Soon</a>
+
+                        <a href="https://docsend.com/view/zv9wjb23xqbhu2w7" target="_blank" className="home__frame__page__content__summary">Summary</a>
                     </div>
                     <MediaQuery query='(min-device-width:1200px)'>
                         <Lottie width={800} height={470} options={defaultOptions}/>
