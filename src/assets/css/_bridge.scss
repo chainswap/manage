@@ -145,6 +145,10 @@
    width: 100%;
   }
 
+  @media #{$mdHeight} {
+    margin-top: 64px;
+  }
+
   .inputs {
     position: relative;
     margin: -20px;
