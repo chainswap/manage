@@ -389,7 +389,7 @@ export const Bridge = () => {
                     </div>
 
                     {!active ? (
-                        <button onClick={() => {
+                        <button style={{marginTop: 18}} onClick={() => {
                             setModalType(MODE_TYPE.WALLETS)
                         }}>Connect Wallet</button>
                     ) : (
