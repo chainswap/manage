@@ -28,25 +28,23 @@ export const useGLFBalance = () =>{
 }
 
 export const useBalance = (address) =>{
-    const {account, active, library} = useActiveWeb3React()
+    const {account, active, library, chainId} = useActiveWeb3React()
     const [ balance, setBalance] = useState()
 
     useEffect(()=>{
         if(active){
             try{
                 const contract = getContract(library, ERC20.abi, address)
-                console.log('token totalSupply:',address)
                 contract.methods.balanceOf(account).call().then(res =>{
-                    console.log('token totalSupply:',res)
+                    console.log('token balanceOf:',res)
                     setBalance(res)
                 })
             }catch (e) {
                 console.log('load token balance error:',e)
 
             }
-
         }
-    },[active])
+    },[active, chainId])
 
     return balance
 }

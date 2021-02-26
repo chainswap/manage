@@ -308,6 +308,8 @@ export function MATTER_ADDRESS(chainId) {
             return  '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
         case 3:
             return  '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
+        case 4:
+            return  '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
         default:
             return '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
     }
@@ -321,5 +323,17 @@ export function OFFERING_ADDRESS(chainId) {
             return  '0x6c9d4B938A119f91e7eEaCd97cB4BEd2b8F5D1af'
         default:
             return '0x6c9d4B938A119f91e7eEaCd97cB4BEd2b8F5D1af'
+    }
+}
+
+
+export function MAPPED_ADDRESS(chainId) {
+    switch (chainId) {
+        case 1:
+            return  '0x994013d05302eef18372b749088F1513f3D27E23'
+        case 3:
+            return  '0x994013d05302eef18372b749088F1513f3D27E23'
+        default:
+            return '0x994013d05302eef18372b749088F1513f3D27E23'
     }
 }

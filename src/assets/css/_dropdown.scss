@@ -1,0 +1,133 @@
+$nav_height: 60px;
+$nav_items_count: 5;
+
+@mixin octicon($content) {
+  content: $content;
+  font: normal normal normal 24px/1 octicons;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin generate-active-menu($menu_count) {
+  @while $menu_count > 0 {
+    &.active-#{$menu_count} {
+      ul {
+        transform: translateY(-$nav_height * $menu_count);
+      }
+    }
+    $menu_count: $menu_count - 1;
+  }
+}
+
+
+*, *::after, *::before {
+  box-sizing: inherit;
+}
+
+nav {
+  position: absolute;
+  width: 300px;
+  max-height: $nav_height;
+  overflow: hidden;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-sizing: border-box;
+  border-radius: 14px;
+
+  &[class*=active-]:focus,
+  &[class*=active-]:hover,
+  &.focused[class*=active-] {
+    outline: none;
+    max-height: $nav_height * $nav_items_count;
+
+    ul {
+      transform: translateY(0);
+    }
+
+    &::after {
+      transform: rotateX(180deg);
+    }
+  }
+
+  &::after {
+    position: absolute !important;
+    z-index: 0;
+    top: 0;
+    right: 20px;
+    color: white;
+    @include octicon(url('../../assets/icon/down.svg'));
+    line-height: $nav_height - 5px;
+    cursor: pointer;
+    transform: rotateX(0);
+    transition: all 0.2s ease-in-out;
+  }
+
+
+  @include generate-active-menu(5);
+
+  ul {
+    transform: translateY(0);
+    transition: all 0.2s ease-in-out;
+    background-color: #000000;
+  }
+
+  li > a {
+    z-index: 9!important;
+    position: relative;
+    display: inline-block!important;
+    width: 100%;
+    height: 100%;
+    border: none!important;
+    margin-top: 0!important;
+    text-decoration: none;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: $nav_height;
+    background: rgba(255, 255, 255, 0.12);
+    transition: all 0.2s ease-in-out;
+    padding: 0!important;
+    border-radius: 0!important;
+    &.selected {
+      font-weight: 700;
+    }
+
+    .icon {
+      height: 32px;
+      position: absolute;
+      left: 58px;
+      margin-top: 14px;
+    }
+
+    &:focus,
+    &:hover {
+      outline: none;
+      background: rgba(255, 255, 255, 0.05)!important;
+      opacity: 1!important;
+    }
+
+    &:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      opacity: 0.2!important;
+    }
+  }
+
+  @media #{$smWidth $xsWidth} {
+    position: relative;
+  }
+
+  .disabled {
+    pointer-events: none;
+    opacity: 0.2;
+  }
+}

@@ -364,3 +364,204 @@ canvas{
     height:100vh;
 }
 
+
+.default_modal {
+    width: 655px;
+    padding-top: 52px;
+    background: linear-gradient(283.31deg, rgba(255, 255, 255, 0.18) -2.53%, rgba(255, 255, 255, 0.17) 18.66%, rgba(255, 255, 255, 0) 98.68%);
+    border-radius: 42px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 50px;
+    position: relative;
+
+    button {
+        width: 240px;
+        height: 60px;
+        border: 1px solid #FFFFFF;
+        ont-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        outline: none;
+        border-radius: 100px;
+        color: #ffffff;
+        background-color: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @media #{$smWidth $xsWidth} {
+            width: 100%;
+        }
+
+        &:hover {
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        &:disabled {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        img {
+            height: 20px;
+            margin-right: 20px;
+        }
+
+    }
+
+
+    @media #{$smWidth $xsWidth} {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        padding: 48px 24px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    p {
+        max-width: 405px;
+        text-align: center;
+        line-height: 148.69%;
+        font-size: 16px;
+    }
+
+    &__icon {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 20px;
+    }
+
+    &__title {
+        margin-bottom: 50px;
+        font-size: 20px!important;
+    }
+
+    &__loading {
+        width: 60px;
+        height: 60px;
+        -webkit-animation: loading 3s linear infinite;
+    }
+}
+
+.modal-wallets {
+    @media #{$smWidth $xsWidth} {
+        justify-content: flex-start;
+        padding: 48px 0;
+    }
+
+    button {
+        width: -webkit-fill-available;
+        margin: 0 24px;
+    }
+
+    button:hover {
+        opacity: 0.6;
+    }
+}
+
+.modal-switch {
+    @media #{$smWidth $xsWidth} {
+        padding: 0;
+
+    }
+}
+
+.modal_profile {
+
+    @media #{$smWidth $xsWidth} {
+        justify-content: flex-start;
+        padding: 52px 0;
+        .btn_group {
+           margin-top: auto!important;
+            width: -webkit-fill-available;
+            margin: 0 60px;
+
+        }
+    }
+
+
+    &__address {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 24px;
+        line-height: 148.69%;
+        display: flex;
+        align-items: center;
+        margin-left: -14px;
+        margin-right: -14px;
+        & > * {
+            margin-left: 14px;
+            margin-right: 14px;
+        }
+
+        p{
+            font-size: 24px;
+        }
+
+        .dot {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #FFFFFF 4.17%, rgba(255, 255, 255, 0) 75%);
+            border: 0.6px solid #FFFFFF;
+            box-sizing: border-box;
+            border-radius: 14px;
+            margin-right: 6px;
+        }
+
+        @media #{$smWidth $xsWidth} {
+           margin-top: 100px;
+        }
+    }
+
+    &__copy{
+        font-family: IBM Plex Mono;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        margin-left: -6px;
+        margin-right: -6px;
+        margin-top: 12px;
+
+        & > * {
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+        svg {
+            width: 16px;
+            cursor: pointer;
+
+            &:hover {
+                g {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+}
+
+.close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    left: auto;
+    cursor: pointer;
+}
+
+
