@@ -350,7 +350,7 @@ export const Bridge = () => {
                                            const value = e.target.value
                                            setInputAccount(value)
                                        }} placeholder='Enter address to swap'/>
-                                <p className="error">{!isAddress(inputAccount) ? 'invalid address' : ''}</p>
+                                <p className="error">{!isAddress(inputAccount) ? 'Invalid address' : ''}</p>
                                 {inputAccount && (
                                     <button onClick={() => {
                                         setInputError(null)
@@ -376,7 +376,7 @@ export const Bridge = () => {
                                        setInputError(null)
                                        if (!balance || new BigNumber(numToWei(value)).isGreaterThan(balance)) {
                                            console.log('balance---->', numToWei(value))
-                                           setInputError('you do not have enough MATTER')
+                                           setInputError('You do not have enough MATTER')
                                        }
                                    }} placeholder='Enter amount to swap'/>
                             <p className="error">{inputError}</p>
@@ -393,11 +393,22 @@ export const Bridge = () => {
                             setModalType(MODE_TYPE.WALLETS)
                         }}>Connect Wallet</button>
                     ) : (
-                        <button  style={{marginTop: 18}} disabled={!amount || inputError || !inputAccount || !isAddress(inputAccount)}
-                                onClick={() => {
-                                    setModalType(MODE_TYPE.SWITCH_CHAIN)
-                                }}>Stake tokens in ETH network</button>
+                        <button  style={{marginTop: 18}}
+                                 onClick={() => {
+                                     setModalType(MODE_TYPE.SWITCH_CHAIN)
+                                 }}>Stake tokens in ETH network</button>
                     )}
+
+                    {/*{!active ? (*/}
+                    {/*    <button style={{marginTop: 18}} onClick={() => {*/}
+                    {/*        setModalType(MODE_TYPE.WALLETS)*/}
+                    {/*    }}>Connect Wallet</button>*/}
+                    {/*) : (*/}
+                    {/*    <button  style={{marginTop: 18}} disabled={!amount || inputError || !inputAccount || !isAddress(inputAccount)}*/}
+                    {/*            onClick={() => {*/}
+                    {/*                setModalType(MODE_TYPE.SWITCH_CHAIN)*/}
+                    {/*            }}>Stake tokens in ETH network</button>*/}
+                    {/*)}*/}
                 </div>
             )}
 
