@@ -342,31 +342,33 @@ export const Bridge = () => {
                             </div>
                         </div>
 
-                        <div className="bridge__input_frame">
-                            <p>Destination Chain Wallet Address</p>
-                            <input value={inputAccount}
-                                   onChange={(e) => {
-                                       const value = e.target.value
-                                       setInputAccount(value)
-                                   }} placeholder='Enter address to swap'/>
-                            <p className="error">{!isAddress(inputAccount) ? 'invalid address' : ''}</p>
-                            {inputAccount && (
-                                <button onClick={() => {
-                                    setInputError(null)
-                                    setInputAccount('')
-                                }} className="max">Clear
-                                </button>
-                            )}
-                        </div>
+                        {active && (
+                            <div className="bridge__input_frame">
+                                <p>Destination Chain Wallet Address</p>
+                                <input value={inputAccount}
+                                       onChange={(e) => {
+                                           const value = e.target.value
+                                           setInputAccount(value)
+                                       }} placeholder='Enter address to swap'/>
+                                <p className="error">{!isAddress(inputAccount) ? 'invalid address' : ''}</p>
+                                {inputAccount && (
+                                    <button onClick={() => {
+                                        setInputError(null)
+                                        setInputAccount('')
+                                    }} className="max">Clear
+                                    </button>
+                                )}
+                            </div>
+                        )}
 
                         <div className="bridge__input_frame">
                             <p>Asset</p>
-                            <input disabled style={{paddingLeft: 64}} value={'MATTER'}/>
+                            <input disabled style={{paddingLeft: 56}} value={'MATTER'}/>
                             <img src={Matter}/>
                         </div>
 
                         <div className="bridge__input_frame">
-                            <p>Amount <span>{`Your balance: ${formatAmount(balance, 18, 18)} MATTER`}</span></p>
+                            <p>Amount <span>{`Your balance: ${formatAmount(balance, 18, 6)} MATTER`}</span></p>
                             <input value={amount}
                                    onChange={(e) => {
                                        const value = e.target.value
@@ -391,7 +393,7 @@ export const Bridge = () => {
                             setModalType(MODE_TYPE.WALLETS)
                         }}>Connect Wallet</button>
                     ) : (
-                        <button disabled={!amount || inputError || !inputAccount || !isAddress(inputAccount)}
+                        <button  style={{marginTop: 18}} disabled={!amount || inputError || !inputAccount || !isAddress(inputAccount)}
                                 onClick={() => {
                                     setModalType(MODE_TYPE.SWITCH_CHAIN)
                                 }}>Stake tokens in ETH network</button>
@@ -401,7 +403,7 @@ export const Bridge = () => {
 
             {modalType === MODE_TYPE.SWITCH_CHAIN && (
                 <div className="default_modal modal-switch">
-                    <p className="default_modal__title">Please switch your wallet network to BSC to complete token
+                    <p className="default_modal__title" style={{width: 332}}>Please switch your wallet network to BSC to complete token
                         swap</p>
                     <div className="extra">
                         <p>From:</p>
@@ -412,7 +414,12 @@ export const Bridge = () => {
                         <img src={toChain.icon}/>
                         <h5>{toChain && toChain.title}</h5>
                     </div>
-                    <p>To learn more about how to add network to wallet, click here</p>
+                    <div className="chain_tip">
+                        <p>Destination Chain Address:</p>
+                        <p>{formatAddress(account)}</p>
+                    </div>
+                    <div className="line"/>
+                    <p>To learn more about how to add network to wallet, <a>click here</a></p>
                     <button onClick={() => {
                         setModalType(MODE_TYPE.CLAIM)
                     }} className="switch_btn">{`Switch wallet network to ${toChain.title}`}</button>
@@ -421,7 +428,7 @@ export const Bridge = () => {
 
             {modalType === MODE_TYPE.CLAIM && (
                 <div className="default_modal">
-                    <p className="default_modal__title">Claim tokens</p>
+                    <p className="default_modal__title" style={{marginBottom: 20}}>Claim tokens</p>
                     <p className="claim__amount">500 MATTER</p>
                     <div className="extra">
                         <p>From:</p>
@@ -432,8 +439,12 @@ export const Bridge = () => {
                         <img src={ETH}/>
                         <h5>BSC</h5>
                     </div>
+                    <div className="chain_tip">
+                        <p>Destination Chain Address:</p>
+                        <p>{formatAddress(account)}</p>
+                    </div>
                     <button onClick={() => {
-
+                        setModalType(MODE_TYPE.CLAIMED)
                     }} className="switch_btn">Claim Tokens on BSC
                     </button>
                 </div>
@@ -442,13 +453,13 @@ export const Bridge = () => {
             {modalType === MODE_TYPE.CLAIMED && (
                 <div className="default_modal claimed_mode">
                     <img src={Success}/>
-                    <p style={{marginTop: 19}}>You have successfully claimed tokens to BSC</p>
+                    <p style={{marginTop: 19, fontSize: 18}}>You have successfully claimed tokens to BSC</p>
                     <a>View on Etherscan</a>
                     <div className="add_token">
                         <p>Add MATTER to Metamask</p>
                         <img src={metamask}/>
                     </div>
-                    <button style={{marginTop: 50}} onClick={() => {
+                    <button style={{marginTop: 32}} onClick={() => {
 
                     }}>Close
                     </button>

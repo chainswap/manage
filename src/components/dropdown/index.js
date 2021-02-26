@@ -7,8 +7,8 @@ import Binnace_logo from '../../assets/icon/binance.svg'
 import Huobi_logo from '../../assets/icon/huobi.svg'
 export const CHAIN = [
     {id: 1, title: 'ETH', chainId: 1 ,logo: <ETH className="icon"/>, icon: ETH_logo},
-    {id: 2, title: 'Binance',chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
-    {id: 3, title: 'Huobi',chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
+    {id: 2, title: 'BSC',chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
+    {id: 3, title: 'HECO',chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
     {id: 4, title: 'Ropsten',chainId: 56, logo: <Binance className="icon"/>, icon: ETH_logo},
     {id: 5, title: 'Rinkeby',chainId: 56, logo: <Binance className="icon"/>, icon: ETH_logo},
 ]

@@ -129,7 +129,7 @@
 }
 
 .bridge {
-  width: 800px;
+  width: 480px;
   background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-sizing: border-box;
@@ -139,7 +139,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 52px 50px 52px;
+  padding: 12px 32px 28px 32px;
 
   @media #{$smWidth $xsWidth} {
    width: 100%;
@@ -147,9 +147,9 @@
 
   .inputs {
     position: relative;
-    margin: -36px;
+    margin: -20px;
     & > * {
-      margin: 36px;
+      margin: 20px;
     }
   }
 
@@ -157,17 +157,18 @@
     font-family: Futura PT;
     font-style: normal;
     font-weight: 500;
-    font-size: 32px;
-    margin-bottom: 44px;
+    font-size: 20px;
+    margin-bottom: 18px;
     line-height: 148.69%;
+    letter-spacing: 0.01em;
   }
 
   &__dropdown_frame{
     display: flex;
 
     img{
-      padding: 0 36px;
-      padding-top: 30px;
+      padding: 0 20px;
+      padding-top: 8px;
     }
 
     @media #{$smWidth $xsWidth} {
@@ -187,15 +188,16 @@
 
 
     .dropdown {
-      width: 300px;
-      height: 104px;
+      width: 178px;
+      height: 80px;
 
       span{
-        ont-family: Roboto;
+        font-family: Roboto-Regular;
         font-style: normal;
         font-weight: normal;
-        font-size: 16px;
+        font-size: 13px;
         line-height: 148.69%;
+        color: rgba(255, 255, 255, 0.6)
       }
       div{
         height: 8px;
@@ -211,16 +213,16 @@
   &__input_frame{
     display: flex;
     flex-direction: column;
-    margin-top: -8px!important;
+    margin-top: -4px!important;
     & > * {
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
     p{
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
-      font-size: 16px;
+      font-size: 13px;
       color: rgba(255, 255, 255, 0.6);
       display: flex;
       justify-content: space-between;
@@ -229,13 +231,16 @@
     }
 
     input {
-      height: 60px;
+      height: 48px;
       background: rgba(255, 255, 255, 0.12);
       border-radius: 14px;
       outline: none;
       border: 1px solid transparent;
       color: #ffffff;
       padding: 20px;
+      padding-right: 100px;
+      font-size: 16px;
+      font-family: Roboto-Regular;
 
       &:hover, focus{
         border-color: rgba(255, 255, 255, 0.6);
@@ -246,8 +251,10 @@
     }
 
     img{
+      width: 24px;
+      height: 24px;
       position: absolute;
-      margin-top: 52px;
+      margin-top: 37px;
       margin-left: 20px;
       z-index: 0;
     }
@@ -259,16 +266,16 @@
 
     .max {
       position: absolute;
-      margin-top: 50px;
-      margin-left: 596px;
-      width: 80px;
-      height: 36px;
+      margin-top: 37px;
+      margin-left: 338px;
+      width: 64px;
+      height: 28px;
       font-family: Roboto;
       font-style: normal;
       font-weight: 500;
-      font-size: 16px;
+      font-size: 14px;
       text-align: center;
-      line-height: 36px;
+      line-height: 26px;
       padding: 0;
       background-color: transparent;
     }
@@ -276,7 +283,7 @@
 
   button{
     width: 100%;
-    height: 60px;
+    height: 48px;
     display: flex;
     border: 1px solid #FFFFFF;
     box-sizing: border-box;
@@ -285,10 +292,10 @@
     font-family: Roboto;
     font-style: normal;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     color: #fff;
     border-radius: 100px;
-    padding: 18px;
+    line-height: 48px;
     justify-content: center;
     outline: none;
     cursor: pointer;
@@ -309,13 +316,13 @@
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
-  width: 400px;
-  height: 60px;
+  width: 352px;
+  height: 48px;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 17px;
   display: flex;
   align-items: center;
   padding: 0 40px;
@@ -326,6 +333,7 @@
 
   img{
     margin-right: 12px;
+    height: 28px;
   }
 
   .arrow{
@@ -334,7 +342,7 @@
   }
 
   h5 {
-    font-size: 18px;
+    font-size: 16px;
     font-family: Roboto-Regular;
     color: #ffffff;
   }
@@ -347,9 +355,9 @@
 }
 
 .switch_btn {
-  width: 480px!important;
-  height: 60px;
-  margin-top: 50px;
+  width: 416px!important;
+  height: 48px!important;
+  margin-top: 32px;
   &:hover{
     opacity: 0.6;
   }
@@ -357,22 +365,28 @@
 
 .claim {
   &__amount {
-    font-family: Futura PT;
+    font-family: Futura-PT;
     font-style: normal;
     font-weight: 500;
-    font-size: 32px!important;
+    font-size: 28px!important;
     line-height: 148.69%;
-    margin-bottom: 36px;
+    margin-bottom: 24px;
   }
 }
 
 .claimed_mode {
+
+  >img{
+    width: 32px;
+    height: 32px;
+  }
+
   a{
     margin-top: 32px;
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 148.69%;
     text-align: center;
     text-decoration-line: underline;
@@ -380,9 +394,9 @@
   }
 
   .add_token {
-    width: 266px;
+    width: 210px;
     height: 36px;
-    font-family: Roboto;
+    font-family: Roboto-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
