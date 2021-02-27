@@ -1,5 +1,5 @@
 $nav_height: 48px;
-$nav_items_count: 5;
+$nav_items_count: 3;
 
 @mixin octicon($content) {
   content: $content;
@@ -71,7 +71,7 @@ nav {
   }
 
 
-  @include generate-active-menu(5);
+  @include generate-active-menu(3);
 
   ul {
     transform: translateY(0);
