@@ -235,6 +235,31 @@
       width: 178px;
       height: 80px;
 
+      .default_drop {
+        width: 176px;
+        height: 48px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-sizing: border-box;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+
+
+        img{
+          width: 18px;
+          margin-left: 20px;
+          padding: 0;
+        }
+
+        p{
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          margin-left: 20px;
+        }
+      }
+
       span {
         font-family: Roboto-Regular;
         font-style: normal;
@@ -255,6 +280,7 @@
 
     .dropdown:hover {
       z-index: 9;
+
     }
 
   }

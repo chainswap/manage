@@ -124,24 +124,16 @@ export const Bridge = () => {
                     if (result.data) {
                         if (result.data.length !== 0) {
                             setClaimData(result.data[0])
-                            if (txStatus === 'ANTIMATTER_CLAIMING') {
-                                setModalType(MODE_TYPE.INIT)
-                            } else {
                                 if (result.data[0].chainId === chainId) {
                                     setModalType(MODE_TYPE.CLAIM)
                                 } else {
                                     console.log('chain result--->', result.data, chainId)
                                     setModalType(MODE_TYPE.SWITCH_CHAIN)
                                 }
-                            }
+
                         } else {
-                            if (txStatus === 'ANTIMATTER_STAKING') {
-                                setModalType(MODE_TYPE.WAITING)
-                            }else if(txStatus === 'ANTIMATTER_CLAIMING') {
-                                setModalType(MODE_TYPE.WAITING)
-                            }else {
                                 setModalType(MODE_TYPE.INIT)
-                            }
+
                         }
                     }
                 }).catch((e) => {
@@ -418,11 +410,15 @@ export const Bridge = () => {
                                     <div className="dropdown">
                                         <span>From</span>
                                         <div/>
-                                        <DropDown disabled
-                                                  index={0} onSelect={(e) => {
-                                            setFromChain(e)
-                                            setFromChainId(e.id)
-                                        }}/>
+                                        <div className="default_drop">
+                                            <img src={chainId && loadChainInfo(chainId).icon}/>
+                                            <p>{chainId && loadChainInfo(chainId).title}</p>
+                                        </div>
+                                        {/*<DropDown disabled*/}
+                                        {/*          index={0} onSelect={(e) => {*/}
+                                        {/*    setFromChain(e)*/}
+                                        {/*    setFromChainId(e.id)*/}
+                                        {/*}}/>*/}
                                     </div>
                                     <img src={Exchange}/>
                                     <div className="dropdown">
