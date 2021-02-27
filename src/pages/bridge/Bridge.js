@@ -175,7 +175,7 @@ export const Bridge = () => {
 
     const onStake = async (func) => {
         console.log('func', func)
-        const contract = getContract(library, chainId === 3 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
+        const contract = getContract(library, chainId === 1 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
         setStake(1)
         try {
             try {
@@ -226,7 +226,7 @@ export const Bridge = () => {
         console.log('claim info', claimData.id, func, chainId, MATTER_ADDRESS(chainId))
 
         setClaim(1)
-        const contract = getContract(library, chainId === 3 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
+        const contract = getContract(library, chainId === 1 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
         setClaim(1)
         try {
             const res = await fetch(`https://api.antimatter.finance/web/getSignDataSyn?stakeBurnId=${claimData.id}`)
