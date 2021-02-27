@@ -79,7 +79,7 @@ export const Bridge = () => {
 
     const balance = useBalance(MATTER_ADDRESS(chainId))
 
-    const [modalType, setModalType] = useState(MODE_TYPE.CLAIMED)
+    const [modalType, setModalType] = useState(MODE_TYPE.INIT)
 
     const [claimData, setClaimData] = useState()
     const [claimList, setClaimList] = useState([])
