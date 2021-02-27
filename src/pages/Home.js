@@ -21,7 +21,7 @@ import Flower from '../assets/icon/flower.svg'
 import MediaQuery from 'react-responsive';
 import Animation from '../assets/animation.json'
 import Lottie from "react-lottie";
-
+import {useHistory} from 'react-router-dom'
 const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -32,7 +32,7 @@ const defaultOptions = {
 };
 
 export const Home = () => {
-
+    const history = useHistory()
     return (
         <div className="home">
             <div className="home__top">
@@ -41,13 +41,15 @@ export const Home = () => {
                     <p className="content_main">MATTER is now on Uniswap. </p>
                 </div>
                 <p className="content_address">Token Contract address: 0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F</p>
-                <button>Exchange now</button>
+                <a href="https://app.uniswap.org/#/swap?outputCurrency=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F" target="_blank">Exchange now</a>
             </div>
             <div className="home__frame">
                 <header>
                     <img src={LogoLineWhite} alt=""/>
                     <div className="bridge_btn">
-                    <a>Cross Chain Bridge</a>
+                    <a onClick={()=>{
+                        history.push('/bridge')
+                    }}>Cross Chain Bridge</a>
                     </div>
                     <a>App Coming Soon</a>
                 </header>
