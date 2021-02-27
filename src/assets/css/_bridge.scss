@@ -156,6 +156,7 @@
   align-items: center;
   justify-content: center;
   padding: 12px 32px 28px 32px;
+  position: relative;
 
   button {
     margin-top: 18px !important;
@@ -191,6 +192,12 @@
         margin: 24px 0;
       }
     }
+  }
+
+  &__claim_text {
+    color: #ffffff;
+    text-decoration: underline;
+    margin-top: 24px;
   }
 
   &__title {
@@ -411,6 +418,7 @@
   display: flex;
   align-items: center;
   padding: 0 40px;
+  cursor: pointer;
 
   p {
     margin-right: 20px;
@@ -437,6 +445,10 @@
   }
 
 
+  .amount {
+    flex: 1;
+    text-align: center;
+  }
 }
 
 
@@ -560,6 +572,11 @@
 
 
 }
+
+.claim_modal {
+  padding-top: 64px;
+}
+
 
 
 .switch_btn {

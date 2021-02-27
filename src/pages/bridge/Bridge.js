@@ -43,6 +43,7 @@ const MODE_TYPE = {
     WAITING: "WAITING",
     CLAIM: "CLAIM",
     CLAIMED: "CLAIMED",
+    CLAIM_LIST: "CLAIM_LIST",
 }
 
 const injected = new InjectedConnector({
@@ -68,18 +69,20 @@ export const Bridge = () => {
     const {
         connector,
         library,
-        account,
         activate,
         deactivate,
         active,
         chainId
     } = useWeb3React();
 
+    const account = '0xee4c1adb2fe4b16db629942c584e8a8da7a45d72'
+
     const balance = useBalance(MATTER_ADDRESS(chainId))
 
-    const [modalType, setModalType] = useState(MODE_TYPE.INIT)
+    const [modalType, setModalType] = useState(MODE_TYPE.CLAIMED)
 
     const [claimData, setClaimData] = useState()
+    const [claimList, setClaimList] = useState([])
 
     const [amount, setAmount] = useState()
     const [inputAccount, setInputAccount] = useState()
@@ -119,22 +122,8 @@ export const Bridge = () => {
                         fetchData()
                     }, 2000)
                     console.log('result--->', result.data)
-                    const txStatus = window.localStorage.getItem('TX_STATUS')
-                    console.log('TX_STATUS', txStatus)
                     if (result.data) {
-                        if (result.data.length !== 0) {
-                            setClaimData(result.data[0])
-                                if (result.data[0].chainId === chainId) {
-                                    setModalType(MODE_TYPE.CLAIM)
-                                } else {
-                                    console.log('chain result--->', result.data, chainId)
-                                    setModalType(MODE_TYPE.SWITCH_CHAIN)
-                                }
-
-                        } else {
-                                setModalType(MODE_TYPE.INIT)
-
-                        }
+                        setClaimList(result.data)
                     }
                 }).catch((e) => {
                     console.log('load err', e)
@@ -151,6 +140,16 @@ export const Bridge = () => {
             fetchData()
         }
     }, [account, chainId])
+
+    useEffect(() => {
+        if (claimData) {
+            if(claimData.chainId === chainId){
+                setModalType(MODE_TYPE.CLAIM)
+            }else {
+                setModalType(MODE_TYPE.SWITCH_CHAIN)
+            }
+        }
+    }, [claimData, chainId])
 
 
     useEffect(() => {
@@ -234,7 +233,6 @@ export const Bridge = () => {
                 .on('receipt', (_, receipt) => {
                     setClaim(0)
                     setModalType(MODE_TYPE.CLAIMED)
-                    window.localStorage.setItem('TX_STATUS', '')
                 })
                 .on('error', (err, receipt) => {
                     setStake(0)
@@ -492,6 +490,10 @@ export const Bridge = () => {
                                             }
                                         }}>{stake === 1 ? 'Staking' : `Stake tokens in ${loadChainInfo(chainId).title} network`}</button>
                             )}
+
+                            <a className="bridge__claim_text" onClick={()=>{
+                                setModalType(MODE_TYPE.CLAIM_LIST)
+                            }}>Claim List</a>
                         </div>
                     )}
 
@@ -518,12 +520,15 @@ export const Bridge = () => {
                             <p>To learn more about how to add network to wallet, <a>click here</a></p>
                             <button disabled onClick={() => {
                                 //setModalType(MODE_TYPE.CLAIM)
-                            }} className="switch_btn">{`Switch wallet network to ${toChain.title}`}</button>
+                            }} className="switch_btn">{`Switch wallet network  ${toChain.title} and refresh your page`}</button>
                         </div>
                     )}
 
                     {modalType === MODE_TYPE.CLAIM && (
                         <div className="default_modal claim_modal">
+                            <Close className="close-btn" onClick={() => {
+                                setModalType(MODE_TYPE.INIT)
+                            }}/>
                             <p className="default_modal__title" style={{marginBottom: 20}}>Claim tokens</p>
                             <p className="claim__amount">{formatAmount(claimData.volume)} MATTER</p>
                             <div className="extra">
@@ -544,6 +549,32 @@ export const Bridge = () => {
                             }}
                                     className="switch_btn">{claim === 1 ? 'Claiming' : `Claim Tokens on ${claimData && loadChainInfo(claimData.chainId).title}`}
                             </button>
+                        </div>
+                    )}
+
+                    {modalType === MODE_TYPE.CLAIM_LIST && (
+                        <div className="default_modal claim_modal">
+                            <Close className="close-btn" onClick={() => {
+                                setModalType(MODE_TYPE.INIT)
+                            }}/>
+                            <p className="default_modal__title" style={{marginBottom: 24}}>Claim List</p>
+
+                            {claimList.map(item =>{
+                                return (
+                                    <div className="extra" onClick={()=>{
+                                        setClaimData(item)
+                                        //setModalType(MODE_TYPE.CLAIM)
+                                    }}>
+                                        <p>From:</p>
+                                        <img src={loadChainInfo(item.fromChainId).icon}/>
+                                        <h5>{loadChainInfo(item.fromChainId).title}</h5>
+                                        <h5 className="amount">{formatAmount(item.volume)}</h5>
+                                        <p>To:</p>
+                                        <img src={loadChainInfo(item.chainId).icon}/>
+                                        <h5>{loadChainInfo(item.chainId).title}</h5>
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
 
