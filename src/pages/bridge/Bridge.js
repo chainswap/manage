@@ -92,10 +92,10 @@ export const Bridge = () => {
     const [loading, setLoading] = useState(false)
     const [inputError, setInputError] = useState()
 
-    const [fromChainId, setFromChainId] = useState(1)
+    const [claimingList, setClaimingList] = useState([])
     const [toChainId, setToChainId] = useState(2)
     const [fromChain, setFromChain] = useState(CHAIN[0])
-    const [toChain, setToChain] = useState(CHAIN[1])
+    const [toChain, setToChain] = useState(CHAIN[0])
 
     const loadChainInfo = (id) => {
         switch (id) {
@@ -165,7 +165,7 @@ export const Bridge = () => {
     }, [chainId])
 
     const onStake = async (func) => {
-        console.log('func', func)
+        console.log('func', toChain.chainId)
         const contract = getContract(library, chainId === 1 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
         setStake(1)
         try {
