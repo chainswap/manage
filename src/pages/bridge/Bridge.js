@@ -199,8 +199,7 @@ export const Bridge = () => {
 
                 })
                 .on('receipt', (_, receipt) => {
-                    setModalType(MODE_TYPE.WAITING)
-                    window.localStorage.setItem('TX_STATUS', 'ANTIMATTER_STAKING')
+                    setModalType(MODE_TYPE.CLAIM)
                 })
                 .on('error', (err, receipt) => {
                     setStake(0)
