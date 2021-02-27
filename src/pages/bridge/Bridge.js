@@ -26,6 +26,7 @@ import MainMatter from "../../web3/abi/MainMatter.json";
 import {isAddress} from "../../utils/address";
 import {ReactComponent as Close} from '../../assets/icon/close.svg'
 import Success from "../../assets/icon/success.svg";
+import Circle from "../../assets/icon/circle.svg";
 
 
 const MODE_TYPE = {
@@ -109,30 +110,53 @@ export const Bridge = () => {
         }
     }
 
-    useEffect(() => {
-        if (account) {
-            setLoading(true)
-            try {
-                fetch(`http://47.241.74.5:8080/web/getClaimList?status=0&to=${account}`).then((res) => {
-                    setLoading(false)
-                    res.json().then((result) => {
-                        console.log('result--->', result.data)
-                        if (result.data && result.data !== 0) {
-                            if(result.data.length !== 0){
-                                setClaimData(result.data[0])
+    const fetchData = () => {
+        try {
+            fetch(`https://api.antimatter.finance/web/getClaimList?status=0&to=${account}`).then((res) => {
+                setLoading(false)
+                res.json().then((result) => {
+                    setTimeout(() => {
+                        fetchData()
+                    }, 2000)
+                    console.log('result--->', result.data)
+                    const txStatus = window.localStorage.getItem('TX_STATUS')
+                    console.log('TX_STATUS', txStatus)
+                    if (result.data) {
+                        if (result.data.length !== 0) {
+                            setClaimData(result.data[0])
+                            if (txStatus === 'ANTIMATTER_CLAIMING') {
+                                setModalType(MODE_TYPE.INIT)
+                            } else {
                                 if (result.data[0].chainId === chainId) {
                                     setModalType(MODE_TYPE.CLAIM)
                                 } else {
-                                    console.log('result--->', result.data, chainId)
+                                    console.log('chain result--->', result.data, chainId)
                                     setModalType(MODE_TYPE.SWITCH_CHAIN)
                                 }
                             }
+                        } else {
+                            if (txStatus === 'ANTIMATTER_STAKING') {
+                                setModalType(MODE_TYPE.WAITING)
+                            }else if(txStatus === 'ANTIMATTER_CLAIMING') {
+                                setModalType(MODE_TYPE.WAITING)
+                            }else {
+                                setModalType(MODE_TYPE.INIT)
+                            }
                         }
-                    })
+                    }
+                }).catch((e) => {
+                    console.log('load err', e)
                 })
-            } catch (e) {
-                setLoading(false)
-            }
+            })
+        } catch (e) {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (account) {
+            setLoading(true)
+            fetchData()
         }
     }, [account, chainId])
 
@@ -183,7 +207,8 @@ export const Bridge = () => {
 
                 })
                 .on('receipt', (_, receipt) => {
-                    window.location.reload()
+                    setModalType(MODE_TYPE.WAITING)
+                    window.localStorage.setItem('TX_STATUS', 'ANTIMATTER_STAKING')
                 })
                 .on('error', (err, receipt) => {
                     setStake(0)
@@ -203,7 +228,7 @@ export const Bridge = () => {
         const contract = getContract(library, chainId === 3 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
         setClaim(1)
         try {
-            const res = await fetch(`http://47.241.74.5:8080/web/getSignDataSyn?stakeBurnId=${claimData.id}`)
+            const res = await fetch(`https://api.antimatter.finance/web/getSignDataSyn?stakeBurnId=${claimData.id}`)
             const jsonData = await res.json()
             const data = jsonData.data
             console.log('claim data', data.authorizer, data.to, data.volume, data.fromChainId, data.hash, data.signV, data.signR, data.signS)
@@ -305,6 +330,14 @@ export const Bridge = () => {
                         )}
                     </header>
 
+                    {modalType === MODE_TYPE.WAITING && (
+                        <div className="default_modal connecting">
+                            <p className="default_modal__title">It takes a few minutes to populate your staking
+                                transaction record on the other chain. Please wait patiently.</p>
+                            <img className="investment__modal__loading" src={Circle} alt=""/>
+                        </div>
+                    )}
+
                     {modalType === MODE_TYPE.WALLETS && (
                         <div style={{paddingBottom: 40}} className="default_modal modal-wallets">
                             <Close className="close-btn" onClick={() => {
@@ -382,9 +415,9 @@ export const Bridge = () => {
                                 <div className="bridge__dropdown_frame">
                                     <div className="dropdown">
                                         <span>From</span>
-                                        {chainId && loadChainInfo(chainId).id -1}
                                         <div/>
-                                        <DropDown disabled disabledId={toChainId} index={chainId && loadChainInfo(chainId).id -1} onSelect={(e) => {
+                                        <DropDown disabled disabledId={toChainId}
+                                                  index={chainId && loadChainInfo(chainId).id - 1} onSelect={(e) => {
                                             setFromChain(e)
                                             setFromChainId(e.id)
                                         }}/>
@@ -481,7 +514,7 @@ export const Bridge = () => {
                             </div>
                             <div className="chain_tip">
                                 <p>Destination Chain Address:</p>
-                                <p>{formatAddress(account)}</p>
+                                <p>{claimData && formatAddress(claimData.toAddress, 10, -5)}</p>
                             </div>
                             <div className="line"/>
                             <p>To learn more about how to add network to wallet, <a>click here</a></p>
@@ -506,7 +539,7 @@ export const Bridge = () => {
                             </div>
                             <div className="chain_tip">
                                 <p>Destination Chain Address:</p>
-                                <p>{formatAddress(account)}</p>
+                                <p>{claimData && formatAddress(claimData.toAddress, 10, -5)}</p>
                             </div>
                             <button disabled={claim !== 0} onClick={() => {
                                 onClaim(chainId === 3 ? 'redeem' : 'mint')
@@ -519,7 +552,8 @@ export const Bridge = () => {
                     {modalType === MODE_TYPE.CLAIMED && (
                         <div className="default_modal claimed_mode">
                             <img src={Success}/>
-                            <p style={{marginTop: 19, fontSize: 18}}>You have successfully claimed tokens to {claimData && loadChainInfo(claimData.chainId).title}</p>
+                            <p style={{marginTop: 19, fontSize: 18}}>You have successfully claimed tokens
+                                to {claimData && loadChainInfo(claimData.chainId).title}</p>
                             <a>View on Etherscan</a>
                             <div className="add_token">
                                 <p>Add MATTER to Metamask</p>

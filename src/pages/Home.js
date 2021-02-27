@@ -16,7 +16,7 @@ import BlockIcon6 from '../assets/image/block-icon-6.svg'
 import Comp from '../assets/image/comp.svg'
 import LeftLines from '../assets/image/left-lines.svg'
 import RightLines from '../assets/image/right-lines.svg'
-
+import Flower from '../assets/icon/flower.svg'
 
 import MediaQuery from 'react-responsive';
 import Animation from '../assets/animation.json'
@@ -35,15 +35,26 @@ export const Home = () => {
 
     return (
         <div className="home">
+            <div className="home__top">
+                <div className="top_content">
+                    <img src={Flower}/>
+                    <p className="content_main">MATTER is now on Uniswap. </p>
+                </div>
+                <p className="content_address">Token Contract address: 0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F</p>
+                <button>Exchange now</button>
+            </div>
             <div className="home__frame">
                 <header>
                     <img src={LogoLineWhite} alt=""/>
+                    <div className="bridge_btn">
+                    <a>Cross Chain Bridge</a>
+                    </div>
                     <a>App Coming Soon</a>
                 </header>
 
                 <MediaQuery query='(max-device-width:1200px)'>
                     <div>
-                    <Lottie  width={'100%'} height={236} options={defaultOptions}/>
+                        <Lottie width={'100%'} height={236} options={defaultOptions}/>
                     </div>
                 </MediaQuery>
 
@@ -56,11 +67,13 @@ export const Home = () => {
                             perpetual derivatives</p>
                         <div className="home__frame__page__content__calc">Value(long)+Value(short)=C</div>
 
-                        <a style={{background: '#fff', color: '#000'}} href="https://docsend.com/view/zv9wjb23xqbhu2w7" target="_blank">Summary</a>
+                        <a style={{background: '#fff', color: '#000'}} href="https://docsend.com/view/zv9wjb23xqbhu2w7"
+                           target="_blank">Summary</a>
 
                         <a className="coming">App Coming Soon</a>
 
-                        <a href="https://docsend.com/view/zv9wjb23xqbhu2w7" target="_blank" className="home__frame__page__content__summary">Summary</a>
+                        <a href="https://docsend.com/view/zv9wjb23xqbhu2w7" target="_blank"
+                           className="home__frame__page__content__summary">Summary</a>
                     </div>
                     <MediaQuery query='(min-device-width:1200px)'>
                         <Lottie width={800} height={470} options={defaultOptions}/>

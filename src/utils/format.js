@@ -3,8 +3,8 @@ import Web3 from 'web3'
 
 BigNumber.config({EXPONENTIAL_AT: [-20, 40]})
 
-export const formatAddress = (address)=>{
-    return  address.slice(0, 6) + '...' + address.slice(-3)
+export const formatAddress = (address, start=6, end = -3)=>{
+    return  address.slice(0, start) + '...' + address.slice(end)
 }
 
 export const formatAmount = (value, decimals = 18, fixed = 6) => {
