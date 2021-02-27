@@ -489,7 +489,7 @@ export const Bridge = () => {
                                 <button style={{marginTop: 18}}
                                         disabled={!amount || inputError || !inputAccount || !isAddress(inputAccount) || stake !== 0}
                                         onClick={() => {
-                                            if (chainId === 3) {
+                                            if (chainId === 1) {
                                                 onStake('stake')
                                             } else {
                                                 onStake('burn')
