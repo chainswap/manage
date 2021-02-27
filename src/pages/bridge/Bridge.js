@@ -418,8 +418,8 @@ export const Bridge = () => {
                                     <div className="dropdown">
                                         <span>From</span>
                                         <div/>
-                                        <DropDown disabled disabledId={toChainId}
-                                                  index={chainId && loadChainInfo(chainId).id - 1} onSelect={(e) => {
+                                        <DropDown disabled
+                                                  index={0} onSelect={(e) => {
                                             setFromChain(e)
                                             setFromChainId(e.id)
                                         }}/>
@@ -428,7 +428,7 @@ export const Bridge = () => {
                                     <div className="dropdown">
                                         <span>To</span>
                                         <div/>
-                                        <DropDown disabledId={fromChainId} index={1} onSelect={(e) => {
+                                        <DropDown index={0} onSelect={(e) => {
                                             setToChain(e)
                                             setToChainId(e.id)
                                         }}/>
