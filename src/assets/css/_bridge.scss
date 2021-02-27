@@ -28,11 +28,12 @@
       justify-content: center;
       background: rgba(255, 255, 255, 0.12);
       border-radius: 4px;
+
       img {
         width: 16px;
       }
 
-      p{
+      p {
         font-family: Roboto-Regular;
         font-style: normal;
         font-weight: 500;
@@ -42,11 +43,10 @@
     }
 
 
-
     @media #{$smWidth $xsWidth} {
       margin: 30px 24px;
 
-      img{
+      img {
         width: 136px;
         height: 32px;
         object-fit: contain;
@@ -72,11 +72,23 @@
       display: flex;
       align-items: center;
 
+      @media #{$smWidth $xsWidth} {
+        width: 104px;
+        padding: 0 8px;
+      }
+
 
       &__balance {
         padding-right: 16px;
         border-right: 1px #ffffff solid;
         font-size: 13px;
+        @media #{$smWidth $xsWidth} {
+          border: none;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          padding-right: 0;
+        }
       }
 
       &__address {
@@ -92,6 +104,7 @@
         }
 
         @media #{$smWidth $xsWidth} {
+          padding-left: 8px;
           p {
             display: none;
           }
@@ -105,6 +118,9 @@
           box-sizing: border-box;
           border-radius: 6px;
           margin-right: 6px;
+          @media #{$smWidth $xsWidth} {
+            margin-right: 0;
+          }
         }
 
         svg {
@@ -141,8 +157,20 @@
   justify-content: center;
   padding: 12px 32px 28px 32px;
 
+  button {
+    margin-top: 18px !important;
+    @media #{$mdHeight} {
+      margin-top: 33px !important;
+      height: 60px;
+      font-size: 18px;
+    }
+  }
+
   @media #{$smWidth $xsWidth} {
-   width: 100%;
+    flex: 1;
+    width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   @media #{$mdHeight} {
@@ -152,8 +180,16 @@
   .inputs {
     position: relative;
     margin: -20px;
+    @media #{$smWidth $xsWidth} {
+      margin: -24px 0;
+      width: 100%;
+    }
+
     & > * {
       margin: 20px;
+      @media #{$smWidth $xsWidth} {
+        margin: 24px 0;
+      }
     }
   }
 
@@ -165,12 +201,17 @@
     margin-bottom: 18px;
     line-height: 148.69%;
     letter-spacing: 0.01em;
+
+    @media #{$smWidth $xsWidth} {
+      font-size: 26px;
+      margin-top: 0px;
+    }
   }
 
-  &__dropdown_frame{
+  &__dropdown_frame {
     display: flex;
 
-    img{
+    img {
       padding: 0 20px;
       padding-top: 24px;
     }
@@ -178,24 +219,23 @@
     @media #{$smWidth $xsWidth} {
       flex-direction: column;
 
-      img{
+      img {
         width: 24px;
         height: 24px;
         padding: unset;
-        margin: 16px auto auto;
-        -ms-transform:rotate(90deg); /* IE 9 */
-        -webkit-transform:rotate(90deg); /* Safari and Chrome */
+        margin: 20px auto auto;
+        -ms-transform: rotate(90deg); /* IE 9 */
+        -webkit-transform: rotate(90deg); /* Safari and Chrome */
         transform: rotate(90deg);
       }
     }
-
 
 
     .dropdown {
       width: 178px;
       height: 80px;
 
-      span{
+      span {
         font-family: Roboto-Regular;
         font-style: normal;
         font-weight: normal;
@@ -203,8 +243,13 @@
         line-height: 148.69%;
         color: rgba(255, 255, 255, 0.6)
       }
-      div{
+
+      div {
         height: 8px;
+      }
+
+      @media #{$smWidth $xsWidth} {
+        width: 100%;
       }
     }
 
@@ -214,15 +259,16 @@
 
   }
 
-  &__input_frame{
+  &__input_frame {
     display: flex;
     flex-direction: column;
-    margin-top: -4px!important;
+    margin-top: -4px !important;
+
     & > * {
       margin-top: 4px;
     }
 
-    p{
+    p {
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
@@ -246,19 +292,24 @@
       font-size: 16px;
       font-family: Roboto-Regular;
 
-      &:hover, focus{
+      &:hover, focus {
         border-color: rgba(255, 255, 255, 0.6);
       }
+
       &:focus {
         border-color: rgba(255, 255, 255, 0.6);
       }
+
+      @media #{$smWidth $xsWidth} {
+        padding-right: 20px;
+      }
     }
 
-    img{
+    img {
       width: 24px;
       height: 24px;
       position: absolute;
-      margin-top: 37px;
+      margin-top: 39px;
       margin-left: 20px;
       z-index: 0;
     }
@@ -270,7 +321,7 @@
 
     .max {
       position: absolute;
-      margin-top: 37px;
+      margin-top: 37px!important;
       margin-left: 338px;
       width: 64px;
       height: 28px;
@@ -282,10 +333,14 @@
       line-height: 26px;
       padding: 0;
       background-color: transparent;
+
+      @media #{$smWidth $xsWidth} {
+        display: none;
+      }
     }
   }
 
-  button{
+  button {
     width: 100%;
     height: 48px;
     display: flex;
@@ -331,16 +386,16 @@
   align-items: center;
   padding: 0 40px;
 
-  p{
+  p {
     margin-right: 20px;
   }
 
-  img{
+  img {
     margin-right: 12px;
     height: 28px;
   }
 
-  .arrow{
+  .arrow {
     flex: 1;
     height: 12px;
   }
@@ -352,27 +407,21 @@
   }
 
   @media #{$smWidth $xsWidth} {
-    width: 100%;
+    width: initial;
   }
 
 
 }
 
-.switch_btn {
-  width: 428px!important;
-  height: 48px!important;
-  margin-top: 32px;
-  &:hover{
-    opacity: 0.6;
-  }
-}
+
+
 
 .claim {
   &__amount {
     font-family: Futura PT;
     font-style: normal;
     font-weight: 500;
-    font-size: 28px!important;
+    font-size: 28px !important;
     line-height: 148.69%;
     margin-bottom: 24px;
   }
@@ -380,14 +429,37 @@
 
 .claimed_mode {
 
-  >img{
-    width: 32px;
-    height: 32px;
+  @media #{$smWidth $xsWidth} {
+    flex: 0;
+    margin-bottom: 0;
+    width: -webkit-fill-available;
   }
 
-  a{
+  > img {
+    width: 32px;
+    height: 32px;
+
+    @media #{$smWidth $xsWidth} {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  > p {
+    font-size: 18px;
+    @media #{$smWidth $xsWidth} {
+      font-family: Roboto-Regular;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 24px !important;
+      line-height: 124%;
+      width: 259px;
+    }
+  }
+
+  a {
     margin-top: 32px;
-    font-family: Roboto;
+    font-family: Roboto-Regular;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
@@ -395,7 +467,12 @@
     text-align: center;
     text-decoration-line: underline;
     color: #FFFFFF;
+    @media #{$smWidth $xsWidth} {
+      font-size: 16px;
+      margin-top: 36px;
+    }
   }
+
 
   .add_token {
     width: 210px;
@@ -412,10 +489,63 @@
     background: rgba(255, 255, 255, 0.1);
     border-radius: 100px;
     cursor: pointer;
+    @media #{$smWidth $xsWidth} {
+      width: 266px;
+      height: 36px;
+      margin-top: 20px;
+      p {
+        font-size: 16px;
+      }
+    }
 
     img {
       width: 15.88px;
       margin-left: 8px;
     }
+
+  }
+
+  button {
+    @media #{$smWidth $xsWidth} {
+      margin-top: 70px !important;
+      height: 60px;
+      font-size: 18px;
+    }
+  }
+}
+
+.claim_modal {
+  @media #{$smWidth $xsWidth} {
+    flex: 0;
+    margin-bottom: 0;
+    padding: 48px 24px;
+    width: -webkit-fill-available;
+
+    .claim__amount {
+      margin-bottom: 40px;
+      margin-top: 20px;
+      font-size: 32px !important;
+    }
+  }
+
+  button {
+    //width: 100% !important;
+  }
+
+
+}
+
+
+.switch_btn {
+  width: 428px !important;
+  height: 48px !important;
+  margin-top: 32px;
+
+  &:hover {
+    opacity: 0.6;
+  }
+
+  @media #{$smWidth $xsWidth} {
+    width: 100% !important;
   }
 }

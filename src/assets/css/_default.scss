@@ -443,8 +443,17 @@ canvas{
     }
 
     &__title {
+        font-family: Futura PT;
         margin-bottom: 28px;
         font-size: 18px!important;
+
+        @media #{$smWidth $xsWidth} {
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 24px!important;
+            line-height: 124%;
+        }
     }
 
     &__loading {
@@ -472,7 +481,15 @@ canvas{
 
 .modal-switch {
     @media #{$smWidth $xsWidth} {
-        padding: 0;
+        width: fit-content;
+        justify-content: flex-start;
+        padding: 24px 24px 81px 24px;
+        flex: 0;
+        margin-bottom: 0;
+
+        p{
+            font-size: 14px;
+        }
     }
 
     a {
@@ -482,9 +499,17 @@ canvas{
             opacity: 0.6;
         }
     }
+
+
 }
 
 .modal_profile {
+
+    .btn_group {
+        button {
+            width: 200px;
+        }
+    }
 
     @media #{$smWidth $xsWidth} {
         justify-content: flex-start;
@@ -493,7 +518,6 @@ canvas{
            margin-top: auto!important;
             width: -webkit-fill-available;
             margin: 0 60px;
-
         }
     }
 
@@ -585,6 +609,10 @@ canvas{
     &:nth-child(1){
         color: rgba(255, 255, 255, 0.6);
     }
+
+    @media #{$smWidth $xsWidth} {
+        width: 100%;
+    }
 }
 
 .line {
@@ -592,6 +620,10 @@ canvas{
     height: 1px;
     background: rgba(255, 255, 255, 0.2);
     margin: 18px auto 24px auto;
+
+    @media #{$smWidth $xsWidth} {
+        width: 100%;
+    }
 }
 
 

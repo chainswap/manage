@@ -126,10 +126,15 @@ nav {
 
   @media #{$smWidth $xsWidth} {
     position: relative;
+    width: 100%;
   }
 
   .disabled {
     pointer-events: none;
     opacity: 0.2;
   }
+}
+
+.nav_disabled {
+
 }
