@@ -199,7 +199,7 @@ export const Bridge = () => {
 
                 })
                 .on('receipt', (_, receipt) => {
-                    setModalType(MODE_TYPE.CLAIM)
+                    setModalType(MODE_TYPE.SWITCH_CHAIN)
                 })
                 .on('error', (err, receipt) => {
                     setStake(0)
