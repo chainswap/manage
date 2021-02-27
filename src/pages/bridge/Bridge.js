@@ -115,9 +115,9 @@ export const Bridge = () => {
             fetch(`https://api.antimatter.finance/web/getClaimList?status=0&to=${account}`).then((res) => {
                 setLoading(false)
                 res.json().then((result) => {
-                    // setTimeout(() => {
-                    //     fetchData()
-                    // }, 2000)
+                    setTimeout(() => {
+                        fetchData()
+                    }, 2000)
                     console.log('result--->', result.data)
                     const txStatus = window.localStorage.getItem('TX_STATUS')
                     console.log('TX_STATUS', txStatus)
@@ -153,24 +153,13 @@ export const Bridge = () => {
         }
     }
 
-    // useEffect(() => {
-    //     if (account) {
-    //         setLoading(true)
-    //         fetchData()
-    //     }
-    // }, [account, chainId])
-
-    let timer;
     useEffect(() => {
-        clearInterval(timer)
-        setLoading(true)
-        timer = setInterval(() => {
+        if (account && chainId) {
+            setLoading(true)
             fetchData()
-        }, 2000)
-        return () => {
-            clearInterval(timer)
         }
-    }, [active, chainId])
+    }, [account, chainId])
+
 
     useEffect(() => {
         if (account) {
