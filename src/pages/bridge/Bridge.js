@@ -43,6 +43,7 @@ const MODE_TYPE = {
     WAITING: "WAITING",
     CLAIM: "CLAIM",
     CLAIMED: "CLAIMED",
+    STAKED: "STAKED",
     CLAIM_LIST: "CLAIM_LIST",
 }
 
@@ -199,7 +200,7 @@ export const Bridge = () => {
 
                 })
                 .on('receipt', (_, receipt) => {
-                    setModalType(MODE_TYPE.SWITCH_CHAIN)
+                    setModalType(MODE_TYPE.STAKED)
                 })
                 .on('error', (err, receipt) => {
                     setStake(0)
@@ -587,6 +588,17 @@ export const Bridge = () => {
                                 <p>Add MATTER to Metamask</p>
                                 <img src={metamask}/>
                             </div>
+                            <button style={{marginTop: 32}} onClick={() => {
+                                window.location.reload()
+                            }}>Close
+                            </button>
+                        </div>
+                    )}
+
+                    {modalType === MODE_TYPE.STAKED && (
+                        <div className="default_modal claimed_mode">
+                            <img src={Success}/>
+                            <p style={{marginTop: 19, fontSize: 18}}>You have successfully staked your tokens, please visit claim list to proceed.</p>
                             <button style={{marginTop: 32}} onClick={() => {
                                 window.location.reload()
                             }}>Close
