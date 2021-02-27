@@ -544,7 +544,7 @@ export const Bridge = () => {
                                 <p>{claimData && formatAddress(claimData.toAddress, 10, -5)}</p>
                             </div>
                             <button disabled={claim !== 0} onClick={() => {
-                                onClaim(chainId === 3 ? 'redeem' : 'mint')
+                                onClaim(chainId === 1 ? 'redeem' : 'mint')
                             }}
                                     className="switch_btn">{claim === 1 ? 'Claiming' : `Claim Tokens on ${claimData && loadChainInfo(claimData.chainId).title}`}
                             </button>
