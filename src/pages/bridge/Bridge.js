@@ -70,12 +70,12 @@ export const Bridge = () => {
         connector,
         library,
         activate,
+        account,
         deactivate,
         active,
         chainId
     } = useWeb3React();
 
-    const account = '0xee4c1adb2fe4b16db629942c584e8a8da7a45d72'
 
     const balance = useBalance(MATTER_ADDRESS(chainId))
 
