@@ -82,6 +82,8 @@ const HECO_OPTIONS = [
 
 export const Bridge = () => {
 
+    let timer = true
+
     const {
         connector,
         library,
@@ -135,9 +137,11 @@ export const Bridge = () => {
             fetch(`https://api.antimatter.finance/web/getClaimList?status=0&to=${account}`).then((res) => {
                 setLoading(false)
                 res.json().then((result) => {
-                    setTimeout(() => {
-                        fetchData()
-                    }, 2000)
+                    if(timer){
+                        setTimeout(() => {
+                            fetchData()
+                        }, 2000)
+                    }
                     console.log('result--->', result.data)
                     if (result.data) {
                         setClaimList(result.data)
@@ -153,8 +157,12 @@ export const Bridge = () => {
 
     useEffect(() => {
         if (account && chainId) {
+            timer = true
             setLoading(true)
             fetchData()
+        }
+        return ()=>{
+            timer = false
         }
     }, [account, chainId])
 
