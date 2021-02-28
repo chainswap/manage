@@ -93,6 +93,7 @@ export const Bridge = () => {
     } = useWeb3React();
 
 
+
     const balance = useBalance(MATTER_ADDRESS(chainId))
 
     const [modalType, setModalType] = useState(MODE_TYPE.INIT)
@@ -152,8 +153,8 @@ export const Bridge = () => {
 
     useEffect(() => {
         if (account && chainId) {
-            //setLoading(true)
-            //fetchData()
+            setLoading(true)
+            fetchData()
         }
     }, [account, chainId])
 
