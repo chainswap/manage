@@ -87,11 +87,11 @@ export const Bridge = () => {
         library,
         activate,
         deactivate,
+        account,
         active,
         chainId
     } = useWeb3React();
 
-    const account = '0x14fe1c6adb626a8235b079d4ff66c6b0a3a2e68a'
 
 
     const balance = useBalance(MATTER_ADDRESS(chainId))
