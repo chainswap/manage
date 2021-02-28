@@ -27,6 +27,9 @@ import {isAddress} from "../../utils/address";
 import {ReactComponent as Close} from '../../assets/icon/close.svg'
 import Success from "../../assets/icon/success.svg";
 import Circle from "../../assets/icon/circle.svg";
+import Binnace_logo from "../../assets/icon/binance.svg";
+import Huobi_logo from "../../assets/icon/huobi.svg";
+import ETH_logo from "../../assets/icon/eth.svg";
 
 
 const MODE_TYPE = {
@@ -64,6 +67,18 @@ const walletChange = new WalletConnectConnector({
     pollingInterval: POLLING_INTERVAL,
 });
 
+const ETH_OPTIONS = [
+    {id: 0, title: 'BSC',chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
+    {id: 1, title: 'HECO',chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo}
+]
+const BINANCE_OPTIONS = [
+    {id: 0, title: 'ETH', chainId: 1 ,logo: <ETH className="icon"/>, icon: ETH_logo},
+    {id: 1, title: 'HECO',chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo}
+]
+const HECO_OPTIONS = [
+    {id: 0, title: 'ETH', chainId: 1 ,logo: <ETH className="icon"/>, icon: ETH_logo},
+    {id: 1, title: 'BSC',chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
+]
 
 export const Bridge = () => {
 
@@ -71,8 +86,8 @@ export const Bridge = () => {
         connector,
         library,
         activate,
-        account,
         deactivate,
+        account,
         active,
         chainId
     } = useWeb3React();
@@ -94,9 +109,9 @@ export const Bridge = () => {
     const [inputError, setInputError] = useState()
 
     const [claimingList, setClaimingList] = useState([])
-    const [toChainId, setToChainId] = useState(2)
-    const [fromChain, setFromChain] = useState(CHAIN[0])
     const [toChain, setToChain] = useState(CHAIN[0])
+    const [toChainList, setToChainList] = useState(CHAIN)
+
 
     const loadChainInfo = (id) => {
         switch (id) {
@@ -137,10 +152,50 @@ export const Bridge = () => {
 
     useEffect(() => {
         if (account && chainId) {
-            setLoading(true)
-            fetchData()
+            //setLoading(true)
+            //fetchData()
         }
     }, [account, chainId])
+
+    useEffect(() => {
+        if (active) {
+            let curChainList = CHAIN
+            switch (chainId) {
+                case 1:
+                    curChainList = ETH_OPTIONS
+                    break;
+                case 56:
+                    curChainList = BINANCE_OPTIONS
+                    break
+                case 128:
+                    curChainList = HECO_OPTIONS
+                    break
+                default:
+                    curChainList = CHAIN
+            }
+            setToChainList(curChainList)
+            setToChain(curChainList[0])
+        }
+    }, [active, chainId])
+
+    useEffect(() => {
+        const claimIdListData = window.localStorage.getItem('CLAIMING_ID_LIST')
+        if(claimIdListData){
+            try {
+                let claimIds= JSON.parse(claimIdListData)
+                const ids = claimList.map(item =>{return item.id})
+                console.log('ids',ids)
+                claimIds = claimIds.filter(item =>{
+                    return ids.indexOf(item) !== -1
+                })
+                console.log('claiming ids',ids)
+                window.localStorage.setItem('CLAIMING_ID_LIST', JSON.stringify(claimIds))
+                setClaimingList(claimIds)
+            }catch (e) {
+
+            }
+        }
+    }, [claimList])
 
     useEffect(() => {
         if (claimData) {
@@ -159,41 +214,12 @@ export const Bridge = () => {
         }
     }, [account])
 
-    useEffect(() => {
-        if (chainId) {
-            setFromChain(4)
-        }
-    }, [chainId])
 
     const onStake = async (func) => {
-        console.log('func', toChain.chainId)
+        console.log('func-------->', toChain.chainId)
         const contract = getContract(library, chainId === 1 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId));
         setStake(1)
         try {
-            try {
-                const tokenContract = getContract(library, ERC20.abi, MATTER_ADDRESS(chainId));
-                //setApprove(1)
-                const allowance = await tokenContract.methods.allowance(account, MATTER_ADDRESS(chainId)).call()
-                console.log('approving', allowance)
-
-                if (!new BigNumber(allowance).isGreaterThan(numToWei(amount))) {
-                    await tokenContract.methods
-                        .approve(MATTER_ADDRESS(chainId), '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
-                        .send({from: account})
-                        .on('transactionHash', hash => {
-
-                        })
-                        .on('receipt', (_, receipt) => {
-                            //window.location.reload()
-                        })
-                        .on('error', (err, receipt) => {
-                            //setApprove(0)
-                        });
-                }
-            } catch (e) {
-                //setApprove(0)
-                console.log('approve  error--->')
-            }
             await contract.methods[func](numToWei(amount), toChain.chainId, inputAccount)
                 .send({from: account})
                 .on('transactionHash', hash => {
@@ -231,6 +257,8 @@ export const Bridge = () => {
 
                 })
                 .on('receipt', (_, receipt) => {
+                    window.localStorage.setItem('CLAIMING_ID_LIST', JSON.stringify(claimingList.concat(claimData.id)))
+                    setClaimingList(claimingList.concat(claimData.id))
                     setClaim(0)
                     setModalType(MODE_TYPE.CLAIMED)
                 })
@@ -422,9 +450,8 @@ export const Bridge = () => {
                                     <div className="dropdown">
                                         <span>To</span>
                                         <div/>
-                                        <DropDown index={0} onSelect={(e) => {
+                                        <DropDown options={toChainList} index={toChain.id} onSelect={(e) => {
                                             setToChain(e)
-                                            setToChainId(e.id)
                                         }}/>
                                     </div>
                                 </div>
@@ -488,7 +515,7 @@ export const Bridge = () => {
                                             } else {
                                                 onStake('burn')
                                             }
-                                        }}>{stake === 1 ? 'Staking' : `Stake tokens in ${loadChainInfo(chainId).title} network`}</button>
+                                        }}>{stake === 1 ? 'Staking' : `Stake tokens in ${loadChainInfo(chainId).title} network (${toChain.title})`}</button>
                             )}
 
                             <a className="bridge__claim_text" onClick={()=>{
@@ -517,7 +544,7 @@ export const Bridge = () => {
                                 <p>{claimData && formatAddress(claimData.toAddress, 10, -5)}</p>
                             </div>
                             <div className="line"/>
-                            <p>To learn more about how to add network to wallet, <a>click here</a></p>
+                            <p>To learn more about how to add network to wallet, <a target="_blank" href="https://antimatterdefi.medium.com/announcing-antimatter-defi-cross-chain-bridge-innovation-7d23515d0844">click here</a></p>
                             <button disabled onClick={() => {
                                 //setModalType(MODE_TYPE.CLAIM)
                             }} className="switch_btn">{`Switch wallet network  ${toChain.title} and refresh your page`}</button>
@@ -561,7 +588,7 @@ export const Bridge = () => {
 
                             {claimList.map(item =>{
                                 return (
-                                    <div className="extra" onClick={()=>{
+                                    <div className={`extra ${claimingList.indexOf(item.id) !== -1? 'claim_disabled': ''}`} onClick={()=>{
                                         setClaimData(item)
                                         //setModalType(MODE_TYPE.CLAIM)
                                     }}>
