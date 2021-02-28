@@ -515,7 +515,7 @@ export const Bridge = () => {
                                             } else {
                                                 onStake('burn')
                                             }
-                                        }}>{stake === 1 ? 'Staking' : `Stake tokens in ${loadChainInfo(chainId).title} network (${toChain.title})`}</button>
+                                        }}>{stake === 1 ? 'Staking' : `Stake tokens in ${loadChainInfo(chainId).title} network`}</button>
                             )}
 
                             <a className="bridge__claim_text" onClick={()=>{
