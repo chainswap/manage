@@ -31,8 +31,8 @@ body {
 
 
 a {
-    color: var(--color);
-    text-decoration: none;
+    color: #ffffff;
+    text-decoration: underline;
     transition: var(--transitionDefault);
 
     &:hover {
@@ -221,7 +221,7 @@ a[href^='tel'],
 }
 
 .color-gray {
-    color: #808080;
+    opacity: 0.2;
 }
 
 .value {
@@ -506,9 +506,7 @@ canvas{
 .modal_profile {
 
     .btn_group {
-        button {
-            width: 200px;
-        }
+
     }
 
     @media #{$smWidth $xsWidth} {
@@ -626,4 +624,127 @@ canvas{
     }
 }
 
+.btn_group {
+    display: flex;
+    width: 442px;
+    margin-left: -12px;
+    margin-right: -12px;
+    & > * {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
 
+    button {
+        margin-top: 50px;
+        display: block;
+        @media #{$smWidth $xsWidth} {
+            margin-top: 0;
+        }
+    }
+
+    @media #{$smWidth $xsWidth} {
+        flex-direction: column;
+        margin: -12px;
+        & > * {
+            margin: 12px;
+        }
+    }
+}
+
+.confirm_modal {
+
+    &__loading {
+        width: 60px;
+        height: 60px;
+        -webkit-animation: loading 3s linear infinite;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-top: 10px
+    }
+}
+
+.transactions {
+    width: 418px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
+    border-radius: 22px;
+    margin-top: 36px;
+    padding: 16px 24px;
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 16px;
+
+    ul{
+        padding-top: 8px;
+        li {
+            a {
+                color: #ffffff;
+                font-size: 14px;
+                text-decoration: underline;
+                &:hover {
+                    opacity: 0.6;
+                }
+            }
+
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+    }
+
+}
+
+button {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    border: 1px solid #FFFFFF;
+    box-sizing: border-box;
+    background-color: #000;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 100px;
+    line-height: 48px;
+    justify-content: center;
+    outline: none;
+    cursor: pointer;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow:ellipsis;
+    padding: 0 24px;
+
+    img {
+        margin-right: 12px;
+        width: 20px;
+        height: 20px;
+        margin-bottom: 0;
+    }
+
+    &:hover {
+        opacity: 0.6;
+    }
+
+    &:disabled {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.3);
+        opacity: 1;
+    }
+}
+
+.small {
+    height: 32px;
+    padding: 0 19px;
+    width: fit-content;
+}
+
+.input_error {
+    border: 1px solid rgba(255, 0, 0, 0.6)!important;
+}

@@ -4,9 +4,11 @@
     color: var(--bg);
 
     &__inner {
-        background-color: #fff;
-        border-radius: 12px;
-        padding: 30px;
+        background: linear-gradient(283.31deg, rgba(255, 255, 255, 0.18) -2.53%, rgba(255, 255, 255, 0.17) 18.66%, rgba(255, 255, 255, 0) 98.68%), #000000;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-sizing: border-box;
+        border-radius: 42px;
+        padding: 24px 52px;
 
         @media #{$smWidth} {
             padding: 20px;

@@ -1,0 +1,41 @@
+.popup {
+  display: inline-block;
+  width: 100%;
+  padding: 1em;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #000000;
+  position: relative;
+  border-radius: 10px;
+  padding: 20px;
+  padding-right: 35px;
+  overflow: hidden;
+  word-break: break-all;
+
+  &__frame {
+    display: flex;
+    flex-direction: column;
+
+    &__content {
+      display: flex;
+      align-items: center;
+
+      svg {
+        margin-right: 12px;
+      }
+    }
+
+    a {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 148.69%;
+      margin-top: 9px;
+      text-decoration-line: underline;
+      color: #ffffff;
+      margin-left: 34px;
+
+      &:hover {opacity: 0.6}
+    }
+  }
+
+}

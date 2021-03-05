@@ -1,10 +1,8 @@
 .transction-submitted {
     text-align: center;
     @media #{$desktop} {
-        width: 400px;
     }
     @media #{$mdWidth} {
-        width: 400px;
     }
     @media #{$smWidth} {
         width: 95%;
@@ -94,6 +92,41 @@
         @media #{$smWidth} {
             margin-top: 24px;
         }
+    }
+
+    &__title {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        color: #ffffff;
+    }
+
+    input {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid #FFFFFF;
+        box-sizing: border-box;
+        border-radius: 14px;
+        width: 376px;
+        height: 48px;
+        margin: 32px 0 0 0;
+        padding: 0 20px;
+        outline: none;
+        color: #ffffff;
+        font-size: 16px;
+        font-family: Roboto-Regular;
+    }
+
+    button {
+        color: #ffffff;
+        margin-top: 20px;
+    }
+
+    .error {
+        color: rgba(255, 0, 0, 1);
+        font-size: 13px;
+        text-align: left;
+        margin-top: 8px;
     }
 }
 

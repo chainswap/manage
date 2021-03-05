@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, {useReducer} from 'react';
 import {
     HANDLE_SHOW_CONNECT_MODAL,
     HANDLE_MY_NFTS_MODAL,
@@ -13,21 +13,22 @@ import {
     HANDLE_SHOW_TRANSACTION_MODAL,
     HANDLE_WALLET_MODAL,
     HANDLE_TX_STATUS,
-    HANDLE_SHOW_MENUMASK_MODAL,
+    HANDLE_SHOW_MENUMASK_MODAL, ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST,
 } from './const';
 
 const mainContext = React.createContext();
 
 const reducer = (state, action) => {
+    console.log('action_type', action.type)
     switch (action.type) {
         case HANDLE_SHOW_CONNECT_MODAL:
-            return { ...state, showConnectModal: action.showConnectModal };
+            return {...state, showConnectModal: action.showConnectModal};
         case HANDLE_SHOW_STAKE_MODAL:
-            return { ...state, showStakeModal: action.showStakeModal };
+            return {...state, showStakeModal: action.showStakeModal};
         case HANDLE_SHOW_UNSTAKE_MODAL:
-            return { ...state, showUnstakeModal: action.showUnstakeModal };
+            return {...state, showUnstakeModal: action.showUnstakeModal};
         case HANDLE_SHOW_REWARD_MODAL:
-            return { ...state, showRewardModal: action.showRewardModal };
+            return {...state, showRewardModal: action.showRewardModal};
         case HANDLE_SHOW_STAKED_TOKENS_MODAL:
             return {
                 ...state,
@@ -47,7 +48,7 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 showWaitingWalletConfirmModal:
-                    action.showWaitingWalletConfirmModal,
+                action.showWaitingWalletConfirmModal,
             };
         case HANDLE_SHOW_TRANSACTION_MODAL:
             return {
@@ -55,17 +56,43 @@ const reducer = (state, action) => {
                 showTransactionModal: action.showTransactionModal,
             };
         case HANDLE_WALLET_MODAL:
-            return { ...state, walletModal: action.walletModal };
+            return {...state, walletModal: action.walletModal};
         case HANDLE_TX_STATUS:
-            return { ...state, txStatus: action.txStatus };
+            return {...state, txStatus: action.txStatus};
         case HANDLE_SHOW_MENUMASK_MODAL:
-            return { ...state, showMenuMaskModal: action.showMenuMaskModal };
+            return {...state, showMenuMaskModal: action.showMenuMaskModal};
+        case ANTIMATTER_TRANSACTION_LIST:
+            let lastTxs = state.transactions
+            if (action.transaction.receipt) {
+                const index = lastTxs.findIndex(item => {
+                    return item.hash === action.transaction.hash
+                })
+                if (index !== -1) {
+                    lastTxs[index] = action.transaction
+                }
+            } else {
+                lastTxs = [action.transaction].concat(lastTxs)
+            }
+            window.localStorage.setItem(ANTIMATTER_TRANSACTION_LIST, JSON.stringify(lastTxs))
+            return {...state, transactions: lastTxs}
+        case HANDLE_POPUP_LIST:
+            let popups = state.popupList
+            const popup = action.popup
+            console.log('popup--->',action.auction, action.popup)
+            if (action.auction === 'add') {
+                popups = [popup].concat(popups)
+            } else {
+                popups = popups.filter(item => {return item.key !== popup.key})
+            }
+            return {...state, popupList: popups};
         default:
             return state;
     }
 };
 
 const ContextProvider = (props) => {
+    const transactionsData = window.localStorage.getItem(ANTIMATTER_TRANSACTION_LIST)
+    console.log('transactionsData', transactionsData)
     const [state, dispatch] = useReducer(reducer, {
         showConnectModal: false,
         showStakeModal: false,
@@ -74,17 +101,19 @@ const ContextProvider = (props) => {
         showStakedTokensModal: false,
         showUnstakedTokensModal: false,
         showFailedTransactionModal: false,
-        showWaitingWalletConfirmModal: { show: false, title: '', content: '' },
+        showWaitingWalletConfirmModal: {show: false, title: '', content: ''},
         showTransactionModal: false,
         walletModal: null,
         txStatus: null,
         showMenuMaskModal: false,
+        transactions: transactionsData ? JSON.parse(transactionsData) : [],
+        popupList: []
     });
     return (
-        <mainContext.Provider value={{ state, dispatch }}>
+        <mainContext.Provider value={{state, dispatch}}>
             {props.children}
         </mainContext.Provider>
     );
 };
 
-export { reducer, mainContext, ContextProvider };
+export {reducer, mainContext, ContextProvider};

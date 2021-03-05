@@ -347,11 +347,7 @@
 }
 
 .btn_group {
-  display: flex;
-  margin: -12px;
-  & > * {
-    margin: 12px;
-  }
+
 
   button {
     margin-top: 50px;

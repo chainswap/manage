@@ -8,7 +8,9 @@ import Huobi_logo from '../../assets/icon/huobi.svg'
 export const CHAIN = [
     {id: 0, title: 'ETH', chainId: 1 ,logo: <ETH className="icon"/>, icon: ETH_logo},
     {id: 1, title: 'BSC',chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
-    {id: 2, title: 'HECO',chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo}
+    {id: 2, title: 'HECO',chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
+    {id: 3, title: 'Ropsten',chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
+    {id: 4, title: 'Rinkeby',chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
 ]
 
 export const DropDown = ({index, onSelect, options}) => {

@@ -32,3 +32,7 @@ export const waitingPending = {show: true, title: 'Transaction submitted' ,conte
 
 export const HANDLE_WALLET_MODAL = "HANDLE_WALLET_MODAL";
 export const HANDLE_TX_STATUS = "HANDLE_TX_STATUS";
+
+export const ANTIMATTER_TRANSACTION_LIST = 'ANTIMATTER_TRANSACTION_LIST'
+
+export const HANDLE_POPUP_LIST = 'HANDLE_POPUP_LIST'
