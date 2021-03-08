@@ -5,8 +5,8 @@ import {getContract, useActiveWeb3React, useBlockNumber, useChainBlockNumber} fr
 import {getGLFStakingAddress, MATTER_ADDRESS} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
-import {ETHProvider} from "../web3/useContract";
-import  MainMatter from '../web3/abi/MainMatter.json'
+import {BigNumber} from "bignumber.js";
+
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
     const [glfBalance, setGLFBalance] = useState()
@@ -40,7 +40,6 @@ export const useBalance = (address) => {
             try {
                 const contract = getContract(library, ERC20.abi, address)
                 contract.balanceOf(account).then(res => {
-                    console.log('token balanceOf:', res, address, chainId)
                     setBalance(res.toString())
                 })
             } catch (e) {
@@ -81,18 +80,16 @@ export const TransactionsUpdater = () => {
                 return !item.receipt && new Date().getTime() - item.addedTime < 86_400_000
             })
             .forEach(tx => {
-                console.log('transaction hash', tx.hash)
                 library
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
                         if (receipt) {
-                            //console.log('receipt-----> nones', receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,""))
                             dispatch({
                                 type: ANTIMATTER_TRANSACTION_LIST, transaction: {
                                     ...tx,
                                     stake: tx.stake? {...tx.stake, status: receipt.status === 1 ? 1 : 0} :null,
                                     claim: tx.claim? {...tx.claim, status: receipt.status === 1 ? 1 : 0} :null,
-                                    nonce: tx.stake? receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,"") === "" ? "0": receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,"") : null,
+                                    nonce: tx.stake? new BigNumber(receipt.logs[1].data.substring(0, 66)).toString() : null,
                                     receipt: {
                                         blockHash: receipt.blockHash,
                                         blockNumber: receipt.blockNumber,
@@ -149,46 +146,4 @@ export const useRemovePopup = () => {
         },
         [dispatch]
     )
-}
-
-export const useETHReceiveList = () => {
-    const {account} = useActiveWeb3React()
-    const library = {}
-    library.provider = ETHProvider
-    const blockNumber = useChainBlockNumber(library)
-    const [receiveList, setReceiveList] = useState([])
-    const chains = [3, 4]
-
-    useEffect(()=>{
-        if(account){
-            const matterContract = getContract(library, MainMatter, MATTER_ADDRESS, account)
-            matterContract.sent.then(res =>{
-                console.log('sent count', res)
-            })
-        }
-    },[blockNumber, account])
-
-    return receiveList
-}
-
-export const useBSCReceiveList = () => {
-    const {blockNumber} = useChainBlockNumber()
-    const [receiveList, setReceiveList] = useState([])
-    const chains = [3, 4]
-
-    useEffect(()=>{
-
-    },[blockNumber])
-
-}
-
-export const useHECOReceiveList = () => {
-    const {blockNumber} = useBlockNumber()
-    const [receiveList, setReceiveList] = useState([])
-    const chains = [3, 4]
-
-    useEffect(()=>{
-
-    },[blockNumber])
-
 }

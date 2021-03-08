@@ -663,6 +663,11 @@
 .claim_modal {
   padding-top: 40px;
 
+  .claim_list {
+    max-height: 500px;
+    overflow: auto;
+  }
+
   .divider {
     width: 100%;
     height: 1px;
@@ -705,11 +710,12 @@
   height: 64px;
   padding: 9px 16px;
   display: flex;
-  width: 440px;
+  width: 448px;
+  margin-bottom: 20px;
 
   >svg {
-    margin: auto;
     fill: transparent;
+    margin: auto 18px;
   }
 
 
@@ -718,8 +724,8 @@
     border: 1px solid #FFFFFF;
     box-sizing: border-box;
     border-radius: 100px;
-    width: fit-content;
     height: 36px;
+    width: 62px;
     margin: auto;
   }
 

@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
 import Matter from '../../assets/icon/matter.svg'
-import {useBalance, useETHReceiveList, useTransactionAdder} from "../Hooks";
+import {useBalance, useTransactionAdder} from "../Hooks";
 import {MATTER_ADDRESS} from "../../web3/address";
 import {useWeb3React} from "@web3-react/core";
 import {formatAddress, formatAmount, numToWei} from "../../utils/format";
@@ -32,8 +32,7 @@ import ETH_logo from "../../assets/icon/eth.svg";
 import {mainContext} from "../../reducer";
 import {CheckCircle, Triangle, Check} from 'react-feather'
 import {PopupItem} from "../../components/popup/Popup";
-import {useSingleContractMultipleData} from "../../hooks/multicall/hooks";
-import {useMatterContract} from "../../web3/useContract";
+import {useReceivedList} from "../../hooks/multicall/hooks";
 
 const MODE_TYPE = {
     INIT: 'INIT',
@@ -75,26 +74,26 @@ const walletChange = new WalletConnectConnector({
 const ETH_OPTIONS = [
     {id: 0, title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
     {id: 1, title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
-    {id: 4, title: 'Rinkeby',chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
+    {id: 4, title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
 ]
 const BINANCE_OPTIONS = [
     {id: 0, title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
     {id: 1, title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
-    {id: 4, title: 'Rinkeby',chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
+    {id: 4, title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
 ]
 const HECO_OPTIONS = [
     {id: 0, title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
     {id: 1, title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
-    {id: 4, title: 'Rinkeby',chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
+    {id: 4, title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
 ]
 
 
 const ROPSTEN_OPTIONS = [
-    {id: 0, title: 'Rinkeby',chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
+    {id: 0, title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
 ]
 
 const RINKEBY_OPTIONS = [
-    {id: 0, title: 'Ropsten',chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
+    {id: 0, title: 'Ropsten', chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
 ]
 
 export const Bridge = () => {
@@ -111,20 +110,21 @@ export const Bridge = () => {
         chainId
     } = useWeb3React();
 
+    const receivedList1 = useReceivedList(4, 3)
+    const receivedList2 = useReceivedList(3, 4)
+
     const {transactions, popupList} = useContext(mainContext).state;
     const {dispatch} = useContext(mainContext)
     const balance = useBalance(MATTER_ADDRESS)
     const addTransaction = useTransactionAdder()
     const [modalType, setModalType] = useState(MODE_TYPE.INIT)
-    //const receiveList = useETHReceiveList()
-    const matterContract = useMatterContract()
-    //console.log('receiveList',  receiveList)
-
     const [claimData, setClaimData] = useState()
 
-    const [withdrawData, setWithdrawData] = useState()
 
-    const [claimList, setClaimList] = useState([])
+    console.log('list----->', receivedList1)
+    console.log('list----->', receivedList2)
+
+    const [withdrawData, setWithdrawData] = useState({})
 
     const [amount, setAmount] = useState()
     const [inputAccount, setInputAccount] = useState()
@@ -132,7 +132,6 @@ export const Bridge = () => {
     const [loading, setLoading] = useState(false)
     const [inputError, setInputError] = useState()
 
-    const [claimingList, setClaimingList] = useState([])
     const [toChain, setToChain] = useState(CHAIN[0])
     const [toChainList, setToChainList] = useState(CHAIN)
 
@@ -207,26 +206,6 @@ export const Bridge = () => {
         }
     }, [active, chainId])
 
-    useEffect(() => {
-        const claimIdListData = window.localStorage.getItem('CLAIMING_ID_LIST')
-        if (claimIdListData) {
-            try {
-                let claimIds = JSON.parse(claimIdListData)
-                const ids = claimList.map(item => {
-                    return item.id
-                })
-                console.log('ids', ids)
-                claimIds = claimIds.filter(item => {
-                    return ids.indexOf(item) !== -1
-                })
-                console.log('claiming ids', ids)
-                window.localStorage.setItem('CLAIMING_ID_LIST', JSON.stringify(claimIds))
-                setClaimingList(claimIds)
-            } catch (e) {
-
-            }
-        }
-    }, [claimList])
 
     useEffect(() => {
         if (claimData) {
@@ -250,7 +229,7 @@ export const Bridge = () => {
         const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
         setModalType(MODE_TYPE.CONFIRMING)
         try {
-            await contract.send(toChain.chainId, inputAccount, numToWei(amount) ,{from: account})
+            await contract.send(toChain.chainId, inputAccount, numToWei(amount), {from: account})
                 .then((response) => {
                     console.log('hash', response)
                     setModalType(MODE_TYPE.SUBMITTED)
@@ -275,16 +254,20 @@ export const Bridge = () => {
     const onClaim = async () => {
         const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
         setModalType(MODE_TYPE.CONFIRMING)
+        console.log('onclaim---->', withdrawData.fromChainId, withdrawData.nonce)
         try {
-            console.log('fetch data',deposite, deposite.stake.fromChainId, deposite.nonce, deposite.stake.toAddress, deposite.stake.toChainId)
-
-            const res = await fetch(`https://test.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${deposite.stake.fromChainId}&nonce=${deposite.nonce}&to=${deposite.stake.toAddress}&toChainId=${deposite.stake.toChainId}`)
-            console.log('res--->',res)
+            const res = await fetch(`https://test.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
+            console.log('res--->', res)
             const jsonData = await res.json()
             const data = jsonData.data
-            console.log('claim data',data.fromChainId, data.to, data.nonce, data.volume.toString(), data.signatory, data.signV, data.signR, data.signS)
+            console.log('claim data', data.fromChainId, data.to, data.nonce, data.volume.toString(), data.signatory, data.signV, data.signR, data.signS)
 
-            await contract.receive(data.fromChainId, data.to, data.nonce, data.volume.toString(), [{signatory: data.signatory, v: data.signV, r: data.signR, s: data.signS}], {from: account})
+            await contract.receive(data.fromChainId, data.to, data.nonce, data.volume.toString(), [{
+                signatory: data.signatory,
+                v: data.signV,
+                r: data.signR,
+                s: data.signS
+            }], {from: account})
                 .then(response => {
                     setModalType(MODE_TYPE.SUBMITTED)
                     addTransaction(response, {
@@ -543,10 +526,10 @@ export const Bridge = () => {
                                         <div className="bridge__input_frame__extra">
                                             <input
                                                 value={inputAccount}
-                                                   onChange={(e) => {
-                                                       const value = e.target.value
-                                                       setInputAccount(value)
-                                                   }} placeholder='Enter address to swap'/>
+                                                onChange={(e) => {
+                                                    const value = e.target.value
+                                                    setInputAccount(value)
+                                                }} placeholder='Enter address to swap'/>
                                         </div>
                                         <p className="error">{!isAddress(inputAccount) ? 'Invalid address' : ''}</p>
                                     </div>
@@ -561,7 +544,7 @@ export const Bridge = () => {
                                 <div className="bridge__input_frame">
                                     <p>Amount <span>{`Your balance: ${formatAmount(balance, 18, 6)} MATTER`}</span></p>
 
-                                    <div className={`bridge__input_frame__extra ${inputError? 'input_error' : ''}`}>
+                                    <div className={`bridge__input_frame__extra ${inputError ? 'input_error' : ''}`}>
                                         <input value={amount}
                                                onChange={(e) => {
                                                    const value = e.target.value
@@ -594,7 +577,10 @@ export const Bridge = () => {
                                 }}>Connect Wallet</button>
                             ) : (
                                 <div className="btn_group">
-                                    <button style={{marginTop: 18, display: deposite && deposite.stake.status === 0? 'flex': 'block'}}
+                                    <button style={{
+                                        marginTop: 18,
+                                        display: deposite && deposite.stake.status === 0 ? 'flex' : 'block'
+                                    }}
                                             disabled={!amount || (account && !new BigNumber(amount).isGreaterThan(0)) || inputError || !inputAccount || !isAddress(inputAccount) || (deposite || (deposite && deposite.stake.status !== 2))}
                                             onClick={onStake}>
 
@@ -610,16 +596,16 @@ export const Bridge = () => {
                                                     : `Deposite in ${loadChainInfo(chainId).title} Chain2`}
                                     </button>
 
-                                    <button style={{marginTop: 18, display: withdraw ? 'flex': 'block'}}
+                                    <button style={{marginTop: 18, display: withdraw ? 'flex' : 'block'}}
                                             disabled={!deposite || (deposite.stake && deposite.stake.status !== 1) || withdraw}
                                             onClick={() => {
+                                                console.log('on withdraw', deposite)
                                                 setWithdrawData({
-                                                    hash: deposite.hash,
                                                     fromChainId: deposite.stake.fromChainId,
                                                     toChainId: deposite.stake.toChainId,
                                                     toAddress: deposite.stake.toAddress,
-                                                    amount: deposite.stake.amount
-                                                })
+                                                    volume: deposite.stake.amount,
+                                                    nonce: deposite.nonce})
                                                 setModalType(MODE_TYPE.CLAIM)
                                             }}>{withdraw
                                         ? <><img src={Circle} className="confirm_modal__loading"/> <p>Withdraw</p></>
@@ -650,10 +636,11 @@ export const Bridge = () => {
                     {modalType === MODE_TYPE.SWITCH_CHAIN && (
                         <div className="default_modal modal-switch">
                             <p className="default_modal__title" style={{width: 332}}>
-                                1. Please switch your wallet network to {claimData && loadChainInfo(claimData.chainId).title}
+                                1. Please switch your wallet network
+                                to {claimData && loadChainInfo(claimData.chainId).title}
                                 to complete token swap. 2. Also please switch
                                 to your wallet with the destination address
-                                </p>
+                            </p>
                             <div className="chain_tip">
                                 <p>Destination Chain Address:</p>
                                 <p>{claimData && formatAddress(claimData.toAddress, 10, -5)}</p>
@@ -684,12 +671,13 @@ export const Bridge = () => {
                             <Close className="close-btn" onClick={() => {
                                 setModalType(MODE_TYPE.INIT)
                             }}/>
-                            <div style={{opacity: chainId !== deposite.stake.toChainId ? 1 : 0.2}}>
+                            <div style={{opacity: chainId !== withdrawData.toChainId ? 1 : 0.2}}>
                                 <p className="default_modal__title" style={{marginBottom: 20}}>
-                                    1. Please switch your wallet network to {deposite && loadChainInfo(deposite.stake.toChainId).title}
+                                    1. Please switch your wallet network
+                                    to {deposite && loadChainInfo(withdrawData.toChainId).title}
                                     to complete token swap. 2. Also please switch
                                     to your wallet with the destination address</p>
-                                {chainId !== deposite.stake.toChainId && (
+                                {chainId !== withdrawData.toChainId && (
                                     <div className="extra">
                                         <p>From:</p>
                                         <img src={withdrawData && loadChainInfo(withdrawData.fromChainId).icon}/>
@@ -706,7 +694,6 @@ export const Bridge = () => {
                                     <p>{deposite && formatAddress(withdrawData.toAddress, 10, -5)}</p>
                                 </div>
                             </div>
-
 
 
                             <div className="divider"/>
@@ -727,9 +714,7 @@ export const Bridge = () => {
                                 )}
 
                             </div>
-                            <button disabled={withdrawData && chainId !== withdrawData.toChainId} onClick={() => {
-                                onClaim( )
-                            }}
+                            <button disabled={withdrawData && chainId !== withdrawData.toChainId} onClick={onClaim}
                                     className="switch_btn">
                                 {withdraw ? <><img src={Circle} className="confirm_modal__loading"/> <p>Withdraw</p></>
                                     : `Withdraw from ${deposite && loadChainInfo(deposite.stake.toChainId).title} Chain`}
@@ -738,56 +723,60 @@ export const Bridge = () => {
                     )}
 
                     {modalType === MODE_TYPE.CLAIM_LIST && (
-                        <div className="default_modal claim_modal">
+                        <div className="default_modal claim_modal" style={{width: 512}}>
                             <Close className="close-btn" onClick={() => {
                                 setModalType(MODE_TYPE.INIT)
                             }}/>
                             <p className="default_modal__title" style={{marginBottom: 24}}>Claim List</p>
+                            <div className="claim_list">
+                                {receivedList1.concat(receivedList2)
+                                    .map(item => {
+                                        return (
+                                            <div className="claim_item"
+                                                 onClick={() => {
 
-                            {transactions
-                                .filter(item => {return item.claim})
-                                .map(item => {
-                                return (
-                                    <div className="claim_item"
-                                         onClick={() => {
+                                                 }}>
+                                                <div className="claim_item__item" style={{marginRight: 0}}>
+                                                    <p>From:</p>
+                                                    <div>
+                                                        <img src={loadChainInfo(item.fromChainId).icon}/>
+                                                        <p>{loadChainInfo(item.fromChainId).title}</p>
+                                                        <img className="arrow" src={ArrowLeft}/>
+                                                    </div>
+                                                </div>
 
-                                         }}>
-                                        <div className="claim_item__item" style={{marginRight: 0}}>
-                                            <p>From:</p>
-                                            <div>
-                                                <img src={loadChainInfo(item.claim.fromChainId).icon}/>
-                                                <p>{loadChainInfo(item.claim.fromChainId).title}</p>
-                                                <img className="arrow" src={ArrowLeft}/>
+                                                <div className="claim_item__item">
+                                                    <p>To:</p>
+                                                    <div>
+                                                        <img src={loadChainInfo(item.toChainId).icon}/>
+                                                        <p>{loadChainInfo(item.toChainId).title}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="claim_item__item">
+                                                    <p>Destination:</p>
+                                                    <div>
+                                                        <p>{account && formatAddress(account)}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="claim_item__item">
+                                                    <p>Amount:</p>
+                                                    <div>
+                                                        <p>{formatAmount(item.volume)}</p>
+                                                    </div>
+                                                </div>
+
+                                                {item.received ? <CheckCircle color={'#27AE60'}/> : <button onClick={()=>{
+                                                    setWithdrawData({fromChainId: item.fromChainId, nonce: item.nonce, toAddress: account, toChainId: item.toChainId, volume: item.volume})
+                                                    setModalType(MODE_TYPE.CLAIM)
+                                                }}
+                                                >Claim</button>}
+
                                             </div>
-                                        </div>
-
-                                        <div className="claim_item__item">
-                                            <p>To:</p>
-                                            <div>
-                                                <img src={loadChainInfo(item.claim.toChainId).icon}/>
-                                                <p>{loadChainInfo(item.claim.toChainId).title}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="claim_item__item">
-                                            <p>Destination:</p>
-                                            <div>
-                                                <p>{formatAddress(item.claim.toAddress)}</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="claim_item__item">
-                                            <p>Amount:</p>
-                                            <div>
-                                                <p>{formatAmount(item.claim.amount)}</p>
-                                            </div>
-                                        </div>
-
-                                        {/*<button>Claim</button>*/}
-                                        <CheckCircle color={'#27AE60'}/>
-                                    </div>
-                                )
-                            })}
+                                        )
+                                    })}
+                            </div>
                         </div>
                     )}
 

@@ -92,7 +92,6 @@ const reducer = (state, action) => {
 
 const ContextProvider = (props) => {
     const transactionsData = window.localStorage.getItem(ANTIMATTER_TRANSACTION_LIST)
-    console.log('transactionsData', transactionsData)
     const [state, dispatch] = useReducer(reducer, {
         showConnectModal: false,
         showStakeModal: false,
