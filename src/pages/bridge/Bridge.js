@@ -163,29 +163,6 @@ export const Bridge = () => {
         }
     }
 
-    const fetchData = () => {
-        try {
-            fetch(`http://bbcd4449834a.ngrok.io/web/getClaimList?status=0&to=${account}`).then((res) => {
-                setLoading(false)
-                res.json().then((result) => {
-                    if (timer) {
-                        setTimeout(() => {
-                            fetchData()
-                        }, 3000)
-                    }
-                    console.log('result--->', result.data)
-                    if (result.data) {
-                        setClaimList(result.data)
-                    }
-                }).catch((e) => {
-                    console.log('load err', e)
-                })
-            })
-        } catch (e) {
-            setLoading(false)
-        }
-    }
-
     useEffect(() => {
         if (!chainId || !hash) return
 
@@ -300,7 +277,7 @@ export const Bridge = () => {
         try {
             console.log('fetch data',deposite, deposite.stake.fromChainId, deposite.nonce, deposite.stake.toAddress, deposite.stake.toChainId)
 
-            const res = await fetch(`https://175.41.183.242/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${deposite.stake.fromChainId}&nonce=${deposite.nonce}&to=${deposite.stake.toAddress}&toChainId=${deposite.stake.toChainId}`)
+            const res = await fetch(`https://test.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${deposite.stake.fromChainId}&nonce=${deposite.nonce}&to=${deposite.stake.toAddress}&toChainId=${deposite.stake.toChainId}`)
             console.log('res--->',res)
             const jsonData = await res.json()
             const data = jsonData.data

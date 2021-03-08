@@ -150,15 +150,35 @@ export const useRemovePopup = () => {
     )
 }
 
-export const useReceiveList = () => {
+export const useETHReceiveList = () => {
     const {blockNumber} = useBlockNumber()
     const [receiveList, setReceiveList] = useState([])
     const chains = [3, 4]
 
     useEffect(()=>{
-        for (let i = 0; i< chains.length; i++){
 
-        }
+    },[blockNumber])
+
+}
+
+export const useBSCReceiveList = () => {
+    const {blockNumber} = useBlockNumber()
+    const [receiveList, setReceiveList] = useState([])
+    const chains = [3, 4]
+
+    useEffect(()=>{
+
+    },[blockNumber])
+
+}
+
+export const useHECOReceiveList = () => {
+    const {blockNumber} = useBlockNumber()
+    const [receiveList, setReceiveList] = useState([])
+    const chains = [3, 4]
+
+    useEffect(()=>{
+
     },[blockNumber])
 
 }
