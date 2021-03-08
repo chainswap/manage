@@ -1,10 +1,11 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
 import ERC20 from '../web3/abi/ERC20.json'
-import {getContract, useActiveWeb3React, useBlockNumber} from "../web3";
-import {getGLFStakingAddress} from "../web3/address";
+import {getContract, useActiveWeb3React, useBlockNumber, useChainBlockNumber} from "../web3";
+import {getGLFStakingAddress, MATTER_ADDRESS} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
+import {BigNumber} from "bignumber.js";
 
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
@@ -35,18 +36,17 @@ export const useBalance = (address) => {
     const [balance, setBalance] = useState()
 
     useEffect(() => {
-        if (active) {
+        if (active && chainId) {
             try {
                 const contract = getContract(library, ERC20.abi, address)
                 contract.balanceOf(account).then(res => {
-                    console.log('token balanceOf:', res, address, chainId)
                     setBalance(res.toString())
                 })
             } catch (e) {
                 console.log('load token balance error:', e)
             }
         }
-    }, [active, chainId, blockNumber])
+    }, [active, chainId, address ,blockNumber])
 
     return balance
 }
@@ -80,17 +80,16 @@ export const TransactionsUpdater = () => {
                 return !item.receipt && new Date().getTime() - item.addedTime < 86_400_000
             })
             .forEach(tx => {
-                console.log('transaction hash', tx.hash)
                 library
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
-                        console.log('receipt----->', receipt, tx.hash)
                         if (receipt) {
                             dispatch({
                                 type: ANTIMATTER_TRANSACTION_LIST, transaction: {
                                     ...tx,
                                     stake: tx.stake? {...tx.stake, status: receipt.status === 1 ? 1 : 0} :null,
                                     claim: tx.claim? {...tx.claim, status: receipt.status === 1 ? 1 : 0} :null,
+                                    nonce: tx.stake? new BigNumber(receipt.logs[1].data.substring(0, 66)).toString() : null,
                                     receipt: {
                                         blockHash: receipt.blockHash,
                                         blockNumber: receipt.blockNumber,

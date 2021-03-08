@@ -49,7 +49,7 @@ export const useAmount = () =>{
     useEffect(()=>{
         if(active){
             try{
-                const contract = getContract(library, ERC20.abi, MATTER_ADDRESS(chainId));
+                const contract = getContract(library, ERC20.abi, MATTER_ADDRESS);
                 contract.methods.balanceOf(account).call().then(res =>{
                     console.log('getQuota:',res)
                     setBalance(res)
