@@ -27,7 +27,9 @@ $nav_items_count: 3;
 }
 
 
-
+*, *::after, *::before {
+  /*box-sizing: inherit;*/
+}
 
 nav {
   position: absolute;

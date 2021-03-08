@@ -443,7 +443,7 @@
       }
 
       &__footer{
-        width: 100%;
+        width: -webkit-fill-available;
         height: 159px;
         margin-top: 251px;
         border-top: 1px solid rgba(255, 255, 255, 0.2);
