@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
 import Matter from '../../assets/icon/matter.svg'
-import {useBalance, useTransactionAdder} from "../Hooks";
+import {useBalance, useETHReceiveList, useTransactionAdder} from "../Hooks";
 import {MATTER_ADDRESS} from "../../web3/address";
 import {useWeb3React} from "@web3-react/core";
 import {formatAddress, formatAmount, numToWei} from "../../utils/format";
@@ -116,8 +116,9 @@ export const Bridge = () => {
     const balance = useBalance(MATTER_ADDRESS)
     const addTransaction = useTransactionAdder()
     const [modalType, setModalType] = useState(MODE_TYPE.INIT)
+    //const receiveList = useETHReceiveList()
     const matterContract = useMatterContract()
-    console.log('matterContract',  matterContract)
+    //console.log('receiveList',  receiveList)
 
     const [claimData, setClaimData] = useState()
 

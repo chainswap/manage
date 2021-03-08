@@ -41,6 +41,26 @@ export const useBlockNumber =() => {
     return {blockNumber}
 }
 
+export const useChainBlockNumber =(library) => {
+    const [blockNumber, setBlockNumber] = useState(0)
+    const updateBlockNumber = (blockNumber) =>{
+        setBlockNumber(blockNumber)
+    }
+
+    useEffect(()=>{
+        if(library){
+            library.once('block', updateBlockNumber)
+        }
+        library && library.getBlockNumber().then((res)=>{
+        })
+        return ()=>{
+            library && library.off('block', updateBlockNumber)
+        }
+    },[blockNumber, library])
+
+    return blockNumber
+}
+
 // 'transaction' | 'token' | 'address' | 'block'
 export function getEtherscanLink(
     chainId,

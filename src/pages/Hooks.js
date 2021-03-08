@@ -1,11 +1,12 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
 import ERC20 from '../web3/abi/ERC20.json'
-import {getContract, useActiveWeb3React, useBlockNumber} from "../web3";
-import {getGLFStakingAddress} from "../web3/address";
+import {getContract, useActiveWeb3React, useBlockNumber, useChainBlockNumber} from "../web3";
+import {getGLFStakingAddress, MATTER_ADDRESS} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
-
+import {ETHProvider} from "../web3/useContract";
+import  MainMatter from '../web3/abi/MainMatter.json'
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
     const [glfBalance, setGLFBalance] = useState()
@@ -85,13 +86,13 @@ export const TransactionsUpdater = () => {
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
                         if (receipt) {
-                            console.log('receipt-----> nones', receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,""))
+                            //console.log('receipt-----> nones', receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,""))
                             dispatch({
                                 type: ANTIMATTER_TRANSACTION_LIST, transaction: {
                                     ...tx,
                                     stake: tx.stake? {...tx.stake, status: receipt.status === 1 ? 1 : 0} :null,
                                     claim: tx.claim? {...tx.claim, status: receipt.status === 1 ? 1 : 0} :null,
-                                    nonce: tx.stake? receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,"") : null,
+                                    nonce: tx.stake? receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,"") === "" ? "0": receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,"") : null,
                                     receipt: {
                                         blockHash: receipt.blockHash,
                                         blockNumber: receipt.blockNumber,
@@ -151,18 +152,27 @@ export const useRemovePopup = () => {
 }
 
 export const useETHReceiveList = () => {
-    const {blockNumber} = useBlockNumber()
+    const {account} = useActiveWeb3React()
+    const library = {}
+    library.provider = ETHProvider
+    const blockNumber = useChainBlockNumber(library)
     const [receiveList, setReceiveList] = useState([])
     const chains = [3, 4]
 
     useEffect(()=>{
+        if(account){
+            const matterContract = getContract(library, MainMatter, MATTER_ADDRESS, account)
+            matterContract.sent.then(res =>{
+                console.log('sent count', res)
+            })
+        }
+    },[blockNumber, account])
 
-    },[blockNumber])
-
+    return receiveList
 }
 
 export const useBSCReceiveList = () => {
-    const {blockNumber} = useBlockNumber()
+    const {blockNumber} = useChainBlockNumber()
     const [receiveList, setReceiveList] = useState([])
     const chains = [3, 4]
 
