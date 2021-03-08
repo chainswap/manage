@@ -309,18 +309,6 @@ export function USDT_ADDRESS(chainId) {
     }
 }
 
-export function MATTER_ADDRESS(chainId) {
-    switch (chainId) {
-        case 1:
-            return '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
-        case 3:
-            return '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
-        case 4:
-            return '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
-        default:
-            return '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
-    }
-}
 
 export function OFFERING_ADDRESS(chainId) {
     switch (chainId) {
@@ -345,7 +333,9 @@ export function MAPPED_ADDRESS(chainId) {
     }
 }
 
-const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
+export const MATTER_ADDRESS = '0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F'
+
+const MULTICALL_NETWORKS = {
     [ChainId.MAINNET]: '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441',
     [ChainId.ROPSTEN]: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
     [ChainId.KOVAN]: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',

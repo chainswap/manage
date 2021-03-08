@@ -20,7 +20,6 @@ import Binance from '../../assets/icon/binance.svg'
 import Huobi from '../../assets/icon/huobi.svg'
 import ArrowLeft from '../../assets/icon/arrow-left.svg'
 import {getContract} from "../../web3";
-import SubMatter from "../../web3/abi/SubMatter.json";
 import MainMatter from "../../web3/abi/MainMatter.json";
 import {isAddress} from "../../utils/address";
 import {ReactComponent as Close} from '../../assets/icon/close.svg'
@@ -33,6 +32,8 @@ import ETH_logo from "../../assets/icon/eth.svg";
 import {mainContext} from "../../reducer";
 import {CheckCircle, Triangle, Check} from 'react-feather'
 import {PopupItem} from "../../components/popup/Popup";
+import {useSingleContractMultipleData} from "../../hooks/multicall/hooks";
+import {useMatterContract} from "../../web3/useContract";
 
 const MODE_TYPE = {
     INIT: 'INIT',
@@ -112,9 +113,11 @@ export const Bridge = () => {
 
     const {transactions, popupList} = useContext(mainContext).state;
     const {dispatch} = useContext(mainContext)
-    const balance = useBalance(MATTER_ADDRESS(chainId))
+    const balance = useBalance(MATTER_ADDRESS)
     const addTransaction = useTransactionAdder()
     const [modalType, setModalType] = useState(MODE_TYPE.INIT)
+    const matterContract = useMatterContract()
+    console.log('matterContract',  matterContract)
 
     const [claimData, setClaimData] = useState()
 
@@ -142,7 +145,7 @@ export const Bridge = () => {
         return item.claim && item.claim.status === 0
     })
 
-    console.log('withdraw', withdraw)
+    console.log('withdraw', deposite)
 
     const loadChainInfo = (id) => {
         switch (id) {
@@ -265,11 +268,11 @@ export const Bridge = () => {
     }, [account])
 
 
-    const onStake = async (func) => {
-        const contract = getContract(library, chainId === 1 || chainId === 3 ? MainMatter : SubMatter, MATTER_ADDRESS(chainId), account);
+    const onStake = async () => {
+        const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
         setModalType(MODE_TYPE.CONFIRMING)
         try {
-            await contract[func](numToWei(amount), toChain.chainId, inputAccount, {from: account})
+            await contract.send(toChain.chainId, inputAccount, numToWei(amount) ,{from: account})
                 .then((response) => {
                     console.log('hash', response)
                     setModalType(MODE_TYPE.SUBMITTED)
@@ -291,17 +294,19 @@ export const Bridge = () => {
     }
 
 
-    const onClaim = async (func, fromChainId ,hash) => {
-        const contract = getContract(library, (chainId === 1 || chainId === 3) ? MainMatter : SubMatter, MATTER_ADDRESS(chainId), account);
+    const onClaim = async () => {
+        const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
         setModalType(MODE_TYPE.CONFIRMING)
         try {
-            const res = await fetch(`https://test.chainswap.xyz/web/getSignDataSyn?fromChainId=${fromChainId}&hash=${hash.substring(2)}`)
+            console.log('fetch data',deposite, deposite.stake.fromChainId, deposite.nonce, deposite.stake.toAddress, deposite.stake.toChainId)
+
+            const res = await fetch(`https://175.41.183.242/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${deposite.stake.fromChainId}&nonce=${deposite.nonce}&to=${deposite.stake.toAddress}&toChainId=${deposite.stake.toChainId}`)
             console.log('res--->',res)
             const jsonData = await res.json()
             const data = jsonData.data
-            console.log('claim data', data.authorizer, data.to, data.volume, data.fromChainId, data.hash, data.signV, data.signR, data.signS)
+            console.log('claim data',data.fromChainId, data.to, data.nonce, data.volume.toString(), data.signatory, data.signV, data.signR, data.signS)
 
-            await contract[func](data.authorizer, data.to, data.volume.toString(), data.fromChainId, data.hash, data.signV, data.signR, data.signS, {from: account})
+            await contract.receive(data.fromChainId, data.to, data.nonce, data.volume.toString(), [{signatory: data.signatory, v: data.signV, r: data.signR, s: data.signS}], {from: account})
                 .then(response => {
                     setModalType(MODE_TYPE.SUBMITTED)
                     addTransaction(response, {
@@ -323,7 +328,7 @@ export const Bridge = () => {
                     })
                 })
                 .catch(error => {
-                    console.log('onClaim error')
+                    console.log('onClaim error', error)
                     setModalType(MODE_TYPE.ERROR)
                 })
         } catch (e) {
@@ -613,13 +618,7 @@ export const Bridge = () => {
                                 <div className="btn_group">
                                     <button style={{marginTop: 18, display: deposite && deposite.stake.status === 0? 'flex': 'block'}}
                                             disabled={!amount || (account && !new BigNumber(amount).isGreaterThan(0)) || inputError || !inputAccount || !isAddress(inputAccount) || (deposite || (deposite && deposite.stake.status !== 2))}
-                                            onClick={() => {
-                                                if (chainId === 1 || chainId === 3) {
-                                                    onStake('stake')
-                                                } else {
-                                                    onStake('burn')
-                                                }
-                                            }}>
+                                            onClick={onStake}>
 
                                         {(!deposite || (deposite && deposite.stake.status === 2))
                                             ? `Deposite in ${loadChainInfo(chainId).title} Chain1`
@@ -751,7 +750,7 @@ export const Bridge = () => {
 
                             </div>
                             <button disabled={withdrawData && chainId !== withdrawData.toChainId} onClick={() => {
-                                onClaim((chainId === 1 || chainId === 3) ? 'redeem' : 'mint', withdrawData.fromChainId, withdrawData.hash)
+                                onClaim( )
                             }}
                                     className="switch_btn">
                                 {withdraw ? <><img src={Circle} className="confirm_modal__loading"/> <p>Withdraw</p></>

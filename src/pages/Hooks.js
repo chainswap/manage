@@ -35,7 +35,7 @@ export const useBalance = (address) => {
     const [balance, setBalance] = useState()
 
     useEffect(() => {
-        if (active) {
+        if (active && chainId) {
             try {
                 const contract = getContract(library, ERC20.abi, address)
                 contract.balanceOf(account).then(res => {
@@ -46,7 +46,7 @@ export const useBalance = (address) => {
                 console.log('load token balance error:', e)
             }
         }
-    }, [active, chainId, blockNumber])
+    }, [active, chainId, address ,blockNumber])
 
     return balance
 }
@@ -84,13 +84,14 @@ export const TransactionsUpdater = () => {
                 library
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
-                        console.log('receipt----->', receipt, tx.hash)
                         if (receipt) {
+                            console.log('receipt-----> nones', receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,""))
                             dispatch({
                                 type: ANTIMATTER_TRANSACTION_LIST, transaction: {
                                     ...tx,
                                     stake: tx.stake? {...tx.stake, status: receipt.status === 1 ? 1 : 0} :null,
                                     claim: tx.claim? {...tx.claim, status: receipt.status === 1 ? 1 : 0} :null,
+                                    nonce: tx.stake? receipt.logs[1].data.substring(2, 66).replace(/\b(0+)/gi,"") : null,
                                     receipt: {
                                         blockHash: receipt.blockHash,
                                         blockNumber: receipt.blockNumber,
@@ -147,4 +148,17 @@ export const useRemovePopup = () => {
         },
         [dispatch]
     )
+}
+
+export const useReceiveList = () => {
+    const {blockNumber} = useBlockNumber()
+    const [receiveList, setReceiveList] = useState([])
+    const chains = [3, 4]
+
+    useEffect(()=>{
+        for (let i = 0; i< chains.length; i++){
+
+        }
+    },[blockNumber])
+
 }
