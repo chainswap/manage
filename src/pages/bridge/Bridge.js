@@ -308,7 +308,7 @@ export const Bridge = () => {
                   <div className="wallet">
                     <p className="wallet__balance">{balance ? formatAmount(balance, 18, 2) : '--'} MATTER</p>
                     <p className="wallet__address">
-                      <div className="dot"/>
+                      <div className="dot" onClick={() => setModalType(MODE_TYPE.PROFILE)}/>
                       <p onClick={() => setModalType(MODE_TYPE.PROFILE)}>{formatAddress(account)}</p>
                       <CopyToClipboard
                           text={account}
@@ -343,6 +343,13 @@ export const Bridge = () => {
               <div className="default_modal connecting">
                 <p className="default_modal__title">It takes a few minutes to populate your staking transaction record
                   on the other chain. Please wait patiently.</p>
+                <img className="investment__modal__loading" src={Circle} alt=""/>
+              </div>
+          )}
+
+          {modalType === MODE_TYPE.CONNECTING && (
+              <div className="investment__modal connecting">
+                <p className="investment__modal__title">Please wait a little...</p>
                 <img className="investment__modal__loading" src={Circle} alt=""/>
               </div>
           )}
@@ -400,6 +407,11 @@ export const Bridge = () => {
                 </div>
 
                 <div className="modal_profile__copy">
+
+                  <Close className="close-btn" onClick={() => {
+                    setModalType(MODE_TYPE.INIT)
+                  }}/>
+
                   <CopyToClipboard
                       text={account}
                       onCopy={() => {
@@ -761,7 +773,7 @@ export const Bridge = () => {
               </div>
           )}
         </div>
-        )}
+
         <footer>
           {active ?
               <a target="_blank" href="https://nib4dj7a8ly.typeform.com/to/v8VcmCsg">Apply for bridge listing</a> :
