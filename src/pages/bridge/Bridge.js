@@ -698,7 +698,7 @@ export const Bridge = () => {
                 <button disabled={withdrawData && chainId !== withdrawData.toChainId} onClick={onClaim}
                         className="switch_btn">
                   {withdraw ? <><img src={Circle} className="confirm_modal__loading"/> <p>Withdraw</p></>
-                      : `Withdraw from ${deposite && loadChainInfo(deposite.stake.toChainId).title} Chain`}
+                      : `Withdraw from ${withdrawData && loadChainInfo(withdrawData.toChainId).title} Chain`}
                 </button>
               </div>
           )}
@@ -710,6 +710,7 @@ export const Bridge = () => {
                 }}/>
                 <p className="default_modal__title" style={{marginBottom: 24}}>Claim List</p>
                 <ClaimList onWithdraw={(item) => {
+                  console.log('test--->',item)
                   setWithdrawData({
                     fromChainId: item.fromChainId,
                     nonce: item.nonce,
