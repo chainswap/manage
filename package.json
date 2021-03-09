@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ethersproject/address": "^5.0.10",
+    "@ethersproject/bignumber": "^5.0.15",
     "@ethersproject/bytes": "^5.0.10",
     "@ethersproject/contracts": "^5.0.5",
     "@ethersproject/providers": "^5.0.12",

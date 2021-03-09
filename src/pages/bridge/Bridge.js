@@ -204,6 +204,7 @@ export const Bridge = () => {
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
     try {
+
       await contract.send(toChain.chainId, inputAccount, numToWei(amount), {from: account})
           .then((response) => {
             console.log('hash-------?', getEtherscanLink(chainId, response.hash, 'transaction'), response)

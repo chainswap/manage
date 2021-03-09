@@ -11,15 +11,22 @@ export const ClaimList = ({onWithdraw}) =>{
 
   const {account} = useActiveWeb3React()
 
-  const receivedList1 = useReceivedList(4, 3)
-  const receivedList2 = useReceivedList(3, 4)
+  const receivedList1 = useReceivedList(1, 56)
+  const receivedList2 = useReceivedList(56, 1)
+
+  const receivedList3 = useReceivedList(1, 128)
+  const receivedList4 = useReceivedList(128, 1)
+
+  const receivedList5 = useReceivedList(56, 128)
+  const receivedList6 = useReceivedList(128, 56)
+
 
   console.log('list----->', receivedList1)
   console.log('list----->', receivedList2)
 
   return (
       <div className="claim_list">
-        {(!receivedList1 && !receivedList2) ? (
+        {(!receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6) ? (
             <img className="investment__modal__loading" src={Circle} alt=""/>
         ):(
             <>

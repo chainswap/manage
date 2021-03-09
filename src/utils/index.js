@@ -1,3 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
+
 export function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
@@ -27,4 +29,9 @@ export function getEtherscanLink(
       return `${prefix}/address/${data}`
     }
   }
+}
+
+
+export function calculateGasMargin(value) {
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(2000))).div(BigNumber.from(10000))
 }
