@@ -36,7 +36,7 @@ export function useSingleContractMultipleData(contract, methodName, callInputs, 
 }
 
 export const ETHNetwork = new NetworkConnector({
-  urls: {[1]: 'eth:https://mainnet.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
+  urls: {[1]: 'https://mainnet.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
 })
 
 export const testETHNetwork1 = new NetworkConnector({

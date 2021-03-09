@@ -1,8 +1,8 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
 import ERC20 from '../web3/abi/ERC20.json'
-import {getContract, useActiveWeb3React, useBlockNumber, useChainBlockNumber} from "../web3";
-import {getGLFStakingAddress, MATTER_ADDRESS} from "../web3/address";
+import {getContract, useActiveWeb3React, useBlockNumber} from "../web3";
+import {getGLFStakingAddress} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
 import {BigNumber} from "bignumber.js";
@@ -17,12 +17,10 @@ export const useGLFBalance = () => {
             try {
                 const contract = getContract(library, StakingRewardsV2.abi, getGLFStakingAddress(chainId))
                 contract.balanceOf(account).then(res => {
-                    console.log('bot totalSupply:', res)
                     setGLFBalance(res)
                 })
             } catch (e) {
                 console.log('load totalSupply error:', e)
-
             }
 
         }
@@ -56,7 +54,6 @@ export const useTransactionAdder = () => {
     const {chainId} = useActiveWeb3React()
     const {dispatch} = useContext(mainContext);
     return useCallback((response, customData) => {
-        console.log('useTransactionAdder', response, customData)
         if (!response) return
         const {hash} = response
         const {summary, stake, claim, hashLink} = customData
@@ -74,14 +71,12 @@ export const TransactionsUpdater = () => {
     const {blockNumber} = useBlockNumber()
     const {transactions} = useContext(mainContext).state;
     useEffect(() => {
-        console.log('transactions---->', transactions)
         if (!chainId || !library || !blockNumber) return
         transactions
             .filter(item => {
                 return !item.receipt && new Date().getTime() - item.addedTime < 86_400_000
             })
             .forEach(tx => {
-                console.log('tx--->', tx)
                 getNetworkLibrary(chainId)
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
