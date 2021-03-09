@@ -234,18 +234,33 @@ export const Bridge = () => {
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
     try {
+
+      const signList = []
+      for (let i = 1; i< 5; i++){
+        try {
+          const res = await fetch(`https://node${i}.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
+          const data = await res.json()
+          console.log('data---->',data)
+          if(data.data && data.data.signatory && data.data.signV && data.data.signR && data.data.signS){
+            signList.push({signatory: data.data.signatory, v: data.data.signV, r: data.data.signR, s: data.data.signS})
+          }
+          if(signList.length === 3){
+            break
+          }
+        }catch (e){
+
+        }
+
+      }
+      console.log('signList', signList)
+
       const res = await fetch(`https://node1.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
       console.log('res--->', res)
       const jsonData = await res.json()
       const data = jsonData.data
       console.log('claim data', data.fromChainId, data.to, data.nonce, data.volume.toString(), data.signatory, data.signV, data.signR, data.signS)
 
-      await contract.receive(data.fromChainId, data.to, data.nonce, data.volume.toString(), [{
-        signatory: data.signatory,
-        v: data.signV,
-        r: data.signR,
-        s: data.signS
-      }], {from: account})
+      await contract.receive(data.fromChainId, data.to, data.nonce, data.volume.toString(), signList, {from: account})
           .then(response => {
             setModalType(MODE_TYPE.SUBMITTED)
             console.log('link------<', getEtherscanLink(chainId, response.hash, 'transaction'))
