@@ -60,7 +60,7 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const useReceivedList = (chain1, chain2) => {
   const [receivedList, setReceivedList] = useState()
   const contractFrom = getContract(getNetworkLibrary(chain1), MainMatter, MATTER_ADDRESS)
-  const contractTo = useMatterContract(getNetworkLibrary(chain2))
+  const contractTo = getContract(getNetworkLibrary(chain2), MainMatter, MATTER_ADDRESS)
   const {account} = useActiveWeb3React()
   useEffect(() => {
 
@@ -76,11 +76,11 @@ export const useReceivedList = (chain1, chain2) => {
 
         const list = await Promise.all(queryData.map(async (item) => {
             const sendVolume = await contractFrom.sent(chain2, account, item)
-            const reVolume = await contractTo.sent(chain2, account, item)
+            const reVolume = await contractTo.received(chain1, account, item)
           console.log('result---->', sendVolume.toString(), reVolume.toString())
           //     receivedList.push({nonce: i, fromChainId: chain1, toChainId: chain2, volume: sendData[i], received: receiveData[i] === sendData[i]})
 
-          return {nonce: item, fromChainId: chain1, toChainId: chain2, volume: sendVolume.toString(), received: sendVolume === reVolume}
+          return {nonce: item, fromChainId: chain1, toChainId: chain2, volume: sendVolume.toString(), received: sendVolume.toString() === reVolume.toString()}
         }))
         setReceivedList(list)
       })

@@ -261,11 +261,20 @@
         display: flex;
         align-items: center;
 
+        @media #{$smWidth $xsWidth} {
+          width: auto;
+        }
+
 
         img{
           width: 18px;
           margin-left: 20px;
           padding: 0;
+
+          @media #{$smWidth $xsWidth} {
+            margin-top: auto;
+            margin-right: 0;
+          }
         }
 
         p{
@@ -682,6 +691,8 @@
     width: 398px;
     justify-content: space-between;
     margin-top: 20px;
+
+
   }
 
 }
@@ -782,6 +793,10 @@ footer {
   display: flex;
   justify-content: space-between;
   width: 100%;
+
+  @media #{$smWidth $xsWidth} {
+    display: none;
+  }
 
   a{
     opacity: 0.8;

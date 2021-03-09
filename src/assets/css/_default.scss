@@ -634,6 +634,10 @@ canvas{
         margin-right: 12px;
     }
 
+    @media #{$smWidth $xsWidth} {
+        width: inherit;
+    }
+
     button {
         margin-top: 50px;
         display: block;
