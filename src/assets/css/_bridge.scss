@@ -23,7 +23,7 @@
   padding: 40px;
   text-align: center;
 
-  @media #{ $desktop} {
+  @media  screen and (min-width: 420px) {
     display: none;
   }
 
@@ -36,7 +36,7 @@
   flex-direction: column;
   display: none;
 
-  @media #{$desktop} {
+  @media screen and  (min-width: 420px) {
     display: flex;
   }
 
