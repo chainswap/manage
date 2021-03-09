@@ -39,7 +39,7 @@ function App() {
             <Web3ReactProvider getLibrary={getLibrary}>
                 <Router>
                     <Switch>
-                        <Route exact path='/bridge'>
+                        <Route exact path='/'>
                             <Bridge />
                         </Route>
                         <Route exact path='/investment'>
