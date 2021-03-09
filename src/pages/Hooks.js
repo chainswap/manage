@@ -77,9 +77,14 @@ export const TransactionsUpdater = () => {
                 return !item.receipt && new Date().getTime() - item.addedTime < 86_400_000
             })
             .forEach(tx => {
+                console.log('tx---->', tx)
+                console.log('hash---->', tx.hash)
+
                 getNetworkLibrary(chainId)
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
+                        console.log('receipt---->', receipt)
+
                         if (receipt) {
                             dispatch({
                                 type: ANTIMATTER_TRANSACTION_LIST, transaction: {
@@ -94,7 +99,7 @@ export const TransactionsUpdater = () => {
                                         from: receipt.from,
                                         status: receipt.status,
                                         to: receipt.to,
-                                        transactionHash: receipt.transactionHash,
+                                        transactionHash: tx.hash,
                                         transactionIndex: receipt.transactionIndex
                                     }
                                 }
