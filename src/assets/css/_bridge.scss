@@ -663,6 +663,7 @@
 }
 
 .claim_modal {
+  max-height: 469px;
   @media #{$smWidth $xsWidth} {
     flex: 0;
     margin-bottom: 0;

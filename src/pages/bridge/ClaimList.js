@@ -25,12 +25,17 @@ export const ClaimList = ({onWithdraw}) =>{
   console.log('list----->', receivedList2)
 
   return (
-      <div className="claim_list">
-        {(!receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6) ? (
-            <img className="investment__modal__loading" src={Circle} alt=""/>
+      <div className="claim_list" style={{overflow: !receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6? 'unset': 'auto'}}>
+        {( !receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6) ? (
+            <img  className="investment__modal__loading" src={Circle} alt=""/>
         ):(
             <>
-          {(receivedList1?receivedList1:[]).concat((receivedList2? receivedList2 : []))
+          {(receivedList1?receivedList1:[])
+              .concat((receivedList2? receivedList2 : [])
+                  .concat(receivedList3? receivedList3 : [])
+                  .concat(receivedList4? receivedList5 : [])
+                  .concat(receivedList5? receivedList5 : [])
+                  .concat(receivedList6? receivedList6 : []))
               .map(item => {
                 return (
                     <div className="claim_item"
