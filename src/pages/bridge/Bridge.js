@@ -34,7 +34,6 @@ import ETH_logo from "../../assets/icon/eth.svg";
 import {mainContext} from "../../reducer";
 import {CheckCircle, Triangle, Check} from 'react-feather'
 import {PopupItem} from "../../components/popup/Popup";
-import {useReceivedList} from "../../hooks/multicall/hooks";
 import {ClaimList} from "./ClaimList";
 import {escapeRegExp} from "../../utils";
 
@@ -220,7 +219,7 @@ export const Bridge = () => {
                             toAddress: inputAccount,
                             status: 0,
                             amount: numToWei(amount)
-                        }, summary: `deposited ${amount} in ${loadChainInfo(chainId).title}`
+                        }, summary: `Deposited ${amount} in ${loadChainInfo(chainId).title}`
                     })
                 })
         } catch (e) {
@@ -257,7 +256,7 @@ export const Bridge = () => {
                             toAddress: data.to,
                             status: 0,
                             amount: data.volume.toString()
-                        }, summary: `withdraw ${amount} in ${loadChainInfo(chainId).title}`
+                        }, summary: `Withdraw ${amount} in ${loadChainInfo(chainId).title}`
                     })
 
                     const pastDispatch = deposite
@@ -339,7 +338,7 @@ export const Bridge = () => {
 
                     <header>
                         <img src={LogoLineWhite} alt=""/>
-                        {active && account && (
+                        {(active && account) ? (
                             <div className="chain_info">
                                 <button className="small" onClick={() => {
                                     setModalType(MODE_TYPE.CLAIM_LIST)
@@ -363,6 +362,15 @@ export const Bridge = () => {
                                         </CopyToClipboard>
                                     </p>
                                 </div>
+                            </div>
+                        ): (
+                            <div className="chain_info buttons">
+                                <button onClick={()=>{
+                                    window.location.href = ""
+                                }}>Apply for bridge listing</button>
+                                <button onClick={()=>{
+                                    setModalType(MODE_TYPE.WALLETS)
+                                }}>Connect Wallet</button>
                             </div>
                         )}
                     </header>
@@ -476,14 +484,9 @@ export const Bridge = () => {
                                         <span>From</span>
                                         <div/>
                                         <div className="default_drop">
-                                            <img src={chainId && loadChainInfo(chainId).icon}/>
-                                            <p>{chainId && loadChainInfo(chainId).title}</p>
+                                            <img src={chainId? loadChainInfo(chainId).icon: loadChainInfo(1).icon}/>
+                                            <p>{chainId ? loadChainInfo(chainId).title: loadChainInfo(1).title}</p>
                                         </div>
-                                        {/*<DropDown disabled*/}
-                                        {/*          index={0} onSelect={(e) => {*/}
-                                        {/*    setFromChain(e)*/}
-                                        {/*    setFromChainId(e.id)*/}
-                                        {/*}}/>*/}
                                     </div>
                                     <img src={Exchange}/>
                                     <div className="dropdown">
@@ -517,7 +520,7 @@ export const Bridge = () => {
                                 {/*</div>*/}
 
                                 <div className="bridge__input_frame">
-                                    <p>Amount <span>{`Your balance: ${formatAmount(balance, 18, 6)} MATTER`}</span></p>
+                                    {active && <p>Amount <span>{`Your balance: ${formatAmount(balance, 18, 2)} MATTER`}</span></p>}
 
                                     <div className={`bridge__input_frame__extra ${inputError ? 'input_error' : ''}`}>
                                         <input
@@ -565,7 +568,7 @@ export const Bridge = () => {
                                             onClick={onStake}>
 
                                         {(!deposite || (deposite && deposite.stake.status === 2))
-                                            ? `Deposite in ${loadChainInfo(chainId).title} Chain1`
+                                            ? `Deposit in ${loadChainInfo(chainId).title} Chain1`
                                             : deposite.stake.status === 0
                                                 ? <>
                                                     <img src={Circle} className="confirm_modal__loading"/>
@@ -573,7 +576,7 @@ export const Bridge = () => {
                                                 </>
                                                 : deposite.stake.status === 1
                                                     ? 'Deposited'
-                                                    : `Deposite in ${loadChainInfo(chainId).title} Chain2`}
+                                                    : `Deposit in ${loadChainInfo(chainId).title} Chain2`}
                                     </button>
 
                                     <button style={{marginTop: 18, display: withdraw ? 'flex' : 'block'}}
@@ -589,7 +592,7 @@ export const Bridge = () => {
                                                 setModalType(MODE_TYPE.CLAIM)
                                             }}>{withdraw
                                         ? <><img src={Circle} className="confirm_modal__loading"/> <p>Withdraw</p></>
-                                        : `Withdraw from ${loadChainInfo(chainId).title} Chain`}
+                                        : `Withdraw from ${toChain ? toChain.title:' '} Chain`}
                                     </button>
                                 </div>
 
@@ -675,12 +678,11 @@ export const Bridge = () => {
                                 </div>
                             </div>
 
-
                             <div className="divider"/>
 
                             <div style={{opacity: chainId === withdrawData.toChainId ? 1 : 0.2}}>
                                 <p className="default_modal__title" style={{marginBottom: 20}}>2. Confirm Withdraw</p>
-                                <p className="claim__amount">{withdrawData && formatAmount(withdrawData.amount)} MATTER</p>
+                                <p className="claim__amount">{withdrawData && formatAmount(withdrawData.volume)} MATTER</p>
                                 {chainId === withdrawData.toChainId && (
                                     <div className="extra">
                                         <p>From:</p>
@@ -751,7 +753,7 @@ export const Bridge = () => {
                                 setModalType(MODE_TYPE.INIT)
                             }}/>
                             <img className="confirm_modal__loading" src={Circle} alt=""/>
-                            <p style={{fontSize: 20}}>Wait For Comfirmation...</p>
+                            <p style={{fontSize: 20}}>Wait For Confirmation...</p>
                             <p>{`Stake in ${chainId && loadChainInfo(chainId).title} Chain`}</p>
 
                             <p className="color-gray">{`Confirm this transaction in your wallet`}</p>
@@ -781,7 +783,7 @@ export const Bridge = () => {
                 </div>
             )}
             <footer>
-                <a>Apply for bridge listing</a>
+                {active ? <a target="_blank" href="https://nib4dj7a8ly.typeform.com/to/v8VcmCsg">Apply for bridge listing</a>: <div/>}
                 <ul>
                     <li>
                         <a

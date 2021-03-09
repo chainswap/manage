@@ -46,7 +46,7 @@ export const useBalance = (address) => {
                 console.log('load token balance error:', e)
             }
         }
-    }, [active, chainId, address ,blockNumber])
+    }, [active, chainId, address ,blockNumber, account])
 
     return balance
 }

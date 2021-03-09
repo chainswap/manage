@@ -70,9 +70,9 @@ export const useReceivedList = (chain1, chain2) => {
       contractFrom.sentCount(chain2, account).then( async res => {
         const queryData = []
         for (let i = 0; i < parseInt(res.toString()); i++) {
-          queryData[i] = [parseInt(res.toString()) - 1]
+          queryData[i] = [parseInt(res.toString()) - (i+1)]
         }
-        console.log('count---->', queryData)
+        console.log('sentCount---->', chain1 ,queryData)
 
         const list = await Promise.all(queryData.map(async (item) => {
             const sendVolume = await contractFrom.sent(chain2, account, item)
@@ -87,7 +87,7 @@ export const useReceivedList = (chain1, chain2) => {
     }
 
     query()
-  }, [])
+  }, [account])
   // console.log('useReceivedList----->')
   // const {account} = useActiveWeb3React()
   // const contract = useMatterContract(getNetworkLibrary(chain1))
