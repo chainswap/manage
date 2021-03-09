@@ -6,15 +6,37 @@
   z-index: 3;
 }
 
-.page {
+.mobile {
+  margin: auto;
   width: 100%;
   height: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Futura PT;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  margin-bottom: 18px;
+  line-height: 148.69%;
+  letter-spacing: 0.01em;
+  padding: 40px;
+
+  @media #{ $desktop} {
+    display: none;
+  }
+
+}
+
+.page {
+  width: 100%;
+  height: 100%;
   justify-content: center;
   flex-direction: column;
+  display: none;
 
-  @media #{$smWidth $xsWidth} {
-    justify-content: flex-start;
+  @media #{$desktop} {
+    display: flex;
   }
 
   header {

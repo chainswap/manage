@@ -131,7 +131,7 @@ export const Bridge = () => {
   const addTransaction = useTransactionAdder()
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
   const [claimData, setClaimData] = useState()
-  console.log('transactions',transactions)
+  console.log('transactions', transactions)
   const [hash, setHash] = useState()
 
   const [copied, setCopied] = useState(false)
@@ -145,6 +145,9 @@ export const Bridge = () => {
 
   const [toChain, setToChain] = useState(CHAIN[0])
   const [toChainList, setToChainList] = useState(CHAIN)
+
+  const [auction, setAuction] = useState('DEPOSIT')
+
 
   const deposite = transactions.find(item => {
     return item.stake && account === item.stake.fromAddress && item.stake.status !== 2
@@ -201,6 +204,7 @@ export const Bridge = () => {
 
 
   const onStake = async () => {
+    setAuction('DEPOSIT')
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
     try {
@@ -230,17 +234,17 @@ export const Bridge = () => {
   }
 
   const onClaim = async () => {
+    setAuction('WITHDRAW')
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
     try {
-
       const signList = []
-      for (let i = 1; i< 5; i++){
+      for (let i = 1; i < 5; i++) {
         try {
           const res = await fetch(`https://node${i}.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
           const data = await res.json()
-          console.log('data---->',data)
-          if(data.data && data.data.signatory && data.data.signV && data.data.signR && data.data.signS && data.data.volume){
+          console.log('data---->', data)
+          if (data.data && data.data.signatory && data.data.signV && data.data.signR && data.data.signS && data.data.volume) {
             signList.push({
               signatory: data.data.signatory,
               v: data.data.signV,
@@ -252,10 +256,10 @@ export const Bridge = () => {
               volume: data.data.volume.toString()
             })
           }
-          if(signList.length === 3){
+          if (signList.length === 3) {
             break
           }
-        }catch (e){
+        } catch (e) {
 
         }
 
@@ -304,6 +308,7 @@ export const Bridge = () => {
 
   return (
       <>
+        <div className="mobile">Phone version coming soon! Please use desktop version for now.</div>
         <div className="page">
 
           <div className="popup_column">
@@ -348,7 +353,7 @@ export const Bridge = () => {
             ) : (
                 <div className="chain_info buttons">
                   <button onClick={() => {
-                    window.location.href = ""
+                    window.location.href = "https://nib4dj7a8ly.typeform.com/to/v8VcmCsg"
                   }}>Apply for bridge listing
                   </button>
                   <button onClick={() => {
@@ -535,8 +540,6 @@ export const Bridge = () => {
                           onChange={(e) => {
                             let value = e.target.value.replace(/,/g, '.')
                             if (value === '' || inputRegex.test(escapeRegExp(value))) {
-                              console.log('value---->', (value))
-
                               setAmount(value)
                               setInputError(null)
                               if (!balance || new BigNumber(numToWei(value)).isGreaterThan(balance)) {
@@ -588,7 +591,6 @@ export const Bridge = () => {
                       <button style={{marginTop: 18, display: withdraw ? 'flex' : 'block'}}
                               disabled={!deposite || (deposite.stake && deposite.stake.status !== 1) || withdraw}
                               onClick={() => {
-                                console.log('on withdraw', deposite)
                                 setWithdrawData({
                                   fromChainId: deposite.stake.fromChainId,
                                   toChainId: deposite.stake.toChainId,
@@ -626,8 +628,8 @@ export const Bridge = () => {
           {modalType === MODE_TYPE.SWITCH_CHAIN && (
               <div className="default_modal modal-switch">
                 <p className="default_modal__title" style={{width: 332}}>
-                  1. Please switch your wallet network to {claimData && loadChainInfo(claimData.chainId).title} to
-                  complete token swap. 2. Also please switch to your wallet with the destination address
+                  {`1. Please switch your wallet network to a${claimData && loadChainInfo(claimData.chainId).title} to complete token swap. 
+                  2. Also please switch to your wallet with the destination address`}
                 </p>
                 <div className="chain_tip">
                   <p>Destination Chain Address:</p>
@@ -663,9 +665,9 @@ export const Bridge = () => {
                 }}/>
                 <div style={{opacity: chainId !== withdrawData.toChainId ? 1 : 0.2}}>
                   <p className="default_modal__title" style={{marginBottom: 20}}>
-                    1. Please switch your wallet network
-                    to {deposite && loadChainInfo(withdrawData.toChainId).title} to complete token swap. 2. Also please switch
-                    to your wallet with the destination address</p>
+                    Please switch your wallet network to {deposite && loadChainInfo(withdrawData.toChainId).title} and
+                    switch to your wallet with destination address.
+                  </p>
                   {chainId !== withdrawData.toChainId && (
                       <div className="extra">
                         <p>From:</p>
@@ -717,7 +719,6 @@ export const Bridge = () => {
                 }}/>
                 <p className="default_modal__title" style={{marginBottom: 24}}>Claim List</p>
                 <ClaimList onWithdraw={(item) => {
-                  console.log('test--->',item)
                   setWithdrawData({
                     fromChainId: item.fromChainId,
                     nonce: item.nonce,
@@ -735,8 +736,8 @@ export const Bridge = () => {
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>You have successfully claimed tokens
                   to {claimData && loadChainInfo(claimData.chainId).title}</p>
-                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan':
-                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo': 'Etherscan'}</a>
+                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
+                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan'}</a>
                 <div className="add_token">
                   <p>Add MATTER to Metamask</p>
                   <p>Add MATTER to Metamask</p>
@@ -753,8 +754,8 @@ export const Bridge = () => {
               <div className="default_modal claimed_mode">
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>Transaction Submitted</p>
-                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan':
-                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo': 'Etherscan'}</a>
+                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
+                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan'}</a>
                 <button style={{marginTop: 32}} onClick={() => {
                   setModalType(MODE_TYPE.INIT)
                 }}>Close
@@ -769,7 +770,7 @@ export const Bridge = () => {
                 }}/>
                 <img className="confirm_modal__loading" src={Circle} alt=""/>
                 <p style={{fontSize: 20}}>Wait For Confirmation...</p>
-                <p>{`Stake in ${chainId && loadChainInfo(chainId).title} Chain`}</p>
+                <p>{`${auction === 'DEPOSIT' ? 'deposit in' : 'withdraw from'} ${chainId && loadChainInfo(chainId).title} Chain`}</p>
 
                 <p className="color-gray">{`Confirm this transaction in your wallet`}</p>
               </div>
