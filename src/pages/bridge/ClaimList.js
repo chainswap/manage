@@ -11,6 +11,9 @@ export const ClaimList = ({onWithdraw}) =>{
 
   const {account} = useActiveWeb3React()
 
+  // const receivedList1 = useReceivedList(1, 56)
+  // const receivedList2 = useReceivedList(56, 1)
+
   const receivedList1 = useReceivedList(1, 56)
   const receivedList2 = useReceivedList(56, 1)
 
@@ -31,11 +34,11 @@ export const ClaimList = ({onWithdraw}) =>{
         ):(
             <>
           {(receivedList1?receivedList1:[])
-              .concat((receivedList2? receivedList2 : [])
+              .concat(receivedList2? receivedList2 : [])
                   .concat(receivedList3? receivedList3 : [])
-                  .concat(receivedList4? receivedList5 : [])
+                  .concat(receivedList4? receivedList4 : [])
                   .concat(receivedList5? receivedList5 : [])
-                  .concat(receivedList6? receivedList6 : []))
+                  .concat(receivedList6? receivedList6 : [])
               .map(item => {
                 return (
                     <div className="claim_item"

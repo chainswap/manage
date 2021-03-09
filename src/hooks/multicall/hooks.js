@@ -84,8 +84,9 @@ export const useReceivedList = (chain1, chain2) => {
 
     const query = () =>{
 
-      console.log('contractFrom', contractFrom)
       contractFrom.sentCount(chain2, account).then( async res => {
+        console.log('contractFrom', chain2, res.toString())
+
         const queryData = []
         for (let i = 0; i < parseInt(res.toString()); i++) {
           queryData[i] = [parseInt(res.toString()) - (i+1)]
@@ -96,46 +97,15 @@ export const useReceivedList = (chain1, chain2) => {
             const sendVolume = await contractFrom.sent(chain2, account, item)
             const reVolume = await contractTo.received(chain1, account, item)
           console.log('result---->', sendVolume.toString(), reVolume.toString())
-          //     receivedList.push({nonce: i, fromChainId: chain1, toChainId: chain2, volume: sendData[i], received: receiveData[i] === sendData[i]})
-
           return {nonce: item, fromChainId: chain1, toChainId: chain2, volume: sendVolume.toString(), received: sendVolume.toString() === reVolume.toString()}
         }))
+        console.log('list--->', list)
         setReceivedList(list)
       })
     }
 
     query()
   }, [account])
-  // console.log('useReceivedList----->')
-  // const {account} = useActiveWeb3React()
-  // const contract = useMatterContract(getNetworkLibrary(chain1))
-  // console.log('contract----->', account)
-  // const data = useSingleContractMultipleData(contract, 'sentCount', [[chain2, account?account: ZERO_ADDRESS]])
-  // console.log('count---->', data)
-  //
-  // const sentQuery = []
-  // const receiveQuery = []
-  // if (data) {
-  //     for (let i = 0; i< parseInt(data); i++){
-  //         sentQuery.push([chain2, account, i])
-  //         receiveQuery.push([chain2, account, i])
-  //     }
-  // }
-  // console.log('sentData', sentQuery)
-  // const sendData = useSingleContractMultipleData(contract, 'sent', sentQuery, chain2, getNetworkLibrary(chain2))
-  // console.log('sendData---->', sendData)
-  // console.log('receiveQuery---->', receiveQuery)
-  //
-  // const receiveData = useSingleContractMultipleData(contract, 'received', receiveQuery, chain2, getNetworkLibrary(chain2))
-  // console.log('receiveData---->', receiveData)
-  // if (!receiveData || !sendData) return []
-  //
-  // const receivedList = []
-  // for (let i = 0; i< parseInt(data); i++) {
-  //     receivedList.push({nonce: i, fromChainId: chain1, toChainId: chain2, volume: sendData[i], received: receiveData[i] === sendData[i]})
-  // }
-  // return receivedList
-
 
   return receivedList
 }
