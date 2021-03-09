@@ -774,3 +774,44 @@
     }
   }
 }
+
+footer {
+  position: fixed;
+  bottom: 28px;
+  left: 45px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  a{
+    opacity: 0.8;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
+
+  ul{
+    display: flex;
+    gap: 48px;
+
+
+    li{
+      @media #{$smWidth $xsWidth} {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      a {
+        svg {
+          fill: #7a7f82;
+        }
+        &:hover svg {
+          fill: #ffffff;
+        }
+      }
+    }
+  }
+
+}

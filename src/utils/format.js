@@ -12,7 +12,7 @@ export const formatAmount = (value, decimals = 18, fixed = 6) => {
 };
 
 export const numToWei = (value, decimals = 18) => {
-    return new BigNumber(toWei(value, decimals).toNumber().toFixed(decimals)).toString()
+    return new BigNumber(toWei(value, decimals).toNumber().toFixed(decimals, 1)).toString()
 };
 
 export const fromWei = (value, decimals = 18) => {

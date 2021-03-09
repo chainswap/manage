@@ -18,9 +18,8 @@ function useContract(address, ABI, withSignerIfPossible = true, defaultLibrary) 
     }, [address, ABI, library, withSignerIfPossible, account, defaultLibrary])
 }
 
-export function useMulticallContract() {
-    const { chainId } = useActiveWeb3React()
-    return useContract(chainId && MULTICALL_NETWORKS[chainId], Multicall, false)
+export function useMulticallContract(chainId, library) {
+    return useContract(chainId && MULTICALL_NETWORKS[chainId], Multicall, false, library)
 }
 
 export function useMatterContract(library) {

@@ -31,8 +31,6 @@
     "browserslist": "^4.16.1",
     "caniuse-lite": "^1.0.30001179",
     "dat.gui": "^0.7.7",
-    "ethers": "^5.0.31",
-    "ethers-multicall": "^0.1.6",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.3",
