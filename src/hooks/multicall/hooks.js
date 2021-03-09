@@ -36,23 +36,23 @@ export function useSingleContractMultipleData(contract, methodName, callInputs, 
 }
 
 export const ETHNetwork = new NetworkConnector({
-  urls: {[1]: 'https://mainnet.infura.io/v3/118195b574e14a77bc5089adb7e80c4e'}
+  urls: {[1]: 'eth:https://mainnet.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
 })
 
 export const testETHNetwork1 = new NetworkConnector({
-  urls: {[3]: 'https://ropsten.infura.io/v3/092b404ef4534f8e9f3acb4e047049c9'}
+  urls: {[3]: 'https://ropsten.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
 })
 
 export const testETHNetwork2 = new NetworkConnector({
-  urls: {[4]: 'https://rinkeby.infura.io/v3/092b404ef4534f8e9f3acb4e047049c9'}
+  urls: {[4]: 'https://rinkeby.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
 })
 
 export const HECONetwork = new NetworkConnector({
-  urls: {[128]: 'https://http-mainnet-node1.hecochain.com'}
+  urls: {[128]: 'https://http-mainnet.hecochain.com'}
 })
 
 export const BSCNetwork = new NetworkConnector({
-  urls: {[56]: 'https://bsc-dataseed3.binance.org'}
+  urls: {[56]: 'https://bsc-dataseed4.binance.org'}
 })
 
 

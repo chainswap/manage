@@ -204,7 +204,7 @@ export const Bridge = () => {
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
     try {
-
+      console.log('wei--->', numToWei(amount))
       await contract.send(toChain.chainId, inputAccount, numToWei(amount), {from: account})
           .then((response) => {
             console.log('hash-------?', getEtherscanLink(chainId, response.hash, 'transaction'), response)
@@ -229,7 +229,6 @@ export const Bridge = () => {
     }
   }
 
-
   const onClaim = async () => {
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
@@ -241,8 +240,17 @@ export const Bridge = () => {
           const res = await fetch(`https://node${i}.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
           const data = await res.json()
           console.log('data---->',data)
-          if(data.data && data.data.signatory && data.data.signV && data.data.signR && data.data.signS){
-            signList.push({signatory: data.data.signatory, v: data.data.signV, r: data.data.signR, s: data.data.signS})
+          if(data.data && data.data.signatory && data.data.signV && data.data.signR && data.data.signS && data.data.volume){
+            signList.push({
+              signatory: data.data.signatory,
+              v: data.data.signV,
+              r: data.data.signR,
+              s: data.data.signS,
+              fromChainId: data.data.fromChainId,
+              to: data.data.to,
+              nonce: data.data.nonce,
+              volume: data.data.volume.toString()
+            })
           }
           if(signList.length === 3){
             break
@@ -253,28 +261,31 @@ export const Bridge = () => {
 
       }
       console.log('signList', signList)
+      const defaultSign = signList[0]
+      console.log('defaultSign', defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume)
 
-      const res = await fetch(`https://node1.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
-      console.log('res--->', res)
-      const jsonData = await res.json()
-      const data = jsonData.data
-      console.log('claim data', data.fromChainId, data.to, data.nonce, data.volume.toString(), data.signatory, data.signV, data.signR, data.signS)
-
-      await contract.receive(data.fromChainId, data.to, data.nonce, data.volume.toString(), signList, {from: account})
+      await contract.receive(defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume, signList.map(item => {
+        return {
+          signatory: item.signatory,
+          v: item.v,
+          r: item.r,
+          s: item.s,
+        }
+      }), {from: account})
           .then(response => {
             setModalType(MODE_TYPE.SUBMITTED)
             console.log('link------<', getEtherscanLink(chainId, response.hash, 'transaction'))
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
             addTransaction(response, {
               claim: {
-                fromChainId: data.fromChainId,
-                toChainId: data.toChainId,
+                fromChainId: defaultSign.fromChainId,
+                toChainId: defaultSign.toChainId,
                 fromAddress: account,
-                toAddress: data.to,
+                toAddress: defaultSign.to,
                 status: 0,
-                amount: data.volume.toString()
+                amount: defaultSign.volume
               },
-              summary: `Withdraw ${formatAmount(data.volume.toString())} in ${loadChainInfo(chainId).title}`,
+              summary: `Withdraw ${formatAmount(defaultSign.volume)} in ${loadChainInfo(chainId).title}`,
               hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
 
@@ -284,10 +295,6 @@ export const Bridge = () => {
               type: ANTIMATTER_TRANSACTION_LIST,
               transaction: pastDispatch
             })
-          })
-          .catch(error => {
-            console.log('onClaim error', error)
-            setModalType(MODE_TYPE.ERROR)
           })
     } catch (e) {
       setModalType(MODE_TYPE.ERROR)
@@ -728,7 +735,8 @@ export const Bridge = () => {
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>You have successfully claimed tokens
                   to {claimData && loadChainInfo(claimData.chainId).title}</p>
-                <a href={hash} target="_blank">View on Etherscan</a>
+                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan':
+                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo': 'Etherscan'}</a>
                 <div className="add_token">
                   <p>Add MATTER to Metamask</p>
                   <p>Add MATTER to Metamask</p>
@@ -745,7 +753,8 @@ export const Bridge = () => {
               <div className="default_modal claimed_mode">
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>Transaction Submitted</p>
-                <a href={hash} target="_blank">View on Etherscan</a>
+                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan':
+                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo': 'Etherscan'}</a>
                 <button style={{marginTop: 32}} onClick={() => {
                   setModalType(MODE_TYPE.INIT)
                 }}>Close

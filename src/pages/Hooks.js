@@ -6,6 +6,7 @@ import {getGLFStakingAddress, MATTER_ADDRESS} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
 import {BigNumber} from "bignumber.js";
+import {getNetworkLibrary} from "../hooks/multicall/hooks";
 
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
@@ -81,7 +82,7 @@ export const TransactionsUpdater = () => {
             })
             .forEach(tx => {
                 console.log('tx--->', tx)
-                library
+                getNetworkLibrary(chainId)
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
                         if (receipt) {
