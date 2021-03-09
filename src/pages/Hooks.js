@@ -58,11 +58,11 @@ export const useTransactionAdder = () => {
         console.log('useTransactionAdder', response, customData)
         if (!response) return
         const {hash} = response
-        const {summary, stake, claim} = customData
+        const {summary, stake, claim, hashLink} = customData
         const now = () => new Date().getTime()
         dispatch({
             type: ANTIMATTER_TRANSACTION_LIST,
-            transaction: {hash, chainId, summary, stake, claim, addedTime: now()}
+            transaction: {hash, chainId, summary, stake, claim, hashLink ,addedTime: now()}
         })
     }, [])
 }
@@ -80,6 +80,7 @@ export const TransactionsUpdater = () => {
                 return !item.receipt && new Date().getTime() - item.addedTime < 86_400_000
             })
             .forEach(tx => {
+                console.log('tx--->', tx)
                 library
                     .getTransactionReceipt(tx.hash)
                     .then(receipt => {
@@ -102,7 +103,6 @@ export const TransactionsUpdater = () => {
                                     }
                                 }
                             })
-
                             dispatch({
                                 type: HANDLE_POPUP_LIST,
                                 auction: 'add',
@@ -110,6 +110,7 @@ export const TransactionsUpdater = () => {
                                     key: receipt.transactionHash,
                                     popKey: receipt.transactionHash,
                                     hash: receipt.transactionHash,
+                                    hashLink: tx.hashLink,
                                     summary: tx.summary,
                                     success: receipt.status === 1
                                 }

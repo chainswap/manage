@@ -209,7 +209,7 @@ export const Bridge = () => {
     try {
       await contract.send(toChain.chainId, inputAccount, numToWei(amount), {from: account})
           .then((response) => {
-            console.log('hash', response)
+            console.log('hash-------?', getEtherscanLink(chainId, response.hash, 'transaction'), response)
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
             setModalType(MODE_TYPE.SUBMITTED)
             addTransaction(response, {
@@ -222,7 +222,7 @@ export const Bridge = () => {
                 amount: numToWei(amount)
               },
               summary: `Deposited ${amount} in ${loadChainInfo(chainId).title}`,
-              hashLink: getEtherscanLink(chainId, response, 'transaction')
+              hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
           })
     } catch (e) {
@@ -250,6 +250,7 @@ export const Bridge = () => {
       }], {from: account})
           .then(response => {
             setModalType(MODE_TYPE.SUBMITTED)
+            console.log('link------<', getEtherscanLink(chainId, response.hash, 'transaction'))
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
             addTransaction(response, {
               claim: {
@@ -261,7 +262,7 @@ export const Bridge = () => {
                 amount: data.volume.toString()
               },
               summary: `Withdraw ${formatAmount(data.volume.toString())} in ${loadChainInfo(chainId).title}`,
-              hashLink: getEtherscanLink(chainId, response, 'transaction')
+              hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
 
             const pastDispatch = deposite
@@ -287,7 +288,7 @@ export const Bridge = () => {
 
           <div className="popup_column">
             {popupList.map(item => {
-              return <PopupItem key={item.key} popKey={item.key} hash={item.hash} content={item.summary}
+              return <PopupItem key={item.key} popKey={item.key} hash={item.hashLink} content={item.summary}
                                 success={item.success} removeAfterMs={4000}/>
             })}
           </div>
@@ -514,7 +515,7 @@ export const Bridge = () => {
                       {inputAccount && (
                           <button className="max" onClick={() => {
                             setInputError(null)
-                            setAmount(formatAmount(balance))
+                            setAmount(formatAmount(balance, 18, 18))
                           }}>Max
                           </button>
                       )}
@@ -631,8 +632,7 @@ export const Bridge = () => {
                 <div style={{opacity: chainId !== withdrawData.toChainId ? 1 : 0.2}}>
                   <p className="default_modal__title" style={{marginBottom: 20}}>
                     1. Please switch your wallet network
-                    to {deposite && loadChainInfo(withdrawData.toChainId).title}
-                    to complete token swap. 2. Also please switch
+                    to {deposite && loadChainInfo(withdrawData.toChainId).title} to complete token swap. 2. Also please switch
                     to your wallet with the destination address</p>
                   {chainId !== withdrawData.toChainId && (
                       <div className="extra">

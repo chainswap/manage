@@ -4,8 +4,8 @@ import {useRemovePopup} from "../../pages/Hooks";
 import {CheckCircle, AlertCircle} from 'react-feather'
 import {useActiveWeb3React} from "../../web3";
 
-export const PopupItem = ({removeAfterMs, content, popKey, success}) => {
-
+export const PopupItem = ({removeAfterMs, content, popKey, success, hash}) => {
+    console.log('hash link--->', hash)
     const removePopup = useRemovePopup()
 
     const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
@@ -40,7 +40,7 @@ export const PopupItem = ({removeAfterMs, content, popKey, success}) => {
                     <p>{content}</p>
                 </div>
 
-                {chainId &&  <a >View on Etherscan</a>}
+                {chainId &&  <a href={hash} target="_blank">View on Etherscan</a>}
             </div>
 
             <animated.div style={faderStyle}/>
