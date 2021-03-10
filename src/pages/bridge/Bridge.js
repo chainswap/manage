@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
 import Matter from '../../assets/icon/matter.svg'
@@ -136,7 +136,7 @@ export const Bridge = () => {
 
   const [copied, setCopied] = useState(false)
 
-  const [withdrawData, setWithdrawData] = useState({})
+  const [withdrawData, setWithdrawData] = useState()
 
   const [amount, setAmount] = useState()
   const [inputAccount, setInputAccount] = useState()
@@ -148,6 +148,7 @@ export const Bridge = () => {
 
   const [auction, setAuction] = useState('DEPOSIT')
 
+  const [curWithdraw, setCurWithdraw] = useState()
 
   const deposite = transactions.find(item => {
     return item.stake && account === item.stake.fromAddress && item.stake.status !== 2
@@ -155,6 +156,42 @@ export const Bridge = () => {
 
   const withdraw = transactions.find(item => {
     return item.claim && item.claim.status === 0
+  })
+
+  const getSigns = (async () => {
+    console.log('withdrawData', withdrawData)
+    if (!withdrawData) return
+    return await new Promise((resolve, reject) => {
+      let signList = []
+      for (let i = 1; i < 6; i++) {
+        try {
+          fetch(`https://node${i}.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
+              .then((response) => {
+                return response.json()
+              })
+              .then((data) => {
+                signList.push({
+                  signatory: data.data.signatory,
+                  v: data.data.signV,
+                  r: data.data.signR,
+                  s: data.data.signS,
+                  fromChainId: data.data.fromChainId,
+                  to: data.data.to,
+                  nonce: data.data.nonce,
+                  volume: data.data.volume.toString()
+                })
+                if (signList.length === 3) {
+                  console.log('resolve', signList)
+                  resolve(signList)
+                }
+              })
+        } catch (e) {
+
+        }
+
+      }
+
+    })
   })
 
   useEffect(() => {
@@ -234,41 +271,15 @@ export const Bridge = () => {
   }
 
   const onClaim = async () => {
+    setModalType(MODE_TYPE.CONFIRMING)
+    const signs = await getSigns()
     setAuction('WITHDRAW')
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
-    setModalType(MODE_TYPE.CONFIRMING)
     try {
-      const signList = []
-      for (let i = 1; i < 5; i++) {
-        try {
-          const res = await fetch(`https://node${i}.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
-          const data = await res.json()
-          console.log('data---->', data)
-          if (data.data && data.data.signatory && data.data.signV && data.data.signR && data.data.signS && data.data.volume) {
-            signList.push({
-              signatory: data.data.signatory,
-              v: data.data.signV,
-              r: data.data.signR,
-              s: data.data.signS,
-              fromChainId: data.data.fromChainId,
-              to: data.data.to,
-              nonce: data.data.nonce,
-              volume: data.data.volume.toString()
-            })
-          }
-          if (signList.length === 3) {
-            break
-          }
-        } catch (e) {
-
-        }
-
-      }
-      console.log('signList', signList)
-      const defaultSign = signList[0]
+      const defaultSign = signs[0]
       console.log('defaultSign', defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume)
 
-      await contract.receive(defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume, signList.map(item => {
+      await contract.receive(defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume, signs.map(item => {
         return {
           signatory: item.signatory,
           v: item.v,
