@@ -13,7 +13,7 @@ import {
     HANDLE_SHOW_TRANSACTION_MODAL,
     HANDLE_WALLET_MODAL,
     HANDLE_TX_STATUS,
-    HANDLE_SHOW_MENUMASK_MODAL, ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST,
+    HANDLE_SHOW_MENUMASK_MODAL, ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST, CLEAR_ANTIMATTER_TRANSACTION_LIST,
 } from './const';
 
 const mainContext = React.createContext();
@@ -75,6 +75,8 @@ const reducer = (state, action) => {
             }
             window.localStorage.setItem(ANTIMATTER_TRANSACTION_LIST, JSON.stringify(lastTxs))
             return {...state, transactions: lastTxs}
+        case CLEAR_ANTIMATTER_TRANSACTION_LIST:
+            return {...state, transactions: []}
         case HANDLE_POPUP_LIST:
             let popups = state.popupList
             const popup = action.popup

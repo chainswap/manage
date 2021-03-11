@@ -11,7 +11,7 @@ import LogoLineWhite from "../../assets/image/chainswap-logo.svg";
 
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {ReactComponent as Copy} from "../../assets/icon/copy.svg";
-import {ANTIMATTER_TRANSACTION_LIST, GALLERY_SELECT_WEB3_CONTEXT} from "../../const";
+import {ANTIMATTER_TRANSACTION_LIST, CLEAR_ANTIMATTER_TRANSACTION_LIST, GALLERY_SELECT_WEB3_CONTEXT} from "../../const";
 import metamask from "../../assets/icon/metamask.png";
 import walletConnect from "../../assets/icon/walletConnect.png";
 import {InjectedConnector} from "@web3-react/injected-connector";
@@ -455,7 +455,10 @@ export const Bridge = () => {
 
                 <div className="transactions">
                   <p>Recent Transactions</p>
-                  <a className="clear">(clear all)</a>
+                  <a onClick={()=>{
+                    window.localStorage.setItem(ANTIMATTER_TRANSACTION_LIST, JSON.stringify([]))
+                    dispatch({type: CLEAR_ANTIMATTER_TRANSACTION_LIST})
+                  }} className="clear">(clear all)</a>
                   <ul>
                     {transactions.map(item => {
                       return (
