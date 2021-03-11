@@ -242,7 +242,7 @@ export const Bridge = () => {
                 status: 0,
                 amount: numToWei(amount)
               },
-              summary: `Deposited ${amount} in ${loadChainInfo(chainId).title}`,
+              summary: `Deposited ${amount} MATTER in ${loadChainInfo(chainId).title}`,
               hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
           })
@@ -281,7 +281,7 @@ export const Bridge = () => {
                 status: 0,
                 amount: defaultSign.volume
               },
-              summary: `Withdraw ${formatAmount(defaultSign.volume)} in ${loadChainInfo(chainId).title}`,
+              summary: `Withdraw ${formatAmount(defaultSign.volume)} MATTER in ${loadChainInfo(chainId).title}`,
               hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
 
@@ -697,7 +697,7 @@ export const Bridge = () => {
               <div className="default_modal claimed_mode">
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>Transaction Submitted</p>
-                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
+                <a href={hash} target="_blank">View on {hash && hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
                     hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan'}</a>
                 <button style={{marginTop: 32}} onClick={() => {
                   setModalType(MODE_TYPE.INIT)

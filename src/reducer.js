@@ -80,12 +80,14 @@ const reducer = (state, action) => {
         case HANDLE_POPUP_LIST:
             let popups = state.popupList
             const popup = action.popup
-            console.log('popup--->',action.auction, action.popup)
             if (action.auction === 'add') {
                 popups = [popup].concat(popups)
             } else {
                 popups = popups.filter(item => {return item.key !== popup.key})
             }
+            popups = popups.filter(function(item, index, arr) {
+            return arr.indexOf(item, 0) === index;
+        });
             return {...state, popupList: popups};
         default:
             return state;
