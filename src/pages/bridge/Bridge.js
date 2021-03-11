@@ -293,6 +293,7 @@ export const Bridge = () => {
             })
           })
     } catch (e) {
+      throw "claim error" + e
       setModalType(MODE_TYPE.ERROR)
     }
   }
