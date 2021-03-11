@@ -1,23 +1,9 @@
-import React, { useContext } from 'react'
-
-import { HANDLE_SHOW_UNSTAKED_TOKENS_MODAL } from '../../const'
-import { mainContext } from '../../reducer'
-import { formatAmount } from '../../utils/format'
-import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
-import { getPercent } from '../../utils/time'
+import React  from 'react'
 import { CrossModalIcon } from "../../icons";
 
-const { fromWei } = Web3.utils
-
 export const UnlockedTokensModal = ({
-  onOk,
-  rewards,
-  symbol,
-  stakedTime,
   setUnlockedOpen,
 }) => {
-  const { dispatch } = useContext(mainContext)
 
   return (
     <div className="modal">

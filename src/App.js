@@ -4,20 +4,10 @@ import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import './styles.css'
 import './assets/css/style.scss';
-import { Header } from './components/header/Header';
-import { PoolTab } from './components/pooltab/PoolTab';
-
 import { Home } from './pages/Home';
 import { Investment } from './pages/investment/Investment';
-
-
 import { ContextProvider } from './reducer';
 import { InitPage } from './pages/InitPage';
-
-import { Footer } from './components/Footer';
-import { StakingPool1 } from './pages/pools/stakingPool1';
-import { StakingPool2 } from './pages/pools/stakingPool2';
-import { StakingPool3 } from './pages/pools/stakingPool3';
 import {Bridge} from "./pages/bridge/Bridge";
 
 function getLibrary(provider) {

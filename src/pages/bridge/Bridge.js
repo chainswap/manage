@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
 import Matter from '../../assets/icon/matter.svg'
@@ -130,8 +130,6 @@ export const Bridge = () => {
   const balance = useBalance(MATTER_ADDRESS)
   const addTransaction = useTransactionAdder()
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
-  const [claimData, setClaimData] = useState()
-  console.log('transactions', transactions)
   const [hash, setHash] = useState()
 
   const [copied, setCopied] = useState(false)
@@ -148,8 +146,6 @@ export const Bridge = () => {
 
   const [auction, setAuction] = useState('DEPOSIT')
 
-  const [curWithdraw, setCurWithdraw] = useState()
-
   const deposite = transactions.find(item => {
     return item.stake && account === item.stake.fromAddress && item.stake.status !== 2
   })
@@ -159,7 +155,6 @@ export const Bridge = () => {
   })
 
   const getSigns = (async () => {
-    console.log('withdrawData', withdrawData)
     if (!withdrawData) return
     return await new Promise((resolve, reject) => {
       let signList = []
@@ -186,7 +181,7 @@ export const Bridge = () => {
                 }
               })
         } catch (e) {
-
+          throw e
         }
 
       }
@@ -223,17 +218,6 @@ export const Bridge = () => {
 
 
   useEffect(() => {
-    if (claimData) {
-      if (claimData.chainId === chainId) {
-        setModalType(MODE_TYPE.CLAIM)
-      } else {
-        setModalType(MODE_TYPE.SWITCH_CHAIN)
-      }
-    }
-  }, [claimData, chainId])
-
-
-  useEffect(() => {
     if (account) {
       setInputAccount(account)
     }
@@ -245,10 +229,8 @@ export const Bridge = () => {
     const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
     try {
-      console.log('wei--->', numToWei(amount))
       await contract.send(toChain.chainId, inputAccount, numToWei(amount), {from: account})
           .then((response) => {
-            console.log('hash-------?', getEtherscanLink(chainId, response.hash, 'transaction'), response)
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
             setModalType(MODE_TYPE.SUBMITTED)
             addTransaction(response, {
@@ -289,7 +271,6 @@ export const Bridge = () => {
       }), {from: account})
           .then(response => {
             setModalType(MODE_TYPE.SUBMITTED)
-            console.log('link------<', getEtherscanLink(chainId, response.hash, 'transaction'))
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
             addTransaction(response, {
               claim: {
@@ -313,7 +294,6 @@ export const Bridge = () => {
           })
     } catch (e) {
       setModalType(MODE_TYPE.ERROR)
-      console.log('claim error---->', e)
     }
   }
 
@@ -475,6 +455,7 @@ export const Bridge = () => {
 
                 <div className="transactions">
                   <p>Recent Transactions</p>
+                  <a className="clear">(clear all)</a>
                   <ul>
                     {transactions.map(item => {
                       return (
@@ -636,39 +617,6 @@ export const Bridge = () => {
               </div>
           )}
 
-          {modalType === MODE_TYPE.SWITCH_CHAIN && (
-              <div className="default_modal modal-switch">
-                <p className="default_modal__title" style={{width: 332}}>
-                  {`1. Please switch your wallet network to a${claimData && loadChainInfo(claimData.chainId).title} to complete token swap. 
-                  2. Also please switch to your wallet with the destination address`}
-                </p>
-                <div className="chain_tip">
-                  <p>Destination Chain Address:</p>
-                  <p>{claimData && formatAddress(claimData.toAddress, 10, -5)}</p>
-                </div>
-                <div className="extra">
-                  <p>From:</p>
-                  <img src={claimData && loadChainInfo(claimData.fromChainId).icon}/>
-                  <h5>{claimData && loadChainInfo(claimData.fromChainId).title}</h5>
-                  <img className="arrow" src={ArrowLeft}/>
-                  <p>To:</p>
-                  <img src={claimData && loadChainInfo(claimData.chainId).icon}/>
-                  <h5>{claimData && loadChainInfo(claimData.chainId).title}</h5>
-                </div>
-
-                <div className="line"/>
-                <p>To learn more about how to add network to wallet,
-                  <a target="_blank"
-                     href="https://antimatterdefi.medium.com/announcing-antimatter-defi-cross-chain-bridge-innovation-7d23515d0844">click
-                    here</a>
-                </p>
-                <button disabled onClick={() => {
-                  //setModalType(MODE_TYPE.CLAIM)
-                }}
-                        className="switch_btn">{`Switch wallet network  ${toChain.title} and refresh your page`}</button>
-              </div>
-          )}
-
           {modalType === MODE_TYPE.CLAIM && (
               <div className="default_modal claim_modal">
                 <Close className="close-btn" onClick={() => {
@@ -739,25 +687,6 @@ export const Bridge = () => {
                   })
                   setModalType(MODE_TYPE.CLAIM)
                 }}/>
-              </div>
-          )}
-
-          {modalType === MODE_TYPE.CLAIMED && (
-              <div className="default_modal claimed_mode">
-                <img src={Success}/>
-                <p style={{marginTop: 19, fontSize: 18}}>You have successfully claimed tokens
-                  to {claimData && loadChainInfo(claimData.chainId).title}</p>
-                <a href={hash} target="_blank">View on {hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
-                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan'}</a>
-                <div className="add_token">
-                  <p>Add MATTER to Metamask</p>
-                  <p>Add MATTER to Metamask</p>
-                  <img src={metamask}/>
-                </div>
-                <button style={{marginTop: 32}} onClick={() => {
-                  window.location.reload()
-                }}>Close
-                </button>
               </div>
           )}
 

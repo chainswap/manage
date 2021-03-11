@@ -4,12 +4,13 @@ import ArrowLeft from "../../assets/icon/arrow-left.svg";
 import {formatAddress, formatAmount} from "../../utils/format";
 import {CheckCircle} from "react-feather";
 import {loadChainInfo} from "./Bridge";
-import {useActiveWeb3React} from "../../web3";
+import {getContract, useActiveWeb3React, useSingleContractMultipleData} from "../../web3";
 import Circle from "../../assets/icon/circle.svg";
-
+import MainMatter from '../../web3/abi/MainMatter.json'
+import {MATTER_ADDRESS} from "../../web3/address";
 export const ClaimList = ({onWithdraw}) =>{
 
-  const {account} = useActiveWeb3React()
+  const {account, library} = useActiveWeb3React()
 
   // const receivedList1 = useReceivedList(1, 56)
   // const receivedList2 = useReceivedList(56, 1)
@@ -23,9 +24,8 @@ export const ClaimList = ({onWithdraw}) =>{
   const receivedList5 = useReceivedList(56, 128)
   const receivedList6 = useReceivedList(128, 56)
 
-
-  console.log('list----->', receivedList1)
-  console.log('list----->', receivedList2)
+  //const matterContract = getContract(library, MainMatter, MATTER_ADDRESS)
+  //const countList = useSingleContractMultipleData(matterContract, 'sentCount', [[3, account], [4, account]])
 
   return (
       <div className="claim_list" style={{overflow: !receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6? 'unset': 'auto'}}>

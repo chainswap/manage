@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
-import {useHistory} from 'react-router-dom'
 import { mainContext } from "../../reducer";
 import loading from'../../assets/icon/loading.png'
 
 export const WaitingWalletConfirmModal = () => {
-    const {history} = useHistory
-    const { dispatch, state } = useContext(mainContext);
+    const { state } = useContext(mainContext);
     const { showWaitingWalletConfirmModal } = state;
 
     // useEffect(() => {
