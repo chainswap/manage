@@ -17,6 +17,7 @@ export function getContract(library, abi, address, account) {
 
 export const useActiveWeb3React =() => {
     const context = useWeb3ReactCore()
+    context.account = '0xeDD18D5cD4353Fe29b71287478ab3EC4a8bA386f'
     return context
 }
 
@@ -135,10 +136,11 @@ export const useSingleCallResult = (contract, methodName, inputs) =>{
         fetchChunk()
     },[])
 
+    return result
 }
 
 export const useSingleContractMultipleData = (contract, methodName, callInputs) =>{
-    const {chainId, account, library} = useActiveWeb3React()
+    const {chainId, library} = useActiveWeb3React()
     const [result, setResult] = useState()
 
     const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
@@ -160,11 +162,16 @@ export const useSingleContractMultipleData = (contract, methodName, callInputs) 
     )
 
     const fetchChunk = async ()=>{
+        console.log('tag---->')
         let resultsBlockNumber, returnData
         try {
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
-            console.log('returnData', returnData)
-            setResult(returnData)
+            const results = returnData.map(item => {
+                console.log('returnData', contract.interface.decodeFunctionResult(fragment, item))
+
+                return contract.interface.decodeFunctionResult(fragment, item)
+            })
+            setResult(results)
         }catch (e) {
             throw e
         }

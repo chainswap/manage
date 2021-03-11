@@ -3,14 +3,12 @@
     background: #fff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     @media #{$desktop} {
-        background-image: url('../image/weBanner.png');
         background-repeat: no-repeat;
         background-size: contain;
         height: 700px;
     }
     @media #{$mdWidth} {
         background: #fff;
-        background-image: url('../image/weBanner.png');
         background-repeat: no-repeat;
         background-size: contain;
         height: 700px;

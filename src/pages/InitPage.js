@@ -1,30 +1,9 @@
-import React, {useContext, useEffect} from 'react';
-import {WalletConnect} from '../components/account/WalletConnect';
+import React, {useEffect} from 'react';
 import {useWeb3React} from '@web3-react/core';
-import {mainContext} from '../reducer';
-import {
-    StakeModal,
-    UnstakeModal,
-    ClaimRewardModal,
-    StakedTokensModal,
-    FailedTransactionModal,
-    WaitingWalletConfirmModal,
-    TransactionModal,
-} from '../components/Modals';
-import {MenuMask} from '../components/menumask/index';
-import {
-    GALLERY_SELECT_WEB3_CONTEXT,
-    HANDLE_WALLET_MODAL,
-    HANDLE_SHOW_MENUMASK_MODAL,
-} from '../const';
+import {GALLERY_SELECT_WEB3_CONTEXT} from '../const';
 import {InjectedConnector} from '@web3-react/injected-connector';
 import {WalletConnectConnector} from '@web3-react/walletconnect-connector';
 import {LedgerConnector} from '@web3-react/ledger-connector';
-import {WalletModal} from '../components/Modals/WalletModal';
-import {WalletChange} from '../components/account/WalletChange';
-import {LoginModal} from '../components/Modals/LoginModl';
-import {TXStatusModal} from '../components/Modals/TXStatusModal';
-import satellite from '../assets/image/satellite.png';
 import {TransactionsUpdater} from "./Hooks";
 
 const injected = new InjectedConnector({
