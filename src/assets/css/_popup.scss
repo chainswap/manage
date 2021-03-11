@@ -1,7 +1,6 @@
 .popup {
   display: inline-block;
   width: 100%;
-  padding: 1em;
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), #000000;
   position: relative;
   border-radius: 10px;
@@ -17,6 +16,12 @@
     &__content {
       display: flex;
       align-items: center;
+
+      p {
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
 
       svg {
         margin-right: 12px;
