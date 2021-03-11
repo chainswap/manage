@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
 import Matter from '../../assets/icon/matter.svg'
-import {useBalance, useTransactionAdder} from "../Hooks";
+import {useBalance, useTokenList, useTransactionAdder} from "../Hooks";
 import {MATTER_ADDRESS} from "../../web3/address";
 import {useWeb3React} from "@web3-react/core";
 import {formatAddress, formatAmount, numToWei} from "../../utils/format";
@@ -11,7 +11,12 @@ import LogoLineWhite from "../../assets/image/chainswap-logo.svg";
 
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {ReactComponent as Copy} from "../../assets/icon/copy.svg";
-import {ANTIMATTER_TRANSACTION_LIST, CLEAR_ANTIMATTER_TRANSACTION_LIST, GALLERY_SELECT_WEB3_CONTEXT} from "../../const";
+import {
+  ANTIMATTER_TRANSACTION_LIST,
+  CLEAR_ANTIMATTER_TRANSACTION_LIST,
+  GALLERY_SELECT_WEB3_CONTEXT,
+  MODE_TYPE
+} from "../../const";
 import metamask from "../../assets/icon/metamask.png";
 import walletConnect from "../../assets/icon/walletConnect.png";
 import {InjectedConnector} from "@web3-react/injected-connector";
@@ -37,25 +42,7 @@ import {PopupItem} from "../../components/popup/Popup";
 import {ClaimList} from "./ClaimList";
 import {escapeRegExp, getEtherscanLink} from "../../utils";
 
-const MODE_TYPE = {
-  INIT: 'INIT',
-  WALLETS: 'WALLETS',
-  PROFILE: 'PROFILE',
-  CONNECTING: 'CONNECTING',
-  CONNECTED: 'CONNECTED',
-  CONNECT_ERROR: "CONNECT_ERROR",
-  SWITCH_CHAIN: "SWITCH_CHAIN",
-  NOT_ELIGIBLE: "NOT_ELIGIBLE",
-  CONTRIBUTE_SUCCESS: "CONTRIBUTE_SUCCESS",
-  CONTRIBUTED: "CONTRIBUTED",
-  WAITING: "WAITING",
-  CLAIM: "CLAIM",
-  CLAIMED: "CLAIMED",
-  SUBMITTED: "SUBMITTED",
-  CLAIM_LIST: "CLAIM_LIST",
-  CONFIRMING: 'CONFIRMING',
-  ERROR: 'ERROR'
-}
+const tokenList = useTokenList()
 
 const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 56, 128],
@@ -86,7 +73,6 @@ const HECO_OPTIONS = [
   {id: 0, title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
   {id: 1, title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
 ]
-
 
 const ROPSTEN_OPTIONS = [
   {id: 0, title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
@@ -129,22 +115,19 @@ export const Bridge = () => {
   const {dispatch} = useContext(mainContext)
   const balance = useBalance(MATTER_ADDRESS)
   const addTransaction = useTransactionAdder()
+
+
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
   const [hash, setHash] = useState()
-
   const [copied, setCopied] = useState(false)
-
   const [withdrawData, setWithdrawData] = useState()
-
   const [amount, setAmount] = useState()
   const [inputAccount, setInputAccount] = useState()
-
   const [inputError, setInputError] = useState()
-
   const [toChain, setToChain] = useState(CHAIN[0])
   const [toChainList, setToChainList] = useState(CHAIN)
-
   const [auction, setAuction] = useState('DEPOSIT')
+
 
   const deposite = transactions.find(item => {
     return item.stake && account === item.stake.fromAddress && item.stake.status !== 2

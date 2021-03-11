@@ -99,13 +99,15 @@ function isValidMethodArgs(x){
     )
 }
 
-export const useSingleCallResult = (contract, methodName, inputs) =>{
+export const useSingleCallResult = (contract, methodName, inputs, options) =>{
 
-    const [result, setResult] = useState()
+    const {chainId, library} = options
+    console.log('library--->', library)
+    const multicallContract = useMulticallContract(chainId, library)
 
     const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
-    const multicallContract = useMulticallContract()
+    const [result, setResult] = useState()
 
 
     const calls = useMemo(() => {

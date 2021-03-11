@@ -1,12 +1,14 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
 import ERC20 from '../web3/abi/ERC20.json'
-import {getContract, useActiveWeb3React, useBlockNumber} from "../web3";
-import {getGLFStakingAddress} from "../web3/address";
+import {getContract, useActiveWeb3React, useBlockNumber, useSingleCallResult} from "../web3";
+import {ChainId, getGLFStakingAddress, TOKEN_FACTORY} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
 import {BigNumber} from "bignumber.js";
-import {getNetworkLibrary} from "../hooks/multicall/hooks";
+import {getNetworkLibrary, testETHNetwork1} from "../hooks/multicall/hooks";
+import TokenFactory from '../web3/abi/TokenFactory.json'
+import {CHAIN} from "../components/dropdown";
 
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
@@ -148,4 +150,16 @@ export const useRemovePopup = () => {
         },
         [dispatch]
     )
+}
+
+
+export const useTokenList = () =>{
+    console.log('tokenFactoryContract', testETHNetwork1, TOKEN_FACTORY[ChainId.ROPSTEN])
+    const tokenFactoryContract = getContract(getNetworkLibrary(3), TokenFactory, TOKEN_FACTORY[ChainId.ROPSTEN])
+    console.log('tokenFactoryContract--->', tokenFactoryContract)
+
+    const tokenCount = useSingleCallResult(tokenFactoryContract, 'certifiedCount', [], {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)})
+
+    console.log('tokenCount--->', tokenCount)
+
 }
