@@ -697,8 +697,8 @@ export const Bridge = () => {
               <div className="default_modal claimed_mode">
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>Transaction Submitted</p>
-                <a href={hash} target="_blank">View on {hash && hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
-                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan'}</a>
+                <a href={hash} target="_blank">View on {hash? hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
+                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan': ''}</a>
                 <button style={{marginTop: 32}} onClick={() => {
                   setModalType(MODE_TYPE.INIT)
                 }}>Close
