@@ -1,14 +1,24 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
-import ERC20 from '../web3/abi/ERC20.json'
-import {getContract, useActiveWeb3React, useBlockNumber, useSingleCallResult} from "../web3";
+import {
+    getContract,
+    useActiveWeb3React,
+    useBlockNumber, useMultipleContractSingleData,
+    useSingleCallResult,
+    useSingleContractMultipleData
+} from "../web3";
+import { Interface } from '@ethersproject/abi'
+
 import {ChainId, getGLFStakingAddress, TOKEN_FACTORY} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
 import {BigNumber} from "bignumber.js";
-import {getNetworkLibrary, testETHNetwork1} from "../hooks/multicall/hooks";
+import {getNetworkLibrary} from "../hooks/multicall/hooks";
 import TokenFactory from '../web3/abi/TokenFactory.json'
 import {CHAIN} from "../components/dropdown";
+import ERC20 from '../web3/abi/ERC20.json'
+const ERC20_INTERFACE = new Interface(ERC20)
+
 
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
@@ -32,14 +42,17 @@ export const useGLFBalance = () => {
 }
 
 export const useBalance = (address) => {
+    console.log('address--->',address)
     const {account, active, library, chainId} = useActiveWeb3React()
     const {blockNumber} = useBlockNumber()
     const [balance, setBalance] = useState()
 
     useEffect(() => {
+        console.log('address--->1',address)
+
         if (active && chainId) {
             try {
-                const contract = getContract(library, ERC20.abi, address)
+                const contract = getContract(library, ERC20, address)
                 contract.balanceOf(account).then(res => {
                     setBalance(res.toString())
                 })
@@ -154,12 +167,33 @@ export const useRemovePopup = () => {
 
 
 export const useTokenList = () =>{
-    console.log('tokenFactoryContract', testETHNetwork1, TOKEN_FACTORY[ChainId.ROPSTEN])
+    const {account} = useActiveWeb3React()
     const tokenFactoryContract = getContract(getNetworkLibrary(3), TokenFactory, TOKEN_FACTORY[ChainId.ROPSTEN])
-    console.log('tokenFactoryContract--->', tokenFactoryContract)
+    const options = {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)}
+    const tokens =  useSingleCallResult(tokenFactoryContract, 'allCertifiedTokens', undefined, options)
 
-    const tokenCount = useSingleCallResult(tokenFactoryContract, 'certifiedCount', [], {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)})
+    const names = useMultipleContractSingleData(tokens? tokens.tokens: [],ERC20_INTERFACE, 'name', undefined, options)
 
-    console.log('tokenCount--->', tokenCount)
+    const balances = useMultipleContractSingleData(tokens? tokens.tokens: [],ERC20_INTERFACE, 'balanceOf', [account], options)
 
+    console.log('mappingTokens--->call', tokens? tokens.tokens.map(item => {return [item]}):[] )
+
+    const mappingTokens = useSingleContractMultipleData(tokenFactoryContract, 'chainIdMappingTokenMappeds',tokens? tokens.tokens.map(item => {return [item]}):[] , options)
+    console.log('mappingTokens--->result', mappingTokens)
+
+    return useMemo(()=>{
+        return tokens ? tokens.symbols.map((item, index) =>{
+            console.log('chains---->', mappingTokens?.[index]?.['chainIds'])
+            return {
+                symbol: item,
+                address: tokens.tokens[index],
+                chainId: tokens.chainIds[index].toString(),
+                name: names?.[index],
+                balance: balances?.[index]?.['balance'].toString(),
+                chains: mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
+                    return {chainId: parseInt(item).toString(), address: mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex]}
+                })
+            }
+        }) : []
+    },[tokens, names, balances, mappingTokens])
 }

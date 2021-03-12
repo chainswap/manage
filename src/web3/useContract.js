@@ -9,7 +9,6 @@ function useContract(address, ABI, withSignerIfPossible = true, defaultLibrary) 
     return useMemo(() => {
         if (!address || !ABI || (!library && !defaultLibrary)) return null
         try {
-            console.log('defaultLibrary', defaultLibrary)
             return getContract(defaultLibrary? defaultLibrary :library,  ABI, address, withSignerIfPossible && account ? account : undefined)
         } catch (error) {
             console.error('Failed to get contract', error)

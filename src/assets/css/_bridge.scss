@@ -367,6 +367,7 @@
       justify-content: space-between;
       width: 100%;
       line-height: 148.69%;
+      white-space: nowrap;
     }
 
     input {
@@ -419,6 +420,7 @@
         margin-left: 12px;
         margin-right: 20px;
         width: auto;
+        font-size: 16px;
       }
 
       img {
@@ -437,6 +439,23 @@
       &:focus {
         border-color: rgba(255, 255, 255, 0.6);
       }
+
+      .asset {
+        display: flex;
+        width: 194px;
+        height: 36px;
+        align-items: center;
+        margin-right: 20px;
+
+
+        &:hover {
+          opacity: 0.8;
+          border-radius: 14px;
+          background-color: rgba(255, 255, 255, 0.08);
+          cursor: pointer;
+        }
+      }
+
     }
   }
 

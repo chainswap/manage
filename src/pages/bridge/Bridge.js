@@ -8,6 +8,7 @@ import {useWeb3React} from "@web3-react/core";
 import {formatAddress, formatAmount, numToWei} from "../../utils/format";
 // import LogoLineWhite from "../../assets/image/logo-line-white.svg";
 import LogoLineWhite from "../../assets/image/chainswap-logo.svg";
+import Down from "../../assets/icon/down.svg";
 
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {ReactComponent as Copy} from "../../assets/icon/copy.svg";
@@ -41,8 +42,7 @@ import {CheckCircle, Triangle, Check} from 'react-feather'
 import {PopupItem} from "../../components/popup/Popup";
 import {ClaimList} from "./ClaimList";
 import {escapeRegExp, getEtherscanLink} from "../../utils";
-
-const tokenList = useTokenList()
+import {AssetModal} from "../../components/modal/AssetModal";
 
 const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 56, 128],
@@ -111,11 +111,13 @@ export const Bridge = () => {
     chainId
   } = useWeb3React();
 
+  const tokenList = useTokenList()
+  console.log('tokenList', tokenList)
+
   const {transactions, popupList} = useContext(mainContext).state;
   const {dispatch} = useContext(mainContext)
   const balance = useBalance(MATTER_ADDRESS)
   const addTransaction = useTransactionAdder()
-
 
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
   const [hash, setHash] = useState()
@@ -127,6 +129,8 @@ export const Bridge = () => {
   const [toChain, setToChain] = useState(CHAIN[0])
   const [toChainList, setToChainList] = useState(CHAIN)
   const [auction, setAuction] = useState('DEPOSIT')
+  const [selectingToken, setSelectingToken] = useState(false)
+  const [selectedToken, setSelectedToken] = useState()
 
 
   const deposite = transactions.find(item => {
@@ -439,7 +443,7 @@ export const Bridge = () => {
 
                 <div className="transactions">
                   <p>Recent Transactions</p>
-                  <a onClick={()=>{
+                  <a onClick={() => {
                     window.localStorage.setItem(ANTIMATTER_TRANSACTION_LIST, JSON.stringify([]))
                     dispatch({type: CLEAR_ANTIMATTER_TRANSACTION_LIST})
                   }} className="clear">(clear all)</a>
@@ -510,7 +514,7 @@ export const Bridge = () => {
                   {/*</div>*/}
 
                   <div className="bridge__input_frame">
-                    {active && <p>Amount <span>{`Your balance: ${formatAmount(balance, 18, 2)} MATTER`}</span></p>}
+                    {active && <p>Amount <span>{`Your balance : ${selectedToken? formatAmount(selectedToken.balance, 18, 2): '--'} ${selectedToken? selectedToken.symbol :''}`}</span></p>}
 
                     <div className={`bridge__input_frame__extra ${inputError ? 'input_error' : ''}`}>
                       <input
@@ -521,21 +525,34 @@ export const Bridge = () => {
                             if (value === '' || inputRegex.test(escapeRegExp(value))) {
                               setAmount(value)
                               setInputError(null)
-                              if (!balance || new BigNumber(numToWei(value)).isGreaterThan(balance)) {
-                                setInputError('You do not have enough MATTER')
+                              if (!selectedToken || new BigNumber(numToWei(value)).isGreaterThan(selectedToken.balance)) {
+                                setInputError(`You do not have enough ${selectedToken.balance}`)
                               }
                             }
                           }} placeholder='Enter amount to swap'/>
-                      {inputAccount && (
-                          <button className="max" onClick={() => {
-                            setInputError(null)
-                            setAmount(formatAmount(balance, 18, 18))
-                          }}>Max
-                          </button>
-                      )}
+                      {/*{inputAccount && (*/}
+                      {/*    <button className="max" onClick={() => {*/}
+                      {/*      setInputError(null)*/}
+                      {/*      setAmount(formatAmount(balance, 18, 18))*/}
+                      {/*    }}>Max*/}
+                      {/*    </button>*/}
+                      {/*)}*/}
 
-                      <img src={Matter}/>
-                      <p>MATTER</p>
+                      <div className="asset" onClick={() => {
+                        setSelectingToken(true)
+                      }}>
+                        {selectedToken ? (
+                            <>
+                              <img src={Matter}/>
+                              <p>{selectedToken.symbol}</p></>
+                        ) : (
+                            <>
+                              <img src={Matter}/>
+                              <p>select Token</p></>
+                        )}
+
+                        <img style={{width: 12, marginLeft: 0, marginRight: 12}} src={Down}/>
+                      </div>
                     </div>
 
                     <p className="error">{inputError}</p>
@@ -681,8 +698,8 @@ export const Bridge = () => {
               <div className="default_modal claimed_mode">
                 <img src={Success}/>
                 <p style={{marginTop: 19, fontSize: 18}}>Transaction Submitted</p>
-                <a href={hash} target="_blank">View on {hash? hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
-                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan': ''}</a>
+                <a href={hash} target="_blank">View on {hash ? hash.indexOf('https://bscscan.com') !== -1 ? 'Bscscan' :
+                    hash.indexOf('https://hecoinfo.com') !== -1 ? 'Hecoinfo' : 'Etherscan' : ''}</a>
                 <button style={{marginTop: 32}} onClick={() => {
                   setModalType(MODE_TYPE.INIT)
                 }}>Close
@@ -724,6 +741,19 @@ export const Bridge = () => {
               </div>
           )}
         </div>
+
+        {selectingToken && <div className="modal-show">
+          <div className="wrapper">
+            <AssetModal tokenList={tokenList}
+                        onSelect={(token) => {
+                          setSelectedToken(token)
+                        }} onClose={() => {
+              setSelectingToken(false)
+            }}/>
+          </div>
+        </div>
+        }
+
 
         <footer>
           {active ?
@@ -767,7 +797,6 @@ export const Bridge = () => {
               </a>
             </li>
           </ul>
-
         </footer>
       </>
   )

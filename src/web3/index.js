@@ -17,7 +17,6 @@ export function getContract(library, abi, address, account) {
 
 export const useActiveWeb3React =() => {
     const context = useWeb3ReactCore()
-    context.account = '0xeDD18D5cD4353Fe29b71287478ab3EC4a8bA386f'
     return context
 }
 
@@ -102,12 +101,12 @@ function isValidMethodArgs(x){
 export const useSingleCallResult = (contract, methodName, inputs, options) =>{
 
     const {chainId, library} = options
-    console.log('library--->', library)
-    const multicallContract = useMulticallContract(chainId, library)
+
+    const [result, setResult] = useState()
 
     const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
-    const [result, setResult] = useState()
+    const multicallContract = useMulticallContract(chainId, library)
 
 
     const calls = useMemo(() => {
@@ -126,7 +125,12 @@ export const useSingleCallResult = (contract, methodName, inputs, options) =>{
         try {
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
             console.log('returnData', returnData)
-            setResult(returnData)
+            const results = returnData.map(item => {
+                console.log('returnData', contract.interface.decodeFunctionResult(fragment, item))
+
+                return contract.interface.decodeFunctionResult(fragment, item)
+            })
+            setResult(results?.[0])
         }catch (e) {
             throw e
         }
@@ -136,20 +140,20 @@ export const useSingleCallResult = (contract, methodName, inputs, options) =>{
     useEffect(() =>{
         if(!multicallContract) return
         fetchChunk()
-    },[])
+    },[inputs])
 
     return result
 }
 
-export const useSingleContractMultipleData = (contract, methodName, callInputs) =>{
-    const {chainId, library} = useActiveWeb3React()
+export const useSingleContractMultipleData = (contract, methodName, callInputs, options) =>{
+    const {chainId, library} = options
+
     const [result, setResult] = useState()
 
     const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
     const multicallContract = useMulticallContract(chainId, library)
 
-    console.log('multicallContract', multicallContract)
     const calls = useMemo(
         () =>
             contract && fragment && callInputs && callInputs.length > 0
@@ -164,37 +168,46 @@ export const useSingleContractMultipleData = (contract, methodName, callInputs) 
     )
 
     const fetchChunk = async ()=>{
-        console.log('tag---->')
+        console.log('singlereturnData1', result, callInputs)
+
+        if(result && result.length !== 0) return
         let resultsBlockNumber, returnData
         try {
-            ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
-            const results = returnData.map(item => {
-                console.log('returnData', contract.interface.decodeFunctionResult(fragment, item))
 
+            ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
+            console.log('singlereturnData5',returnData)
+
+            const results = returnData.map(item => {
+                console.log('singlereturnData2', contract.interface.decodeFunctionResult(fragment, item))
                 return contract.interface.decodeFunctionResult(fragment, item)
             })
+            console.log('singlereturnData4',)
             setResult(results)
         }catch (e) {
             throw e
+            console.log('singlereturnData3', e)
+
         }
     }
+
 
 
     useEffect(() =>{
         if(!multicallContract) return
         fetchChunk()
-    },[])
+    },[callInputs])
 
     return result
 }
 
-export const useMultipleContractSingleData = (addresses, contractInterface, methodName, callInputs) =>{
+export const useMultipleContractSingleData = (addresses, contractInterface, methodName, callInputs, options) =>{
+
+    const {chainId, library} = options
 
     const [result, setResult] = useState()
-
     const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
-    const multicallContract = useMulticallContract()
+    const multicallContract = useMulticallContract(chainId, library)
 
     const callData = useMemo(
         () =>
@@ -207,7 +220,7 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
     const calls = useMemo(
         () =>
             fragment && addresses && addresses.length > 0 && callData
-                ? addresses.map<Call | undefined>(address => {
+                ? addresses.map(address => {
                 return address && callData
                     ? {
                         address,
@@ -223,8 +236,10 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
         let resultsBlockNumber, returnData
         try {
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
-            console.log('returnData', returnData)
-            setResult(returnData)
+            const results = returnData.map(item => {
+                return contractInterface.decodeFunctionResult(fragment, item)
+            })
+            setResult(results)
         }catch (e) {
             throw e
         }
@@ -234,8 +249,9 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
     useEffect(() =>{
         if(!multicallContract) return
         fetchChunk()
-    },[])
+    },[addresses])
 
+    return  result
 }
 
 
