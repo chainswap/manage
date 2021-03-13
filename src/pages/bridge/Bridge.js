@@ -43,6 +43,7 @@ import {PopupItem} from "../../components/popup/Popup";
 import {ClaimList} from "./ClaimList";
 import {escapeRegExp, getEtherscanLink} from "../../utils";
 import {AssetModal} from "../../components/modal/AssetModal";
+import {SmallDropDown} from "../../components/dropdown/SmallDropdown";
 
 const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 56, 128],
@@ -159,8 +160,6 @@ export const Bridge = () => {
     })
     return curToken.address !== selectedToken.address;
   }, [selectedToken, chainId])
-
-  console.log('approve---->', approveStatus)
 
   const curAllowance = useAllowance(selectedToken && approveStatus && selectedToken.address, selectedToken && selectedToken.chains.find(item => {
     return item.chainId === chainId
@@ -307,7 +306,7 @@ export const Bridge = () => {
                 fromTokenAddress: fromToken.address,
                 toTokenAddress: toToken.address,
                 status: 0,
-                amount: numToWei(amount),
+                amount: numToWei(amount, selectedToken.decimals),
                 symbol: selectedToken.symbol,
                 mainAddress: selectedToken.address
               },
@@ -646,7 +645,7 @@ export const Bridge = () => {
                               <p>{selectedToken.symbol}</p></>
                         ) : (
                             <>
-                              <p>select Token</p></>
+                              <p>Select Token</p></>
                         )}
 
                         <img style={{width: 12, marginLeft: 0, marginRight: 12}} src={Down}/>
@@ -779,7 +778,7 @@ export const Bridge = () => {
                 <div className="default_modal__header">
                   <p className="default_modal__title" style={{marginBottom: 'auto'}}>Claim List</p>
                   <div className="default_modal__header__dropdown">
-                    <DropDown onSelect={(token) => {
+                    <SmallDropDown onSelect={(token) => {
                       setSelectedReceivedToken(token)
                     }} options={tokenList.map(item => {
                       return {...item, title: item.symbol}
@@ -792,7 +791,11 @@ export const Bridge = () => {
                     nonce: item.nonce,
                     toAddress: account,
                     toChainId: item.toChainId,
-                    volume: item.volume
+                    volume: item.volume,
+                    toTokenAddress: item.toTokenAddress,
+                    fromTokenAddress: item.fromTokenAddress,
+                    symbol: item.symbol,
+                    mainAddress: item.mainAddress
                   })
                   setModalType(MODE_TYPE.CLAIM)
                 }}/>

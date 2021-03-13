@@ -1,51 +1,27 @@
-import React from 'react'
-import {useReceived, useReceivedList} from "../../hooks/multicall/hooks";
+import React, {useState} from 'react'
 import ArrowLeft from "../../assets/icon/arrow-left.svg";
 import {formatAddress, formatAmount} from "../../utils/format";
 import {CheckCircle} from "react-feather";
 import {loadChainInfo} from "./Bridge";
 import {getContract, useActiveWeb3React} from "../../web3";
 import Circle from "../../assets/icon/circle.svg";
-import MainMatter from '../../web3/abi/MainMatter.json'
-import {MATTER_ADDRESS} from "../../web3/address";
+import {DEFAULT_TOKEN} from "../../const";
+import {useClaimList} from "../Hooks";
 
-export const ClaimList = ({token, onWithdraw}) => {
-
+export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
   const {account, library} = useActiveWeb3React()
-  const receivedList = useReceived(token)
-  // const receivedList1 = useReceivedList(1, 56)
-  // const receivedList2 = useReceivedList(56, 1)
 
-  const receivedList1 = useReceivedList(1, 56, token)
-  const receivedList2 = useReceivedList(56, 1, token)
+  const claimList = useClaimList(token)
 
-  const receivedList3 = useReceivedList(1, 128, token)
-  const receivedList4 = useReceivedList(128, 1, token)
+  console.log('claimList', token.symbol, claimList.token?.symbol)
 
-  const receivedList5 = useReceivedList(56, 128, token)
-  const receivedList6 = useReceivedList(128, 56, token)
-
-  const receivedList7 = useReceivedList(3, 4, token)
-  const receivedList8 = useReceivedList(4, 3, token)
-
-  const matterContract = getContract(library, MainMatter, MATTER_ADDRESS)
-  // const countList = useSingleContractMultipleData(matterContract, 'sentCount', [[3, account], [4, account]])
-  // console.log('countList', countList)
   return (
-      <div className="claim_list"
-           style={{overflow: !receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6 ? 'unset' : 'auto'}}>
-        {(!receivedList1 || !receivedList2 || !receivedList3 || !receivedList4 || !receivedList5 || !receivedList6) ? (
+      <div className="claim_list">
+        {(!claimList.list || claimList.token !== token) ? (
             <img className="investment__modal__loading" src={Circle} alt=""/>
         ) : (
             <>
-              {(receivedList1 ? receivedList1 : [])
-                  .concat(receivedList2 ? receivedList2 : [])
-                  .concat(receivedList3 ? receivedList3 : [])
-                  .concat(receivedList4 ? receivedList4 : [])
-                  .concat(receivedList5 ? receivedList5 : [])
-                  .concat(receivedList6 ? receivedList6 : [])
-                  .concat(receivedList7 ? receivedList7 : [])
-                  .concat(receivedList8 ? receivedList8 : [])
+              {claimList.list
                   .map(item => {
                     return (
                         <div className="claim_item"
@@ -72,8 +48,8 @@ export const ClaimList = ({token, onWithdraw}) => {
                           <div className="claim_item__item" style={{width: 100}}>
                             <p>Token:</p>
                             <div>
-                              <img src={loadChainInfo(item.toChainId).icon}/>
-                              <p>{loadChainInfo(item.toChainId).title}</p>
+                              {/*<img src={loadChainInfo(item.toChainId).icon}/>*/}
+                              <p>{token.symbol}</p>
                             </div>
                           </div>
 

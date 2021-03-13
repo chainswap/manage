@@ -1,11 +1,12 @@
 import {useEffect, useMemo, useState} from "react";
-import {getContract, useActiveWeb3React, useBlockNumber} from "../../web3";
+import {getContract, useActiveWeb3React, useBlockNumber, useSingleCallResult} from "../../web3";
 import {useMatterContract, useMulticallContract} from "../../web3/useContract";
 import MainMatter from "../../web3/abi/MainMatter.json";
-import {MATTER_ADDRESS} from "../../web3/address";
+import {ChainId, MATTER_ADDRESS} from "../../web3/address";
 import {Web3Provider} from '@ethersproject/providers'
 
 import {NetworkConnector} from "../../utils/NetworkConnector";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 export function useSingleContractMultipleData(contract, methodName, callInputs, chainId, library) {
   const multicallContract = useMulticallContract(chainId, library)
@@ -75,15 +76,18 @@ export function getNetworkLibrary(chainId) {
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const useReceivedList = (chain1, chain2) => {
+export const useReceivedList = (chain1, chain2, tokens) => {
   const [receivedList, setReceivedList] = useState()
+
+  const {account} = useActiveWeb3React()
   const contractFrom = getContract(getNetworkLibrary(chain1), MainMatter, MATTER_ADDRESS)
   const contractTo = getContract(getNetworkLibrary(chain2), MainMatter, MATTER_ADDRESS)
-  const {account} = useActiveWeb3React()
-  useEffect(() => {
+  const chainIds = tokens.chains.map(item => {return item.chainId})
 
+  useDeepCompareEffect(() => {
+  return
     const query = () =>{
-
+      console.log('query---->', chain1, chain2, tokens)
       contractFrom.sentCount(chain2, account).then( async res => {
         console.log('contractFrom', chain2, res.toString())
 
@@ -94,7 +98,9 @@ export const useReceivedList = (chain1, chain2) => {
         console.log('sentCount---->', chain1 ,queryData)
 
         const list = await Promise.all(queryData.map(async (item) => {
-            const sendVolume = await contractFrom.sent(chain2, account, item)
+          console.log('result---->')
+
+          const sendVolume = await contractFrom.sent(chain2, account, item)
             const reVolume = await contractTo.received(chain1, account, item)
           console.log('result---->', sendVolume.toString(), reVolume.toString())
           return {nonce: item, fromChainId: chain1, toChainId: chain2, volume: sendVolume.toString(), received: sendVolume.toString() === reVolume.toString()}
@@ -104,8 +110,10 @@ export const useReceivedList = (chain1, chain2) => {
       })
     }
 
-    query()
-  }, [account, chain1, chain2])
+    if (chainIds.indexOf(chain1) !== -1 && chainIds.indexOf(chain2) !== -1){
+      query()
+    }
+  }, [account, tokens, contractFrom, contractTo])
 
   return receivedList
 }

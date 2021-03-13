@@ -100,16 +100,13 @@ function isValidMethodArgs(x){
 
 export const useSingleCallResult = (contract, methodName, inputs, options) =>{
 
-
     const {chainId, library} = options
 
     const [result, setResult] = useState()
 
-    const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
-
     const multicallContract = useMulticallContract(chainId, library)
 
-
+    const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
     const calls = useMemo(() => {
         return contract && fragment && isValidMethodArgs(inputs)
             ? [
@@ -122,6 +119,7 @@ export const useSingleCallResult = (contract, methodName, inputs, options) =>{
     }, [contract, fragment, inputs])
 
     const fetchChunk = async ()=>{
+
         let resultsBlockNumber, returnData
         try {
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
@@ -130,6 +128,7 @@ export const useSingleCallResult = (contract, methodName, inputs, options) =>{
             })
             setResult(results?.[0])
         }catch (e) {
+            console.log('error--->')
             throw e
         }
     }
@@ -247,11 +246,12 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
 
 
     useDeepCompareEffect(() =>{
-        if(!multicallContract && !blockNumber) return
+        if(!multicallContract || !blockNumber) return
         fetchChunk()
     },[calls, blockNumber])
 
     return  result
 }
+
 
 

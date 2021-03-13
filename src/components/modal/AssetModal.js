@@ -26,7 +26,7 @@ export const AssetModal = ({tokenList, onSelect, onClose}) => {
                   tokenList
                       .filter(item => {
                         console.log('searchText', searchText, item.symbol)
-                        return !searchText || item.symbol.toLowerCase().indexOf(searchText.toLocaleString()) !== -1
+                        return !searchText || item.symbol.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
                       }).map(item => {
                     return (
                         <div className="token__frame" onClick={() => {

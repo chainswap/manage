@@ -75,3 +75,19 @@ export const ALL_CHAINS = {
   128: {title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
 }
 
+export const DEFAULT_TOKEN = {
+  "symbol": "MATTER",
+  "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F",
+  "chainId": 1,
+  "name": ["Antimatter.Finance Governance Token"],
+  "decimals": [18],
+  "balance": "201000000000000000",
+  "chains": [{
+    "chainId": 3,
+    "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
+  }, {
+    "chainId": 4,
+    "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
+  }]
+}
+

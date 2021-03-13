@@ -1,4 +1,5 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
+import MainMatter from "../web3/abi/MainMatter.json";
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
 import {
     getContract,
@@ -53,7 +54,6 @@ export const useBalance = (address, options) => {
             try {
                 const contract = getContract(library, ERC20, address)
                 contract.balanceOf(account).then(res => {
-                    console.log('token balance--->',res.toString())
                     setBalance(res.toString())
                 })
             } catch (e) {
@@ -199,11 +199,10 @@ export const useRemovePopup = () => {
 
 export const useTokenList = () =>{
     const {account, chainId, active} = useActiveWeb3React()
-    const options = {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)}
-    const tokenFactoryContract = getContract(getNetworkLibrary(3), TokenFactory, TOKEN_FACTORY[ChainId.ROPSTEN])
+    const options = {chainId: ChainId.MAINNET, library: getNetworkLibrary(1)}
+    const tokenFactoryContract = getContract(getNetworkLibrary(1), TokenFactory, TOKEN_FACTORY)
 
     const tokens =  useSingleCallResult(tokenFactoryContract, 'allCertifiedTokens', undefined, options)
-
     const [tokensData, setTokensData] = useState()
 
     useEffect(()=>{
@@ -218,7 +217,6 @@ export const useTokenList = () =>{
     const curAddresses = active && tokensData && mappingTokens ? mappingTokens.map((item, index)=>{
         const mainChainID = tokensData.chainIds[index]
         const position = item.chainIds.findIndex(chainIdItem =>{return chainIdItem.toString() === chainId.toString()})
-        console.log('curAddresses item', tokensData.tokens[index], chainId , mainChainID)
         return chainId.toString() === mainChainID.toString() ? tokensData.tokens[index] : item.mappingTokenMappeds_[parseInt(position.toString())]
     }) :[]
 
@@ -242,6 +240,116 @@ export const useTokenList = () =>{
         }) : []
     },[tokens, names, balances, mappingTokens])
 }
+
+export const useClaimList = (token) =>{
+    const {account} = useActiveWeb3React()
+    const options3 = {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)}
+    const options4 = {chainId: ChainId.RINKEBY, library: getNetworkLibrary(4)}
+
+    const fromAddress = token.chains.find(item => {return item.chainId === 3}).address
+    const toAddress = token.chains.find(item => {return item.chainId === 4}).address
+
+    const fromContract3 = getContract(getNetworkLibrary(3), MainMatter, fromAddress)
+    const toContract3 = getContract(getNetworkLibrary(4), MainMatter, toAddress)
+
+    const fromContract4 = getContract(getNetworkLibrary(4), MainMatter, toAddress)
+    const toContract4 = getContract(getNetworkLibrary(3), MainMatter, fromAddress)
+
+    const count3 =  useSingleCallResult(fromContract3, 'sentCount', [4, account], options3)
+
+    const count4 =  useSingleCallResult(fromContract4, 'sentCount', [3, account], options4)
+
+
+    useEffect(()=>{
+        console.log('tag----->')
+    },[token])
+
+    const queryFromData3 = useMemo(()=>{
+        if(!count3) return []
+        const queryData = []
+        for (let i = 0; i < parseInt(count3.toString()); i++) {
+            queryData[i] = [4, account, parseInt(count3.toString()) - (i+1)]
+        }
+        return queryData
+    },[count3, account])
+
+    const queryToData3 = useMemo(()=>{
+        if(!count3) return []
+        const queryData = []
+        for (let i = 0; i < parseInt(count3.toString()); i++) {
+            queryData[i] = [3, account, parseInt(count3.toString()) - (i+1)]
+        }
+        return queryData
+    },[count3, account])
+
+    const sendVolumes3 = useSingleContractMultipleData(fromContract3, 'sent', queryFromData3 , options3)
+    const reVolume3 = useSingleContractMultipleData(toContract3, 'received',queryToData3 , options4)
+
+
+    /*-------------------------------------------------------------------------------------------------------------*/
+    const queryFromData4 = useMemo(()=>{
+        if(!count4) return []
+        const queryData = []
+        for (let i = 0; i < parseInt(count4.toString()); i++) {
+            queryData[i] = [3, account, parseInt(count4.toString()) - (i+1)]
+        }
+        return queryData
+    },[count4, account])
+
+    const queryToData4 = useMemo(()=>{
+        if(!count4) return []
+        const queryData = []
+        for (let i = 0; i < parseInt(count4.toString()); i++) {
+            queryData[i] = [4, account, parseInt(count4.toString()) - (i+1)]
+        }
+        return queryData
+    },[count4, account])
+
+    const sendVolumes4 = useSingleContractMultipleData(fromContract4, 'sent', queryFromData4 , options4)
+    const reVolume4 = useSingleContractMultipleData(toContract4, 'received',queryToData4 , options3)
+
+    // useEffect(()=>{
+    //     if(!count3) return
+    //     setTokensData(count3)
+    // },[count3])
+
+
+    return useMemo(()=>{
+        console.log('token symbol')
+        if(!sendVolumes3 || !reVolume3 || !sendVolumes4 ||!reVolume4) return {list: token}
+
+        const chain3Data = sendVolumes3.map((item, index) => {
+            return {
+                nonce: index,
+                fromChainId: 3,
+                toChainId: 4,
+                mainAddress: token.address,
+                fromTokenAddress: fromAddress,
+                toTokenAddress: toAddress,
+                volume: item.toString(),
+                received: item.toString() === reVolume3[index]?.toString(),
+                symbol: token.symbol
+            }
+        })
+
+        const chain4Data = sendVolumes4.map((item, index) => {
+            return {
+                nonce: index,
+                fromChainId: 4,
+                toChainId: 3,
+                mainAddress: token.address,
+                fromTokenAddress: toAddress,
+                toTokenAddress: fromAddress,
+                volume: item.toString(),
+                received: item.toString() === reVolume4[index]?.toString(),
+                symbol: token.symbol
+            }
+        })
+
+        return {list: chain3Data.concat(chain4Data), token}
+    },[sendVolumes3, reVolume3, reVolume4, sendVolumes4, token, fromAddress, toAddress])
+}
+
 
 
 export const useReceiveList = (token) =>{

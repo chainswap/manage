@@ -71,19 +71,25 @@
 				"type": "address"
 			},
 			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "to",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
 			}
 		],
-		"name": "ChargeFee",
+		"name": "Burn",
 		"type": "event"
 	},
 	{
@@ -117,6 +123,25 @@
 			{
 				"indexed": true,
 				"internalType": "address",
+				"name": "previousGovernor",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newGovernor",
+				"type": "address"
+			}
+		],
+		"name": "GovernorshipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
 				"name": "signatory",
 				"type": "address"
 			},
@@ -134,6 +159,43 @@
 			}
 		],
 		"name": "IncreaseAuthQuota",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "signatory",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "txHash",
+				"type": "uint256"
+			}
+		],
+		"name": "Mint",
 		"type": "event"
 	},
 	{
@@ -257,6 +319,19 @@
 	},
 	{
 		"inputs": [],
+		"name": "MINT_TYPEHASH",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "PERMIT_TYPEHASH",
 		"outputs": [
 			{
@@ -284,6 +359,44 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "governor_",
+				"type": "address"
+			}
+		],
+		"name": "__Governable_init_unchained",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "governor_",
+				"type": "address"
+			}
+		],
+		"name": "__MappingMATTER_init",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "__MappingMATTER_init_unchained",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "governor_",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
 				"name": "mainChainId_",
 				"type": "uint256"
@@ -291,11 +404,6 @@
 			{
 				"internalType": "address",
 				"name": "token_",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "creator_",
 				"type": "address"
 			},
 			{
@@ -307,11 +415,6 @@
 				"internalType": "string",
 				"name": "symbol_",
 				"type": "string"
-			},
-			{
-				"internalType": "uint8",
-				"name": "decimals_",
-				"type": "uint8"
 			},
 			{
 				"internalType": "uint256",
@@ -334,11 +437,6 @@
 			{
 				"internalType": "address",
 				"name": "token_",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "creator_",
 				"type": "address"
 			}
 		],
@@ -399,7 +497,7 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "",
+				"name": "signatory",
 				"type": "address"
 			}
 		],
@@ -434,6 +532,29 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "burn",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "cap",
 		"outputs": [
@@ -441,32 +562,6 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "chainId",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "creator",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -534,32 +629,88 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address[]",
-				"name": "signatorys",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "decrements",
-				"type": "uint256[]"
-			}
-		],
-		"name": "decreaseAuthQuotas",
+		"inputs": [],
+		"name": "factory",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
-				"name": "quotas",
-				"type": "uint256[]"
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "getConfig",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			}
+		],
+		"name": "getConfig",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "getConfig",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "factory",
+		"name": "governor",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -619,30 +770,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address[]",
-				"name": "signatorys",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "increments",
-				"type": "uint256[]"
-			}
-		],
-		"name": "increaseAuthQuotas",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "quotas",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "mainChainId",
 		"outputs": [
@@ -650,6 +777,101 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "authorizer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "txHash",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "v",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "r",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "s",
+				"type": "bytes32"
+			}
+		],
+		"name": "mint",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "txHash",
+				"type": "uint256"
+			}
+		],
+		"name": "mint",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "minted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -782,7 +1004,7 @@
 		],
 		"name": "receive",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -812,6 +1034,13 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceGovernorship",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -931,6 +1160,70 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "setConfig",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "setConfig",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "key",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "setConfig",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "symbol",
 		"outputs": [
@@ -1019,6 +1312,19 @@
 				"type": "bool"
 			}
 		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newGovernor",
+				"type": "address"
+			}
+		],
+		"name": "transferGovernorship",
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
