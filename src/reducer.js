@@ -1,8 +1,6 @@
 import React, {useReducer} from 'react';
 import {
   HANDLE_SHOW_CONNECT_MODAL,
-  HANDLE_MY_NFTS_MODAL,
-  HANDLE_WEB3_CONTEXT,
   HANDLE_SHOW_STAKE_MODAL,
   HANDLE_SHOW_UNSTAKE_MODAL,
   HANDLE_SHOW_REWARD_MODAL,
@@ -13,7 +11,11 @@ import {
   HANDLE_SHOW_TRANSACTION_MODAL,
   HANDLE_WALLET_MODAL,
   HANDLE_TX_STATUS,
-  HANDLE_SHOW_MENUMASK_MODAL, ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST, CLEAR_ANTIMATTER_TRANSACTION_LIST,
+  HANDLE_SHOW_MENUMASK_MODAL,
+  ANTIMATTER_TRANSACTION_LIST,
+  HANDLE_POPUP_LIST,
+  CLEAR_ANTIMATTER_TRANSACTION_LIST,
+  HANDLE_TOKENS,
 } from './const';
 
 const mainContext = React.createContext();
@@ -94,6 +96,11 @@ const reducer = (state, action) => {
       });
       return {...state, popupList: popups};
 
+    case HANDLE_TOKENS:
+      if(state.tokenList.length === 0){
+        return {...state, tokenList: action.tokens}
+      }
+    break
     default:
       return state;
   }
@@ -115,7 +122,8 @@ const ContextProvider = (props) => {
     txStatus: null,
     showMenuMaskModal: false,
     transactions: transactionsData ? JSON.parse(transactionsData) : [],
-    popupList: []
+    popupList: [],
+    tokenList: []
   });
   return (
       <mainContext.Provider value={{state, dispatch}}>

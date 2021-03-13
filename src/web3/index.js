@@ -2,7 +2,7 @@ import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Contract } from '@ethersproject/contracts'
 import {useEffect, useMemo, useState} from "react";
 import {useMulticallContract} from "./useContract";
-
+import useDeepCompareEffect from 'use-deep-compare-effect'
 export function getSigner(library, account) {
     return library.getSigner(account).connectUnchecked()
 }
@@ -47,7 +47,7 @@ export const useChainBlockNumber =(library) => {
         setBlockNumber(blockNumber)
     }
 
-    useEffect(()=>{
+    useDeepCompareEffect(()=>{
         if(library){
             library.once('block', updateBlockNumber)
         }
@@ -100,6 +100,7 @@ function isValidMethodArgs(x){
 
 export const useSingleCallResult = (contract, methodName, inputs, options) =>{
 
+
     const {chainId, library} = options
 
     const [result, setResult] = useState()
@@ -124,10 +125,7 @@ export const useSingleCallResult = (contract, methodName, inputs, options) =>{
         let resultsBlockNumber, returnData
         try {
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
-            console.log('returnData', returnData)
             const results = returnData.map(item => {
-                console.log('returnData', contract.interface.decodeFunctionResult(fragment, item))
-
                 return contract.interface.decodeFunctionResult(fragment, item)
             })
             setResult(results?.[0])
@@ -137,10 +135,10 @@ export const useSingleCallResult = (contract, methodName, inputs, options) =>{
     }
 
 
-    useEffect(() =>{
+    useDeepCompareEffect(() =>{
         if(!multicallContract) return
         fetchChunk()
-    },[inputs])
+    },[calls])
 
     return result
 }
@@ -168,46 +166,45 @@ export const useSingleContractMultipleData = (contract, methodName, callInputs, 
     )
 
     const fetchChunk = async ()=>{
-        console.log('singlereturnData1', result, callInputs)
 
-        if(result && result.length !== 0) return
         let resultsBlockNumber, returnData
         try {
 
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
-            console.log('singlereturnData5',returnData)
 
             const results = returnData.map(item => {
-                console.log('singlereturnData2', contract.interface.decodeFunctionResult(fragment, item))
                 return contract.interface.decodeFunctionResult(fragment, item)
             })
-            console.log('singlereturnData4',)
             setResult(results)
         }catch (e) {
             throw e
             console.log('singlereturnData3', e)
-
         }
     }
 
 
 
-    useEffect(() =>{
-        if(!multicallContract) return
+    useDeepCompareEffect(() =>{
+        if(!multicallContract || calls.length === 0) return
         fetchChunk()
-    },[callInputs])
+    },[calls])
 
     return result
 }
 
 export const useMultipleContractSingleData = (addresses, contractInterface, methodName, callInputs, options) =>{
 
-    const {chainId, library} = options
+    const chainId = options?.chainId
+    const library = options?.library
+
+    const defaultChainId = useActiveWeb3React().chainId
+    const defaultLibrary = useActiveWeb3React().library
+
 
     const [result, setResult] = useState()
     const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
-    const multicallContract = useMulticallContract(chainId, library)
+    const multicallContract = useMulticallContract(chainId? chainId : defaultChainId, library? library : defaultLibrary)
 
     const callData = useMemo(
         () =>
@@ -233,6 +230,7 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
     )
 
     const fetchChunk = async ()=>{
+
         let resultsBlockNumber, returnData
         try {
             ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(calls.map(obj => [obj.address, obj.callData]))
@@ -246,10 +244,10 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
     }
 
 
-    useEffect(() =>{
+    useDeepCompareEffect(() =>{
         if(!multicallContract) return
         fetchChunk()
-    },[addresses])
+    },[calls])
 
     return  result
 }

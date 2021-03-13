@@ -105,8 +105,17 @@ export const useReceivedList = (chain1, chain2) => {
     }
 
     query()
-  }, [account])
+  }, [account, chain1, chain2])
 
   return receivedList
 }
+
+export const useReceived = (token) => {
+  console.log('receive  token', token)
+  const tokens = token? token.chains  : []
+  console.log('receive  tokens', tokens)
+
+
+}
+
 

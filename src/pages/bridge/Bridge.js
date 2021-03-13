@@ -1,18 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
 import Matter from '../../assets/icon/matter.svg'
-import {useBalance, useTokenList, useTransactionAdder} from "../Hooks";
-import {MATTER_ADDRESS} from "../../web3/address";
+import {useAllowance, useBalance, useTokenList, useTransactionAdder} from "../Hooks";
+import {MATTER_ADDRESS, OFFERING_ADDRESS} from "../../web3/address";
 import {useWeb3React} from "@web3-react/core";
 import {formatAddress, formatAmount, numToWei} from "../../utils/format";
 // import LogoLineWhite from "../../assets/image/logo-line-white.svg";
 import LogoLineWhite from "../../assets/image/chainswap-logo.svg";
 import Down from "../../assets/icon/down.svg";
-
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {ReactComponent as Copy} from "../../assets/icon/copy.svg";
 import {
+  ALL_CHAINS,
   ANTIMATTER_TRANSACTION_LIST,
   CLEAR_ANTIMATTER_TRANSACTION_LIST,
   GALLERY_SELECT_WEB3_CONTEXT,
@@ -61,27 +61,6 @@ const walletChange = new WalletConnectConnector({
   pollingInterval: POLLING_INTERVAL,
 });
 
-const ETH_OPTIONS = [
-  {id: 0, title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
-  {id: 1, title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
-]
-const BINANCE_OPTIONS = [
-  {id: 0, title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
-  {id: 1, title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
-]
-const HECO_OPTIONS = [
-  {id: 0, title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
-  {id: 1, title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
-]
-
-const ROPSTEN_OPTIONS = [
-  {id: 0, title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo}
-]
-
-const RINKEBY_OPTIONS = [
-  {id: 0, title: 'Ropsten', chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
-]
-
 export const loadChainInfo = (id) => {
   switch (id) {
     case 1:
@@ -111,13 +90,39 @@ export const Bridge = () => {
     chainId
   } = useWeb3React();
 
-  const tokenList = useTokenList()
-  console.log('tokenList', tokenList)
-
   const {transactions, popupList} = useContext(mainContext).state;
   const {dispatch} = useContext(mainContext)
   const balance = useBalance(MATTER_ADDRESS)
+
+
+  const [selectedToken, setSelectedToken] = useState()
+
+  const [curAddress, setCurAddress] = useState()
+  const [curChainId, setCurChainId] = useState()
+
+  const tokenBalance = useBalance(curAddress, {curChainId})
+
+  useEffect(() => {
+    if (selectedToken) {
+      const chain = selectedToken.chains.find(item => {
+        return item.chainId === chainId
+      })
+      setCurChainId(chain.chainId)
+      if (chain.address !== selectedToken.address) {
+        if (chain.chainId === selectedToken.chainId) {
+          setCurAddress(selectedToken.address)
+        } else {
+          setCurAddress(chain.address)
+        }
+      } else {
+        setCurAddress(selectedToken.address)
+      }
+    }
+  }, [selectedToken, chainId])
+
   const addTransaction = useTransactionAdder()
+
+  const tokenList = useTokenList()
 
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
   const [hash, setHash] = useState()
@@ -130,7 +135,8 @@ export const Bridge = () => {
   const [toChainList, setToChainList] = useState(CHAIN)
   const [auction, setAuction] = useState('DEPOSIT')
   const [selectingToken, setSelectingToken] = useState(false)
-  const [selectedToken, setSelectedToken] = useState()
+
+  const [selectedReceivedToken, setSelectedReceivedToken] = useState()
 
 
   const deposite = transactions.find(item => {
@@ -141,31 +147,75 @@ export const Bridge = () => {
     return item.claim && item.claim.status === 0
   })
 
+  const approve = transactions.find(item => {
+    return item.approve && item.approve.status === 0 && item.approve.account === account
+  })
+
+  const approveStatus = useMemo(() => {
+    if (!selectedToken) return false
+    if (selectedToken.chainId.toString() !== chainId.toString()) return false
+    const curToken = selectedToken.chains.find(item => {
+      return item.chainId.toString() === chainId.toString()
+    })
+    return curToken.address !== selectedToken.address;
+  }, [selectedToken, chainId])
+
+  console.log('approve---->', approveStatus)
+
+  const curAllowance = useAllowance(selectedToken && approveStatus && selectedToken.address, selectedToken && selectedToken.chains.find(item => {
+    return item.chainId === chainId
+  }).address, {curChainId, approveStatus})
+
+  const sendButton = useMemo(() => {
+    if (approveStatus && approve) return (<><img src={Circle} className="confirm_modal__loading"/>
+      <p>Approving</p></>)
+
+    if (approveStatus && new BigNumber(curAllowance).isEqualTo('0')) return 'Approve'
+
+    if ((!deposite || (deposite && deposite.stake.status === 2))) return `Deposit in ${loadChainInfo(chainId)?.title} Chain`
+
+    if (deposite.stake.status === 0) return (<><img src={Circle} className="confirm_modal__loading"/>
+      <p>Depositing</p></>)
+
+    if (deposite.stake.status === 1) return 'Deposited'
+
+    return `Deposit in ${loadChainInfo(chainId)?.title} Chain`
+
+  }, [curAllowance, deposite, chainId, approve, approveStatus])
+
+
   const getSigns = (async () => {
     if (!withdrawData) return
     return await new Promise((resolve, reject) => {
       let signList = []
+      let count = 0
       for (let i = 1; i < 6; i++) {
         try {
-          fetch(`https://node${i}.chainswap.exchange/web/getSignDataSyn?contractAddress=0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}`)
+          fetch(`https://test.chainswap.xyz/web/getSignDataSyn?contractAddress=${withdrawData.toTokenAddress}&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}&fromContract=${withdrawData.fromTokenAddress}&toContract=${withdrawData.toTokenAddress}&mainContract=${withdrawData.mainAddress}`)
               .then((response) => {
                 return response.json()
               })
               .then((data) => {
-                signList.push({
-                  signatory: data.data.signatory,
-                  v: data.data.signV,
-                  r: data.data.signR,
-                  s: data.data.signS,
-                  fromChainId: data.data.fromChainId,
-                  to: data.data.to,
-                  nonce: data.data.nonce,
-                  volume: data.data.volume.toString()
-                })
+                count++;
+                if (data.data) {
+                  signList.push({
+                    signatory: data.data.signatory,
+                    v: data.data.signV,
+                    r: data.data.signR,
+                    s: data.data.signS,
+                    fromChainId: data.data.fromChainId,
+                    to: data.data.to,
+                    nonce: data.data.nonce,
+                    volume: data.data.volume.toString()
+                  })
+                }
                 if (signList.length === 3) {
                   console.log('resolve', signList)
                   resolve(signList)
+                } else if (count === 5 && signList.length < 3) {
+                  reject('query error')
                 }
+
               })
         } catch (e) {
           throw e
@@ -176,33 +226,6 @@ export const Bridge = () => {
     })
   })
 
-  useEffect(() => {
-    if (active) {
-      let curChainList = CHAIN
-      switch (chainId) {
-        case 1:
-          curChainList = ETH_OPTIONS
-          break;
-        case 3:
-          curChainList = ROPSTEN_OPTIONS
-          break
-        case 4:
-          curChainList = RINKEBY_OPTIONS
-          break
-        case 56:
-          curChainList = BINANCE_OPTIONS
-          break
-        case 128:
-          curChainList = HECO_OPTIONS
-          break
-        default:
-          curChainList = CHAIN
-      }
-      setToChainList(curChainList)
-      setToChain(curChainList[0])
-    }
-  }, [active, chainId])
-
 
   useEffect(() => {
     if (account) {
@@ -210,13 +233,68 @@ export const Bridge = () => {
     }
   }, [account])
 
+  useEffect(() => {
+    if (selectedToken) {
+      const chains = selectedToken.chains
+      const chainList = chains
+          .filter(item => {
+            return item.chainId !== chainId
+          }).map((item, index) => {
+            return {...ALL_CHAINS[item.chainId], id: index}
+          })
+      console.log('selectedToken', chains)
+
+      setToChainList(chainList)
+      setToChain(chainList[0])
+    }
+
+  }, [selectedToken, chainId])
+
 
   const onStake = async () => {
-    setAuction('DEPOSIT')
-    const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
     setModalType(MODE_TYPE.CONFIRMING)
+
     try {
-      await contract.send(toChain.chainId, inputAccount, numToWei(amount), {from: account})
+      setAuction('DEPOSIT')
+      const fromToken = selectedToken.chains.find(item => {
+        return item.chainId === chainId
+      })
+      const toToken = selectedToken.chains.find(item => {
+        return item.chainId === toChain.chainId
+      })
+
+      const sendToken = selectedToken.chains.find(item => {
+        return item.chainId === chainId
+      })
+
+      const contract = getContract(library, MainMatter, sendToken.address, account);
+
+      if (approveStatus && new BigNumber(curAllowance).isEqualTo('0')) {
+        const approveContract = getContract(library, MainMatter, selectedToken.address, account);
+        await approveContract.approve(sendToken.address, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+            .then(response => {
+              console.log('approve response', response)
+              setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
+              setModalType(MODE_TYPE.SUBMITTED)
+              addTransaction(response, {
+                approve: {
+                  account,
+                  address: selectedToken.address,
+                  chainId,
+                  status: 0
+                },
+                summary: `Approved ${selectedToken.symbol} in ${loadChainInfo(chainId).title}`,
+                hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
+              })
+
+            })
+        return
+      }
+      console.log('sendToken', sendToken.address, account, toChain.chainId, inputAccount, numToWei(amount, selectedToken.decimals))
+      await contract.send(toChain.chainId, inputAccount, numToWei(amount, selectedToken.decimals), {
+        from: account,
+        value: numToWei('0.005')
+      })
           .then((response) => {
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
             setModalType(MODE_TYPE.SUBMITTED)
@@ -226,10 +304,14 @@ export const Bridge = () => {
                 toChainId: toChain.chainId,
                 fromAddress: account,
                 toAddress: inputAccount,
+                fromTokenAddress: fromToken.address,
+                toTokenAddress: toToken.address,
                 status: 0,
-                amount: numToWei(amount)
+                amount: numToWei(amount),
+                symbol: selectedToken.symbol,
+                mainAddress: selectedToken.address
               },
-              summary: `Deposited ${amount} MATTER in ${loadChainInfo(chainId).title}`,
+              summary: `Deposited ${amount} ${selectedToken.symbol} in ${loadChainInfo(chainId).title}`,
               hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
           })
@@ -240,13 +322,23 @@ export const Bridge = () => {
   }
 
   const onClaim = async () => {
+    console.log('toTokenAddress', withdrawData.toTokenAddress)
+
     setModalType(MODE_TYPE.CONFIRMING)
     const signs = await getSigns()
     setAuction('WITHDRAW')
-    const contract = getContract(library, MainMatter, MATTER_ADDRESS, account);
+
+    const contract = getContract(library, MainMatter, withdrawData.toTokenAddress, account);
     try {
       const defaultSign = signs[0]
-      console.log('defaultSign', defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume)
+      console.log('defaultSign', defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume, signs.map(item => {
+        return {
+          signatory: item.signatory,
+          v: item.v,
+          r: item.r,
+          s: item.s,
+        }
+      }))
 
       await contract.receive(defaultSign.fromChainId, defaultSign.to, defaultSign.nonce, defaultSign.volume, signs.map(item => {
         return {
@@ -255,7 +347,7 @@ export const Bridge = () => {
           r: item.r,
           s: item.s,
         }
-      }), {from: account})
+      }), {from: account, value: numToWei('0.005')})
           .then(response => {
             setModalType(MODE_TYPE.SUBMITTED)
             setHash(getEtherscanLink(chainId, response.hash, 'transaction'))
@@ -268,7 +360,7 @@ export const Bridge = () => {
                 status: 0,
                 amount: defaultSign.volume
               },
-              summary: `Withdraw ${formatAmount(defaultSign.volume)} MATTER in ${loadChainInfo(chainId).title}`,
+              summary: `Withdraw ${formatAmount(defaultSign.volume)} ${withdrawData.symbol} in ${loadChainInfo(chainId).title}`,
               hashLink: getEtherscanLink(chainId, response.hash, 'transaction')
             })
 
@@ -280,8 +372,8 @@ export const Bridge = () => {
             })
           })
     } catch (e) {
-      throw "claim error" + e
       setModalType(MODE_TYPE.ERROR)
+      throw "claim error" + e
     }
   }
 
@@ -514,10 +606,13 @@ export const Bridge = () => {
                   {/*</div>*/}
 
                   <div className="bridge__input_frame">
-                    {active && <p>Amount <span>{`Your balance : ${selectedToken? formatAmount(selectedToken.balance, 18, 2): '--'} ${selectedToken? selectedToken.symbol :''}`}</span></p>}
+                    {active && selectedToken &&
+                    <p>Amount <span>{`Your balance : ${tokenBalance ? formatAmount(tokenBalance, selectedToken.decimals, 2) : '--'} ${selectedToken ? selectedToken.symbol : ''}`}</span>
+                    </p>}
 
                     <div className={`bridge__input_frame__extra ${inputError ? 'input_error' : ''}`}>
                       <input
+                          disabled={!selectedToken || !tokenBalance}
                           pattern="^[0-9]*[.,]?[0-9]*$"
                           value={amount}
                           onChange={(e) => {
@@ -525,8 +620,8 @@ export const Bridge = () => {
                             if (value === '' || inputRegex.test(escapeRegExp(value))) {
                               setAmount(value)
                               setInputError(null)
-                              if (!selectedToken || new BigNumber(numToWei(value)).isGreaterThan(selectedToken.balance)) {
-                                setInputError(`You do not have enough ${selectedToken.balance}`)
+                              if (!selectedToken || new BigNumber(numToWei(value, selectedToken.decimals)).isGreaterThan(tokenBalance)) {
+                                setInputError(`You do not have enough ${selectedToken.symbol}`)
                               }
                             }
                           }} placeholder='Enter amount to swap'/>
@@ -547,7 +642,6 @@ export const Bridge = () => {
                               <p>{selectedToken.symbol}</p></>
                         ) : (
                             <>
-                              <img src={Matter}/>
                               <p>select Token</p></>
                         )}
 
@@ -560,28 +654,22 @@ export const Bridge = () => {
                 </div>
 
                 {!active ? (
-                    <button style={{marginTop: 18}} onClick={() => {
-                      setModalType(MODE_TYPE.WALLETS)
-                    }}>Connect Wallet</button>
+                    <button
+                        style={{marginTop: 18}}
+                        onClick={() => {
+                          setModalType(MODE_TYPE.WALLETS)
+                        }}>Connect Wallet</button>
                 ) : (
                     <div className="btn_group">
-                      <button style={{
-                        marginTop: 18,
-                        display: deposite && deposite.stake.status === 0 ? 'flex' : 'block'
-                      }}
-                              disabled={!amount || (account && !new BigNumber(amount).isGreaterThan(0)) || inputError || !inputAccount || !isAddress(inputAccount) || (deposite || (deposite && deposite.stake.status !== 2))}
-                              onClick={onStake}>
+                      <button
+                          style={{
+                            marginTop: 18,
+                            display: ((deposite && deposite.stake.status === 0) || approve) ? 'flex' : 'block'
+                          }}
+                          disabled={approve || !new BigNumber(curAllowance).isEqualTo('0') && ((!amount) || (account && !new BigNumber(amount).isGreaterThan(0)) || inputError || !inputAccount || !isAddress(inputAccount) || (deposite || (deposite && deposite.stake.status !== 2)))}
+                          onClick={onStake}>
 
-                        {(!deposite || (deposite && deposite.stake.status === 2))
-                            ? `Deposit in ${loadChainInfo(chainId).title} Chain1`
-                            : deposite.stake.status === 0
-                                ? <>
-                                  <img src={Circle} className="confirm_modal__loading"/>
-                                  <p>Depositing</p>
-                                </>
-                                : deposite.stake.status === 1
-                                    ? 'Deposited'
-                                    : `Deposit in ${loadChainInfo(chainId).title} Chain2`}
+                        {sendButton}
                       </button>
 
                       <button style={{marginTop: 18, display: withdraw ? 'flex' : 'block'}}
@@ -592,7 +680,11 @@ export const Bridge = () => {
                                   toChainId: deposite.stake.toChainId,
                                   toAddress: deposite.stake.toAddress,
                                   volume: deposite.stake.amount,
-                                  nonce: deposite.nonce
+                                  nonce: deposite.nonce,
+                                  toTokenAddress: deposite.stake.toTokenAddress,
+                                  fromTokenAddress: deposite.stake.fromTokenAddress,
+                                  symbol: deposite.stake.symbol,
+                                  mainAddress: deposite.stake.mainAddress
                                 })
                                 setModalType(MODE_TYPE.CLAIM)
                               }}>{withdraw
@@ -653,7 +745,7 @@ export const Bridge = () => {
 
                 <div style={{opacity: chainId === withdrawData.toChainId ? 1 : 0.2}}>
                   <p className="default_modal__title" style={{marginBottom: 20}}>2. Confirm Withdraw</p>
-                  <p className="claim__amount">{withdrawData && formatAmount(withdrawData.volume)} MATTER</p>
+                  <p className="claim__amount">{withdrawData && formatAmount(withdrawData.volume)} {withdrawData.symbol}</p>
                   {chainId === withdrawData.toChainId && (
                       <div className="extra">
                         <p>From:</p>
@@ -676,12 +768,21 @@ export const Bridge = () => {
           )}
 
           {modalType === MODE_TYPE.CLAIM_LIST && (
-              <div className="default_modal claim_modal" style={{width: 512}}>
+              <div className="default_modal claim_modal" style={{width: 620}}>
                 <Close className="close-btn" onClick={() => {
                   setModalType(MODE_TYPE.INIT)
                 }}/>
-                <p className="default_modal__title" style={{marginBottom: 24}}>Claim List</p>
-                <ClaimList onWithdraw={(item) => {
+                <div className="default_modal__header">
+                  <p className="default_modal__title" style={{marginBottom: 'auto'}}>Claim List</p>
+                  <div className="default_modal__header__dropdown">
+                    <DropDown onSelect={(token) => {
+                      setSelectedReceivedToken(token)
+                    }} options={tokenList.map(item => {
+                      return {...item, title: item.symbol}
+                    })}/>
+                  </div>
+                </div>
+                <ClaimList token={selectedReceivedToken} onWithdraw={(item) => {
                   setWithdrawData({
                     fromChainId: item.fromChainId,
                     nonce: item.nonce,
@@ -746,10 +847,12 @@ export const Bridge = () => {
           <div className="wrapper">
             <AssetModal tokenList={tokenList}
                         onSelect={(token) => {
+                          console.log('onselect---->1', token)
                           setSelectedToken(token)
-                        }} onClose={() => {
-              setSelectingToken(false)
-            }}/>
+                        }}
+                        onClose={() => {
+                          setSelectingToken(false)
+                        }}/>
           </div>
         </div>
         }

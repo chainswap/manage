@@ -1,4 +1,10 @@
 import React from 'react'
+import Huobi from "./assets/icon/huobi.svg";
+import Huobi_logo from "./assets/icon/huobi.svg";
+import Binance from "./assets/icon/binance.svg";
+import Binnace_logo from "./assets/icon/binance.svg";
+import ETH from "./assets/icon/eth.svg";
+import ETH_logo from "./assets/icon/eth.svg";
 export const HANDLE_WEB3_CONTEXT = "HANDLE_WEB3_CONTEXT";
 
 export const HANDLE_MY_NFTS_MODAL = "HANDLE_MY_NFTS_MODAL";
@@ -39,6 +45,8 @@ export const CLEAR_ANTIMATTER_TRANSACTION_LIST = 'CLEAR_ANTIMATTER_TRANSACTION_L
 
 export const HANDLE_POPUP_LIST = 'HANDLE_POPUP_LIST'
 
+export const HANDLE_TOKENS = 'HANDLE_TOKENS'
+
 export const MODE_TYPE = {
   INIT: 'INIT',
   WALLETS: 'WALLETS',
@@ -57,5 +65,13 @@ export const MODE_TYPE = {
   CLAIM_LIST: "CLAIM_LIST",
   CONFIRMING: 'CONFIRMING',
   ERROR: 'ERROR'
+}
+
+export const ALL_CHAINS = {
+  1: {title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
+  3: { title: 'Ropsten', chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
+  4: {title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo},
+  56: {title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
+  128: {title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
 }
 

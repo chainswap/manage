@@ -706,6 +706,27 @@
 
 .claim_modal {
   max-height: 469px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%), #000000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  nav{
+    width: 128px;
+    border-radius: 4px;
+    max-height: 32px;
+
+    &::after {
+      line-height: 32px;
+      right: 12px;
+      font-size: 12px;
+    }
+
+    li > a{
+      font-size: 12px;
+      line-height: 32px;
+      height: 32px;
+      padding-left: 12px!important;
+    }
+  }
   @media #{$smWidth $xsWidth} {
     flex: 0;
     margin-bottom: 0;
@@ -727,7 +748,11 @@
 }
 
 .claim_modal {
-  padding-top: 40px;
+  padding-top: 16px;
+
+  .header {
+
+  }
 
   .claim_list {
     max-height: 500px;
@@ -778,7 +803,7 @@
   height: 64px;
   padding: 9px 16px;
   display: flex;
-  width: 448px;
+  width: 556px;
   margin-bottom: 20px;
 
   >svg {
