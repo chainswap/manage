@@ -221,11 +221,8 @@ export const useTokenList = () =>{
         console.log('curAddresses item', tokensData.tokens[index], chainId , mainChainID)
         return chainId.toString() === mainChainID.toString() ? tokensData.tokens[index] : item.mappingTokenMappeds_[parseInt(position.toString())]
     }) :[]
-    console.log('curAddresses--->',curAddresses)
 
     const balances = useMultipleContractSingleData(curAddresses, ERC20_INTERFACE, 'balanceOf', [account])
-
-    console.log('balance--->',balances)
 
     const decimals = useMultipleContractSingleData(tokensData? tokensData.tokens: [],ERC20_INTERFACE, 'decimals', undefined, options)
 

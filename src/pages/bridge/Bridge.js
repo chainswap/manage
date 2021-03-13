@@ -634,7 +634,11 @@ export const Bridge = () => {
                       {/*)}*/}
 
                       <div className="asset" onClick={() => {
-                        setSelectingToken(true)
+                        if(!active){
+                          setModalType(MODE_TYPE.WALLETS)
+                        }else {
+                          setSelectingToken(true)
+                        }
                       }}>
                         {selectedToken ? (
                             <>

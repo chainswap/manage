@@ -40,7 +40,7 @@ export const AssetModal = ({tokenList, onSelect, onClose}) => {
                             <p>{item.name}</p>
                           </div>
                           {item.balance ? (
-                              <p style={{marginLeft: 'auto'}}>{formatAmount(item.balance)}</p>
+                              <p style={{marginLeft: 'auto'}}>{formatAmount(item.balance, item.decimals)}</p>
                           ) : (
                               <img className="fetch__loading" style={{width: 12, marginRight: 0}} src={Circle} alt=""/>
                           )}

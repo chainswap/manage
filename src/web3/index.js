@@ -194,6 +194,8 @@ export const useSingleContractMultipleData = (contract, methodName, callInputs, 
 
 export const useMultipleContractSingleData = (addresses, contractInterface, methodName, callInputs, options) =>{
 
+    const {blockNumber} = useBlockNumber()
+
     const chainId = options?.chainId
     const library = options?.library
 
@@ -245,9 +247,9 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
 
 
     useDeepCompareEffect(() =>{
-        if(!multicallContract) return
+        if(!multicallContract && !blockNumber) return
         fetchChunk()
-    },[calls])
+    },[calls, blockNumber])
 
     return  result
 }
