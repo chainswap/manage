@@ -191,7 +191,7 @@ export const Bridge = () => {
       let count = 0
       for (let i = 1; i < 6; i++) {
         try {
-          fetch(`https://test.chainswap.xyz/web/getSignDataSyn?contractAddress=${withdrawData.toTokenAddress}&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}&fromContract=${withdrawData.fromTokenAddress}&toContract=${withdrawData.toTokenAddress}&mainContract=${withdrawData.mainAddress}`)
+          fetch(`https://test.chainswap.exchange/web/getSignDataSyn?contractAddress=${withdrawData.toTokenAddress}&fromChainId=${withdrawData.fromChainId}&nonce=${withdrawData.nonce}&to=${withdrawData.toAddress}&toChainId=${withdrawData.toChainId}&fromContract=${withdrawData.fromTokenAddress}&toContract=${withdrawData.toTokenAddress}&mainContract=${withdrawData.mainAddress}`)
               .then((response) => {
                 return response.json()
               })
