@@ -22,10 +22,11 @@ export const AssetModal = ({tokenList, onSelect, onClose}) => {
               }} placeholder='Search by name or paste address'/>
               <div className="form-app__inner__divider"/>
 
-              {tokenList && tokenList.length !== 0 ? (
+              {tokenList && tokenList.length !== 0 && tokenList[0].chains ? (
                   tokenList
                       .filter(item => {
-                        return !searchText || item.symbol.indexOf(searchText)
+                        console.log('searchText', searchText, item.symbol)
+                        return !searchText || item.symbol.toLowerCase().indexOf(searchText.toLocaleString()) !== -1
                       }).map(item => {
                     return (
                         <div className="token__frame" onClick={() => {
