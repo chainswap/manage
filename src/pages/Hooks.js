@@ -213,7 +213,6 @@ export const useTokenList = () =>{
     const names = useMultipleContractSingleData(tokensData? tokensData.tokens: [],ERC20_INTERFACE, 'name', undefined, options)
 
     const mappingTokens = useSingleContractMultipleData(tokenFactoryContract, 'chainIdMappingTokenMappeds',tokensData && tokensData.tokens? tokensData.tokens.map(item => {return [item]}):[] , options)
-    console.log('mappingTokens--->',mappingTokens)
     const curAddresses = active && tokensData && mappingTokens ? mappingTokens.map((item, index)=>{
         const mainChainID = tokensData.chainIds[index]
         const position = item.chainIds.findIndex(chainIdItem =>{return chainIdItem.toString() === chainId.toString()})

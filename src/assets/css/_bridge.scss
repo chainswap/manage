@@ -576,6 +576,7 @@
   .arrow {
     flex: 1;
     height: 12px;
+    margin-left: 12px;
   }
 
   h5 {
@@ -704,6 +705,7 @@
   }
 }
 
+
 .claim_modal {
   max-height: 469px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%), #000000;
@@ -747,6 +749,7 @@
 
 }
 
+
 .claim_modal {
   padding-top: 16px;
 
@@ -756,7 +759,26 @@
 
   .claim_list {
     overflow: auto;
+    height: 440px;
 
+    .loading_frame {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+
+    .empty_list {
+      margin: auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      width: 266px;
+    }
 
   }
 

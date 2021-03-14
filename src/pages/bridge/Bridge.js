@@ -1,9 +1,8 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react'
 import {CHAIN, DropDown} from "../../components/dropdown";
 import Exchange from '../../assets/icon/exchange.svg'
-import Matter from '../../assets/icon/matter.svg'
 import {useAllowance, useBalance, useTokenList, useTransactionAdder} from "../Hooks";
-import {MATTER_ADDRESS, OFFERING_ADDRESS} from "../../web3/address";
+import {MATTER_ADDRESS} from "../../web3/address";
 import {useWeb3React} from "@web3-react/core";
 import {formatAddress, formatAmount, numToWei} from "../../utils/format";
 // import LogoLineWhite from "../../assets/image/logo-line-white.svg";
@@ -34,9 +33,6 @@ import {ReactComponent as Close} from '../../assets/icon/close.svg'
 import Success from "../../assets/icon/success.svg";
 import Circle from "../../assets/icon/circle.svg";
 import Error from "../../assets/icon/error.svg";
-import Binnace_logo from "../../assets/icon/binance.svg";
-import Huobi_logo from "../../assets/icon/huobi.svg";
-import ETH_logo from "../../assets/icon/eth.svg";
 import {mainContext} from "../../reducer";
 import {CheckCircle, Triangle, Check} from 'react-feather'
 import {PopupItem} from "../../components/popup/Popup";
@@ -124,7 +120,6 @@ export const Bridge = () => {
   const addTransaction = useTransactionAdder()
 
   const tokenList = useTokenList()
-  console.log('tokenList',tokenList)
 
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
   const [hash, setHash] = useState()
@@ -777,7 +772,7 @@ export const Bridge = () => {
           )}
 
           {modalType === MODE_TYPE.CLAIM_LIST && (
-              <div className="default_modal claim_modal" style={{width: 620}}>
+              <div className="default_modal claim_modal claim_list" style={{width: 620}}>
                 <Close className="close-btn" onClick={() => {
                   setModalType(MODE_TYPE.INIT)
                 }}/>

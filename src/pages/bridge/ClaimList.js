@@ -46,7 +46,7 @@ export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
   }
 
   const fetchClaimList = async () => {
-    console.log('token', token)
+    console.log('token----->', token)
     setLoading(true)
     const results = await Promise.all(queryPairs.map(async item => {
       const fromChainId = item[0].chainId
@@ -65,13 +65,12 @@ export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
       for (let i = 0; i < parseInt(count.toString()); i++) {
         fromQueryData[i] = [toChainId, account, parseInt(count.toString()) - (i + 1)]
         toQueryData[i] = [fromChainId, account, parseInt(count.toString()) - (i + 1)]
-
       }
       const sendResult = await getSingleContractMultipleData(fromMultcallContracct, getContract(getNetworkLibrary(fromChainId), MainMatter, fromAddress), 'sent', fromQueryData)
       const reResult = await getSingleContractMultipleData(toMultcallContracct, getContract(getNetworkLibrary(toChainId), MainMatter, toAddress), 'received', toQueryData)
       return sendResult.map((item, index) => {
         return {
-          nonce: index,
+          nonce: fromQueryData[index][2],
           fromChainId: fromChainId,
           toChainId: toChainId,
           mainAddress: token.address,
@@ -99,12 +98,15 @@ export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
   return (
       <div className="claim_list">
         {loading ? (
+            <div className="loading_frame">
             <img className="investment__modal__loading" src={Circle} alt=""/>
+            </div>
         ) : (
             <>
-              <p className="empty_list">
-                {claimList.length === 0 && 'You currently don’t have transactions in the Claim List'}
-              </p>
+              {claimList.length === 0 &&  <p className="empty_list">
+                 You currently don’t have transactions in the Claim List
+              </p>}
+
               {claimList.length !== 0 && claimList
                   .map(item => {
                     return (

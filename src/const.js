@@ -83,10 +83,13 @@ export const DEFAULT_TOKEN = {
   "decimals": [18],
   "balance": "201000000000000000",
   "chains": [{
-    "chainId": 3,
+    "chainId": 1,
+    "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
+  },{
+    "chainId": 128,
     "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
   }, {
-    "chainId": 4,
+    "chainId": 56,
     "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
   }]
 }
