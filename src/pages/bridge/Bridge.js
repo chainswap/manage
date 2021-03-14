@@ -367,11 +367,11 @@ export const Bridge = () => {
             const pastDispatch = deposite
             if(pastDispatch){
               pastDispatch.stake.status = 2
+              dispatch({
+                type: ANTIMATTER_TRANSACTION_LIST,
+                transaction: pastDispatch
+              })
             }
-            dispatch({
-              type: ANTIMATTER_TRANSACTION_LIST,
-              transaction: pastDispatch
-            })
           })
     } catch (e) {
       setModalType(MODE_TYPE.ERROR)
