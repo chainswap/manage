@@ -21,6 +21,11 @@ export function useMulticallContract(chainId, library) {
     return useContract(chainId && MULTICALL_NETWORKS[chainId], Multicall, false, library)
 }
 
+
+export function useGetMulticallContract(chainId, library) {
+    return useContract(chainId && MULTICALL_NETWORKS[chainId], Multicall, false, library)
+}
+
 export function useMatterContract(library) {
     return useContract(MATTER_ADDRESS, MainMatter, true, library)
 }

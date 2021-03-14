@@ -1,27 +1,111 @@
-import React, {useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import ArrowLeft from "../../assets/icon/arrow-left.svg";
 import {formatAddress, formatAmount} from "../../utils/format";
 import {CheckCircle} from "react-feather";
 import {loadChainInfo} from "./Bridge";
-import {getContract, useActiveWeb3React} from "../../web3";
+import {getContract, getSingleCallResult, getSingleContractMultipleData, useActiveWeb3React} from "../../web3";
 import Circle from "../../assets/icon/circle.svg";
 import {DEFAULT_TOKEN} from "../../const";
-import {useClaimList} from "../Hooks";
+import {getNetworkLibrary} from "../../hooks/multicall/hooks";
+import MainMatter from "../../web3/abi/MainMatter.json";
+import {useMulticallContract} from "../../web3/useContract";
 
 export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
-  const {account, library} = useActiveWeb3React()
+  const {account} = useActiveWeb3React()
 
-  const claimList = useClaimList(token)
+  //const claimList = useClaimList(token)
 
-  console.log('claimList', token.symbol, claimList.token?.symbol)
+  const [claimList, setClaimList] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const queryPairs = useMemo(() => {
+    if (!token.chains) return []
+    const pairs = []
+    for (let i = 0; i < token.chains.length; i++) {
+      for (let k = token.chains.length - 1; k >= 0; k--) {
+        pairs.push([token.chains[i], token.chains[k]])
+      }
+    }
+    return pairs.filter(item => {
+      return item[0] !== item[1]
+    })
+  }, [token])
+
+  const multicallContract1 = useMulticallContract(1, getNetworkLibrary(1))
+  const multicallContract3 = useMulticallContract(3, getNetworkLibrary(3))
+  const multicallContract4 = useMulticallContract(4, getNetworkLibrary(4))
+  const multicallContract56 = useMulticallContract(56, getNetworkLibrary(56))
+  const multicallContract128 = useMulticallContract(128, getNetworkLibrary(128))
+
+  const AllMulticallContract = {
+    1: multicallContract1,
+    3: multicallContract3,
+    4: multicallContract4,
+    56: multicallContract56,
+    128: multicallContract128,
+  }
+
+  const fetchClaimList = async () => {
+    console.log('token', token)
+    setLoading(true)
+    const results = await Promise.all(queryPairs.map(async item => {
+      const fromChainId = item[0].chainId
+      const toChainId = item[1].chainId
+      const fromAddress = item[0].address
+      const toAddress = item[1].address
+
+      const fromMultcallContracct = AllMulticallContract[fromChainId]
+      const toMultcallContracct = AllMulticallContract[toChainId]
+      const fromContract = getContract(getNetworkLibrary(fromChainId), MainMatter, fromAddress)
+      console.log('fromContract', fromContract)
+      const count = await getSingleCallResult(fromMultcallContracct, fromContract, 'sentCount', [toChainId, account])
+      const fromQueryData = []
+      const toQueryData = []
+
+      for (let i = 0; i < parseInt(count.toString()); i++) {
+        fromQueryData[i] = [toChainId, account, parseInt(count.toString()) - (i + 1)]
+        toQueryData[i] = [fromChainId, account, parseInt(count.toString()) - (i + 1)]
+
+      }
+      const sendResult = await getSingleContractMultipleData(fromMultcallContracct, getContract(getNetworkLibrary(fromChainId), MainMatter, fromAddress), 'sent', fromQueryData)
+      const reResult = await getSingleContractMultipleData(toMultcallContracct, getContract(getNetworkLibrary(toChainId), MainMatter, toAddress), 'received', toQueryData)
+      return sendResult.map((item, index) => {
+        return {
+          nonce: index,
+          fromChainId: fromChainId,
+          toChainId: toChainId,
+          mainAddress: token.address,
+          fromTokenAddress: fromAddress,
+          toTokenAddress: toAddress,
+          volume: item.toString(),
+          received: item.toString() === reResult[index]?.toString(),
+          symbol: token.symbol
+        }
+      })
+    }))
+
+
+    const allData = results.reduce((a, b) => {
+      return a.concat(b)
+    })
+    setClaimList(allData)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchClaimList()
+  }, [token])
 
   return (
       <div className="claim_list">
-        {(!claimList.list || claimList.token !== token) ? (
+        {loading ? (
             <img className="investment__modal__loading" src={Circle} alt=""/>
         ) : (
             <>
-              {claimList.list
+              <p className="empty_list">
+                {claimList.length === 0 && 'You currently don’t have transactions in the Claim List'}
+              </p>
+              {claimList.length !== 0 && claimList
                   .map(item => {
                     return (
                         <div className="claim_item"

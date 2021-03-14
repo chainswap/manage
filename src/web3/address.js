@@ -4,6 +4,7 @@ export const ChainId = {
     RINKEBY: 4,
     GÖRLI: 5,
     KOVAN: 42,
+    BSC: 56,
     HT: 128
 }
 
@@ -341,6 +342,7 @@ const MULTICALL_NETWORKS = {
     [ChainId.KOVAN]: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',
     [ChainId.RINKEBY]: '0x42Ad527de7d4e9d9d011aC45B31D8551f8Fe9821',
     [ChainId.GÖRLI]: '0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e',
+    [ChainId.BSC]: '0xe348b292e8eA5FAB54340656f3D374b259D658b8',
     [ChainId.HT]: '0x37ab26db3df780e7026f3e767f65efb739f48d8e'
 }
 

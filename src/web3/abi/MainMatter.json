@@ -67,37 +67,6 @@
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "volume",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "chainId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			}
-		],
-		"name": "Burn",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
 				"name": "signatory",
 				"type": "address"
 			},
@@ -166,6 +135,37 @@
 		"inputs": [
 			{
 				"indexed": true,
+				"internalType": "uint256",
+				"name": "fromChainId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "nonce",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			}
+		],
+		"name": "Receive",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
 				"internalType": "address",
 				"name": "signatory",
 				"type": "address"
@@ -195,38 +195,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "Mint",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "fromChainId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "nonce",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "volume",
-				"type": "uint256"
-			}
-		],
-		"name": "Receive",
+		"name": "Redeem",
 		"type": "event"
 	},
 	{
@@ -264,6 +233,37 @@
 			}
 		],
 		"name": "Send",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "Stake",
 		"type": "event"
 	},
 	{
@@ -319,19 +319,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "MINT_TYPEHASH",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "PERMIT_TYPEHASH",
 		"outputs": [
 			{
@@ -346,6 +333,19 @@
 	{
 		"inputs": [],
 		"name": "RECEIVE_TYPEHASH",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "REDEEM_TYPEHASH",
 		"outputs": [
 			{
 				"internalType": "bytes32",
@@ -375,16 +375,77 @@
 				"internalType": "address",
 				"name": "governor_",
 				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "offering_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "public_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "team_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "fund_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "mine_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "liquidity_",
+				"type": "address"
 			}
 		],
-		"name": "__MappingMATTER_init",
+		"name": "__MATTER_init",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "__MappingMATTER_init_unchained",
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "offering_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "public_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "team_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "fund_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "mine_",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "liquidity_",
+				"type": "address"
+			}
+		],
+		"name": "__MATTER_init_unchained",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -394,16 +455,6 @@
 			{
 				"internalType": "address",
 				"name": "governor_",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "mainChainId_",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "token_",
 				"type": "address"
 			},
 			{
@@ -417,30 +468,19 @@
 				"type": "string"
 			},
 			{
-				"internalType": "uint256",
-				"name": "cap_",
-				"type": "uint256"
+				"internalType": "uint8",
+				"name": "decimals_",
+				"type": "uint8"
 			}
 		],
-		"name": "__MappingToken_init",
+		"name": "__MappableToken_init",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "mainChainId_",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "token_",
-				"type": "address"
-			}
-		],
-		"name": "__MappingToken_init_unchained",
+		"inputs": [],
+		"name": "__MappableToken_init_unchained",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -521,42 +561,6 @@
 			}
 		],
 		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "volume",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "chainId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			}
-		],
-		"name": "burn",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "cap",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -783,101 +787,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "authorizer",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "volume",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "chainId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "txHash",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint8",
-				"name": "v",
-				"type": "uint8"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "r",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "s",
-				"type": "bytes32"
-			}
-		],
-		"name": "mint",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "volume",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "chainId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "txHash",
-				"type": "uint256"
-			}
-		],
-		"name": "mint",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "minted",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "name",
 		"outputs": [
@@ -888,6 +797,19 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "needApprove",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -1004,7 +926,7 @@
 		],
 		"name": "receive",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -1031,6 +953,101 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "authorizer",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "txHash",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "v",
+				"type": "uint8"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "r",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "s",
+				"type": "bytes32"
+			}
+		],
+		"name": "redeem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "txHash",
+				"type": "uint256"
+			}
+		],
+		"name": "redeem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "redeemed",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -1224,6 +1241,29 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "volume",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "chainId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "stake",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "symbol",
 		"outputs": [
@@ -1244,6 +1284,19 @@
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalMapped",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

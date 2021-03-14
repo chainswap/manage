@@ -37,15 +37,15 @@ export function useSingleContractMultipleData(contract, methodName, callInputs, 
 }
 
 export const ETHNetwork = new NetworkConnector({
-  urls: {[1]: 'https://mainnet.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
+  urls: {[1]: 'https://mainnet.infura.io/v3/3f6f55ba1ee540328662f8496ddbc228'}
 })
 
 export const testETHNetwork1 = new NetworkConnector({
-  urls: {[3]: 'https://ropsten.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
+  urls: {[3]: 'https://ropsten.infura.io/v3/3f6f55ba1ee540328662f8496ddbc228'}
 })
 
 export const testETHNetwork2 = new NetworkConnector({
-  urls: {[4]: 'https://rinkeby.infura.io/v3/d3c24365c3994ed9859700fab7ccd30b'}
+  urls: {[4]: 'https://rinkeby.infura.io/v3/3f6f55ba1ee540328662f8496ddbc228'}
 })
 
 export const HECONetwork = new NetworkConnector({
