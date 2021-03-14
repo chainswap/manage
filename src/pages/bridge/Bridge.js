@@ -104,7 +104,7 @@ export const Bridge = () => {
   const tokenBalance = useBalance(curAddress, {curChainId})
 
   useEffect(() => {
-    if (selectedToken) {
+    if (selectedToken && chainId) {
       const chain = selectedToken.chains.find(item => {
         return item.chainId === chainId
       })
@@ -124,6 +124,7 @@ export const Bridge = () => {
   const addTransaction = useTransactionAdder()
 
   const tokenList = useTokenList()
+  console.log('tokenList',tokenList)
 
   const [modalType, setModalType] = useState(MODE_TYPE.INIT)
   const [hash, setHash] = useState()
@@ -153,7 +154,8 @@ export const Bridge = () => {
   })
 
   const approveStatus = useMemo(() => {
-    if (!selectedToken) return false
+    if (!selectedToken || !chainId) return false
+    console.log('selectedToken',selectedToken.chainId ,chainId)
     if (selectedToken.chainId.toString() !== chainId.toString()) return false
     const curToken = selectedToken.chains.find(item => {
       return item.chainId.toString() === chainId.toString()
@@ -163,7 +165,7 @@ export const Bridge = () => {
 
   const curAllowance = useAllowance(selectedToken && approveStatus && selectedToken.address, selectedToken && selectedToken.chains.find(item => {
     return item.chainId === chainId
-  }).address, {curChainId, approveStatus})
+  })?.address, {curChainId, approveStatus})
 
   const sendButton = useMemo(() => {
     if (approveStatus && approve) return (<><img src={Circle} className="confirm_modal__loading"/>
@@ -233,15 +235,19 @@ export const Bridge = () => {
   }, [account])
 
   useEffect(() => {
-    if (selectedToken) {
+    if (selectedToken && chainId) {
       const chains = selectedToken.chains
       const chainList = chains
           .filter(item => {
+            console.log('selectedToken', item, chainId)
+
             return item.chainId !== chainId
           }).map((item, index) => {
+
+            console.log('selectedToken1', ALL_CHAINS[item.chainId], item.chainId)
+
             return {...ALL_CHAINS[item.chainId], id: index}
           })
-      console.log('selectedToken', chains)
 
       setToChainList(chainList)
       setToChain(chainList[0])
@@ -641,7 +647,7 @@ export const Bridge = () => {
                       }}>
                         {selectedToken ? (
                             <>
-                              <img src={Matter}/>
+                              <img src={`https://raw.githubusercontent.com/williamzng/chainswap-assets/main/blockchains/ethereum/${selectedToken.address.toLowerCase()}.png`}/>
                               <p>{selectedToken.symbol}</p></>
                         ) : (
                             <>

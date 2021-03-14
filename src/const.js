@@ -68,7 +68,7 @@ export const MODE_TYPE = {
 }
 
 export const ALL_CHAINS = {
-  1: {title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
+  1: {title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
   3: { title: 'Ropsten', chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
   4: {title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo},
   56: {title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},

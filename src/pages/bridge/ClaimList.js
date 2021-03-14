@@ -132,7 +132,7 @@ export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
                           <div className="claim_item__item" style={{width: 100}}>
                             <p>Token:</p>
                             <div>
-                              {/*<img src={loadChainInfo(item.toChainId).icon}/>*/}
+                              <img src={`https://raw.githubusercontent.com/williamzng/chainswap-assets/main/blockchains/ethereum/${token.address.toLowerCase()}.png`}/>
                               <p>{token.symbol}</p>
                             </div>
                           </div>

@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Circle from "../../assets/icon/circle.svg";
 import {ReactComponent as Close} from "../../assets/icon/close.svg";
-import Matter from '../../assets/icon/matter.svg'
 import {formatAmount} from "../../utils/format";
 
 export const AssetModal = ({tokenList, onSelect, onClose}) => {
@@ -34,7 +33,7 @@ export const AssetModal = ({tokenList, onSelect, onClose}) => {
                           onSelect(item)
                           onClose()
                         }}>
-                          <img src={`https://raw.githubusercontent.com/williamzng/chainswap-assets/main/blockchains/ethereum/${item.address.toLowerCase()}.png`}/>
+                          <img style={{width: 30}} src={`https://raw.githubusercontent.com/williamzng/chainswap-assets/main/blockchains/ethereum/${item.address.toLowerCase()}.png`}/>
                           <div className="token__frame__extra">
                             <p>{item.symbol}</p>
                             <p>{item.name}</p>
