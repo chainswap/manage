@@ -34,7 +34,7 @@ export const AssetModal = ({tokenList, onSelect, onClose}) => {
                           onSelect(item)
                           onClose()
                         }}>
-                          <img src={Matter}/>
+                          <img src={`https://raw.githubusercontent.com/williamzng/chainswap-assets/main/blockchains/ethereum/${item.address.toLowerCase()}.png`}/>
                           <div className="token__frame__extra">
                             <p>{item.symbol}</p>
                             <p>{item.name}</p>
