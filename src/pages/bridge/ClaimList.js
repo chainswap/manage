@@ -107,7 +107,11 @@ export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
                  You currently don’t have transactions in the Claim List
               </p>}
 
-              {claimList.length !== 0 && claimList
+              {claimList.length !== 0 && claimList.filter((item)=>{
+                  return !item.received
+              }).concat(claimList.filter((item )=>{
+                return item.received
+              }))
                   .map(item => {
                     return (
                         <div className="claim_item"
