@@ -365,7 +365,9 @@ export const Bridge = () => {
             })
 
             const pastDispatch = deposite
-            pastDispatch.stake.status = 2
+            if(pastDispatch){
+              pastDispatch.stake.status = 2
+            }
             dispatch({
               type: ANTIMATTER_TRANSACTION_LIST,
               transaction: pastDispatch
