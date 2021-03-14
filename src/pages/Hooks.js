@@ -199,8 +199,8 @@ export const useRemovePopup = () => {
 
 export const useTokenList = () =>{
     const {account, chainId, active} = useActiveWeb3React()
-    const options = {chainId: ChainId.MAINNET, library: getNetworkLibrary(1)}
-    const tokenFactoryContract = getContract(getNetworkLibrary(1), TokenFactory, TOKEN_FACTORY)
+    const options = {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)}
+    const tokenFactoryContract = getContract(getNetworkLibrary(3), TokenFactory, TOKEN_FACTORY)
 
     const tokens =  useSingleCallResult(tokenFactoryContract, 'allCertifiedTokens', undefined, options)
     const [tokensData, setTokensData] = useState()
