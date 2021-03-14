@@ -5,7 +5,6 @@ import {CheckCircle, AlertCircle} from 'react-feather'
 import {useActiveWeb3React} from "../../web3";
 
 export const PopupItem = ({removeAfterMs, content, popKey, success, hash}) => {
-    console.log('hash link--->', hash)
     const removePopup = useRemovePopup()
 
     const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])

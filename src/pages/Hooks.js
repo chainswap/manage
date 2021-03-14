@@ -199,8 +199,9 @@ export const useRemovePopup = () => {
 
 export const useTokenList = () =>{
     const {account, chainId, active} = useActiveWeb3React()
-    const options = {chainId: ChainId.ROPSTEN, library: getNetworkLibrary(3)}
-    const tokenFactoryContract = getContract(getNetworkLibrary(3), TokenFactory, TOKEN_FACTORY)
+    const FactoryChain = 3
+    const options = {chainId: FactoryChain, library: getNetworkLibrary(FactoryChain)}
+    const tokenFactoryContract = getContract(getNetworkLibrary(FactoryChain), TokenFactory, TOKEN_FACTORY)
 
     const tokens =  useSingleCallResult(tokenFactoryContract, 'allCertifiedTokens', undefined, options)
     const [tokensData, setTokensData] = useState()
@@ -233,6 +234,7 @@ export const useTokenList = () =>{
                 decimals: decimals?.[index],
                 balance: balances?.[index]?.['balance'].toString(),
                 chains: mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
+                    console.log('mappingTokens',mappingTokens)
                     return {chainId: parseInt(item), address: mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex]}
                 })
             }
