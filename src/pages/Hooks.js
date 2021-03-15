@@ -1,22 +1,20 @@
 import {useState, useEffect, useContext, useCallback, useMemo} from 'react';
-import MainMatter from "../web3/abi/MainMatter.json";
 import StakingRewardsV2 from '../web3/abi/StakingRewardsV2.json'
 import {
-    getContract,
+    getContract, getMultipleContractSingleData, getSingleCallResult, getSingleContractMultipleData,
     useActiveWeb3React,
-    useBlockNumber, useMultipleContractSingleData,
-    useSingleCallResult,
-    useSingleContractMultipleData
+    useBlockNumber
 } from "../web3";
 import { Interface } from '@ethersproject/abi'
 
-import {ChainId, getGLFStakingAddress, TOKEN_FACTORY} from "../web3/address";
+import {getGLFStakingAddress, TOKEN_FACTORY} from "../web3/address";
 import {mainContext} from "../reducer";
 import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
 import {BigNumber} from "bignumber.js";
 import {getNetworkLibrary} from "../hooks/multicall/hooks";
 import TokenFactory from '../web3/abi/TokenFactory.json'
 import ERC20 from '../web3/abi/ERC20.json'
+import {useMulticallContract} from "../web3/useContract";
 const ERC20_INTERFACE = new Interface(ERC20)
 
 
@@ -199,52 +197,51 @@ export const useRemovePopup = () => {
 
 export const useTokenList = () =>{
     const {account, chainId, active} = useActiveWeb3React()
-    const FactoryChain = 3
-    const options = {chainId: FactoryChain, library: getNetworkLibrary(FactoryChain)}
+    const FactoryChain = 1
     const tokenFactoryContract = getContract(getNetworkLibrary(FactoryChain), TokenFactory, TOKEN_FACTORY)
+    const multicallContract = useMulticallContract(FactoryChain, getNetworkLibrary(FactoryChain))
+    const currentMulticallContract = useMulticallContract(chainId, getNetworkLibrary(chainId))
 
-    const tokens =  useSingleCallResult(tokenFactoryContract, 'allCertifiedTokens', undefined, options)
     const [tokensData, setTokensData] = useState()
 
+    const fetchTokens = async () => {
+        const tokens =  await getSingleCallResult(multicallContract, tokenFactoryContract, 'allCertifiedTokens', undefined)
+
+        const names = await getMultipleContractSingleData(multicallContract, tokens? tokens.tokens: [],ERC20_INTERFACE, 'name', undefined)
+
+        const mappingTokens = await getSingleContractMultipleData(multicallContract, tokenFactoryContract, 'chainIdMappingTokenMappeds',tokens && tokens.tokens? tokens.tokens.map(item => {return [item]}):[])
+        const curAddresses = active && tokens && mappingTokens ? mappingTokens.map((item, index)=>{
+            const mainChainID = tokens.chainIds[index]
+            const position = item.chainIds.findIndex(chainIdItem =>{return chainIdItem.toString() === chainId.toString()})
+            return chainId.toString() === mainChainID.toString() ? tokens.tokens[index] : item.mappingTokenMappeds_[parseInt(position.toString())]
+        }) :[]
+
+        const balances = await getMultipleContractSingleData(currentMulticallContract, curAddresses, ERC20_INTERFACE, 'balanceOf', [account])
+
+        const decimals = await getMultipleContractSingleData(multicallContract, tokens? tokens.tokens: [],ERC20_INTERFACE, 'decimals', undefined)
+        setTokensData({tokens, names, mappingTokens, balances, decimals})
+    }
+
     useEffect(()=>{
-        if(!tokens) return
-        setTokensData(tokens)
-    },[tokens])
-
-    const names = useMultipleContractSingleData(tokensData? tokensData.tokens: [],ERC20_INTERFACE, 'name', undefined, options)
-
-    const mappingTokens = useSingleContractMultipleData(tokenFactoryContract, 'chainIdMappingTokenMappeds',tokensData && tokensData.tokens? tokensData.tokens.map(item => {return [item]}):[] , options)
-    const curAddresses = active && tokensData && mappingTokens ? mappingTokens.map((item, index)=>{
-        const mainChainID = tokensData.chainIds[index]
-        const position = item.chainIds.findIndex(chainIdItem =>{return chainIdItem.toString() === chainId.toString()})
-        return chainId.toString() === mainChainID.toString() ? tokensData.tokens[index] : item.mappingTokenMappeds_[parseInt(position.toString())]
-    }) :[]
-
-    const balances = useMultipleContractSingleData(curAddresses, ERC20_INTERFACE, 'balanceOf', [account])
-
-    const decimals = useMultipleContractSingleData(tokensData? tokensData.tokens: [],ERC20_INTERFACE, 'decimals', undefined, options)
+        if(!active) return
+        fetchTokens()
+    },[ active, account])
 
     return useMemo(()=>{
-        return tokens ? tokens.symbols.map((item, index) =>{
+        console.log('tokensData', tokensData)
+        return tokensData ? tokensData?.tokens?.symbols.map((item, index) =>{
             return {
                 symbol: item,
-                address: tokens.tokens[index],
-                chainId: parseInt(tokens.chainIds[index].toString()),
-                name: names?.[index],
-                decimals: decimals?.[index],
-                balance: balances?.[index]?.['balance'].toString(),
-                chains: mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
-                    console.log('mappingTokens',mappingTokens)
-                    return {chainId: parseInt(item), address: mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex]}
+                address: tokensData.tokens.tokens[index],
+                chainId: parseInt(tokensData.tokens.chainIds[index].toString()),
+                name: tokensData.names?.[index],
+                decimals: tokensData.decimals?.[index],
+                balance: tokensData.balances?.[index]?.['balance'].toString(),
+                chains: tokensData.mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
+                    return {chainId: parseInt(item), address: tokensData.mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex]}
                 })
             }
         }) : []
-    },[tokens, names, balances, mappingTokens])
+    },[tokensData])
 }
 
-export const useReceiveList = (token) =>{
-    const tokens = token? token.chains  : []
-    console.log('receive tokens', tokens)
-
-
-}

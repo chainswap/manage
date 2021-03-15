@@ -254,7 +254,6 @@ export const useMultipleContractSingleData = (addresses, contractInterface, meth
 
 
 export const getSingleCallResult = async (multicallContract, contract, methodName, inputs) => {
-  console.log('log1------>')
   const fragment = contract?.interface?.getFunction(methodName)
   const calls = contract && fragment && isValidMethodArgs(inputs)
       ? [
@@ -272,7 +271,6 @@ export const getSingleCallResult = async (multicallContract, contract, methodNam
     const results = returnData.map(item => {
       return contract.interface.decodeFunctionResult(fragment, item)
     })
-    console.log('fetch result', results)
     return results?.[0]
   } catch (e) {
     console.log('error--->')

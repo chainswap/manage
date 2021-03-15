@@ -13,8 +13,6 @@ import {useMulticallContract} from "../../web3/useContract";
 export const ClaimList = ({token = DEFAULT_TOKEN, onWithdraw}) => {
   const {account} = useActiveWeb3React()
 
-  //const claimList = useClaimList(token)
-
   const [claimList, setClaimList] = useState([])
   const [loading, setLoading] = useState(false)
 

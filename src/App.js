@@ -9,6 +9,7 @@ import { Investment } from './pages/investment/Investment';
 import { ContextProvider } from './reducer';
 import { InitPage } from './pages/InitPage';
 import {Bridge} from "./pages/bridge/Bridge";
+import {Manager} from "./pages/bridge/Manager";
 
 function getLibrary(provider) {
     const library = new Web3Provider(provider);
@@ -31,6 +32,9 @@ function App() {
                     <Switch>
                         <Route exact path='/'>
                             <Bridge />
+                        </Route>
+                        <Route exact path='/manager'>
+                            <Manager />
                         </Route>
                         <Route exact path='/investment'>
                             <Investment />

@@ -24,7 +24,6 @@ export const AssetModal = ({tokenList, onSelect, onClose}) => {
               {tokenList && tokenList.length !== 0 && tokenList[0].chains ? (
                   tokenList
                       .filter(item => {
-                        console.log('searchText', searchText, item.symbol)
                         return !searchText || item.symbol.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
                       }).map(item => {
                     return (
