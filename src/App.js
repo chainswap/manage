@@ -4,11 +4,8 @@ import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import './styles.css'
 import './assets/css/style.scss';
-import { Home } from './pages/Home';
-import { Investment } from './pages/investment/Investment';
 import { ContextProvider } from './reducer';
 import { InitPage } from './pages/InitPage';
-import {Bridge} from "./pages/bridge/Bridge";
 import {Manager} from "./pages/bridge/Manager";
 
 function getLibrary(provider) {
@@ -31,16 +28,10 @@ function App() {
                 <Router>
                     <Switch>
                         <Route exact path='/'>
-                            <Bridge />
+                            <Manager />
                         </Route>
                         <Route exact path='/manager'>
                             <Manager />
-                        </Route>
-                        <Route exact path='/investment'>
-                            <Investment />
-                        </Route>
-                        <Route path='/'>
-                            <Home />
                         </Route>
                     </Switch>
                     <InitPage />

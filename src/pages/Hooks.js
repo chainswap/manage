@@ -196,11 +196,9 @@ export const useRemovePopup = () => {
 
 
 export const useTokenList = () =>{
-    const {account, chainId, active} = useActiveWeb3React()
     const FactoryChain = 1
     const tokenFactoryContract = getContract(getNetworkLibrary(FactoryChain), TokenFactory, TOKEN_FACTORY)
     const multicallContract = useMulticallContract(FactoryChain, getNetworkLibrary(FactoryChain))
-    const currentMulticallContract = useMulticallContract(chainId, getNetworkLibrary(chainId))
 
     const [tokensData, setTokensData] = useState()
 
@@ -210,22 +208,14 @@ export const useTokenList = () =>{
         const names = await getMultipleContractSingleData(multicallContract, tokens? tokens.tokens: [],ERC20_INTERFACE, 'name', undefined)
 
         const mappingTokens = await getSingleContractMultipleData(multicallContract, tokenFactoryContract, 'chainIdMappingTokenMappeds',tokens && tokens.tokens? tokens.tokens.map(item => {return [item]}):[])
-        const curAddresses = active && tokens && mappingTokens ? mappingTokens.map((item, index)=>{
-            const mainChainID = tokens.chainIds[index]
-            const position = item.chainIds.findIndex(chainIdItem =>{return chainIdItem.toString() === chainId.toString()})
-            return chainId.toString() === mainChainID.toString() ? tokens.tokens[index] : item.mappingTokenMappeds_[parseInt(position.toString())]
-        }) :[]
-
-        const balances = await getMultipleContractSingleData(currentMulticallContract, curAddresses, ERC20_INTERFACE, 'balanceOf', [account])
 
         const decimals = await getMultipleContractSingleData(multicallContract, tokens? tokens.tokens: [],ERC20_INTERFACE, 'decimals', undefined)
-        setTokensData({tokens, names, mappingTokens, balances, decimals})
+        setTokensData({tokens, names, mappingTokens, decimals})
     }
 
     useEffect(()=>{
-        if(!active) return
         fetchTokens()
-    },[ active, account])
+    },[ ])
 
     return useMemo(()=>{
         console.log('tokensData', tokensData)
@@ -236,7 +226,6 @@ export const useTokenList = () =>{
                 chainId: parseInt(tokensData.tokens.chainIds[index].toString()),
                 name: tokensData.names?.[index],
                 decimals: tokensData.decimals?.[index],
-                balance: tokensData.balances?.[index]?.['balance'].toString(),
                 chains: tokensData.mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
                     return {chainId: parseInt(item), address: tokensData.mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex]}
                 })
