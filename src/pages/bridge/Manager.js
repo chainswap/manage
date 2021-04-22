@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {makeStyles} from '@material-ui/core/styles';
 import Lottie from "react-lottie";
 
@@ -12,6 +12,7 @@ import {TOKEN_FACTORY} from "../../web3/address";
 import {formatAmount, numToWei} from "../../utils/format";
 import BigNumber from "bignumber.js";
 import Animation from "../../assets/loading.json";
+import {mainContext} from "../../reducer";
 
 const defaultOptions = {
     loop: true,
@@ -23,12 +24,11 @@ const defaultOptions = {
 };
 
 export const Manager = () => {
-    const tokenList = useTokenList()
+    useTokenList()
     const [list, setList] = useState([])
-
+    const { tokens } = useContext(mainContext).state
     const fetchData = async () => {
-        console.log('fetchData', tokenList)
-        const list = await Promise.all(tokenList.map(async (item) => {
+        const list = await Promise.all(tokens.map(async (item) => {
             console.log('chain---->', item)
             const amounts = await Promise.all(item.chains.map(async chain => {
                 const contract = getContract(getNetworkLibrary(chain.chainId), MainMatter, chain.address)
@@ -56,10 +56,10 @@ export const Manager = () => {
     }
 
     useEffect(() => {
-        if (tokenList && tokenList) {
+        if (tokens && tokens) {
             fetchData()
         }
-    }, [tokenList])
+    }, [tokens])
 
 
     return (

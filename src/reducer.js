@@ -15,7 +15,7 @@ import {
   ANTIMATTER_TRANSACTION_LIST,
   HANDLE_POPUP_LIST,
   CLEAR_ANTIMATTER_TRANSACTION_LIST,
-  HANDLE_TOKENS,
+  HANDLE_TOKENS, CHAINSWAP_TOKENS,
 } from './const';
 
 const mainContext = React.createContext();
@@ -97,10 +97,15 @@ const reducer = (state, action) => {
       return {...state, popupList: popups};
 
     case HANDLE_TOKENS:
-      if(state.tokenList.length === 0){
-        return {...state, tokenList: action.tokens}
-      }
-    break
+      console.log('tag--->', action.tokens)
+      const hash = {}
+      const allTokens = action.tokens.concat(state.tokens).reduce((item, next) => {
+        if(!hash[next.symbol]) hash[next.symbol] = item.push(next)
+        return item
+      }, [])
+      window.localStorage.setItem(CHAINSWAP_TOKENS, JSON.stringify(allTokens))
+      return {...state, tokens: allTokens}
+
     default:
       return state;
   }
@@ -123,7 +128,8 @@ const ContextProvider = (props) => {
     showMenuMaskModal: false,
     transactions: transactionsData ? JSON.parse(transactionsData) : [],
     popupList: [],
-    tokenList: []
+    tokenList: [],
+    tokens: []
   });
   return (
       <mainContext.Provider value={{state, dispatch}}>

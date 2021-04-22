@@ -9,14 +9,15 @@ import { Interface } from '@ethersproject/abi'
 
 import {getGLFStakingAddress, TOKEN_FACTORY} from "../web3/address";
 import {mainContext} from "../reducer";
-import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST} from "../const";
+import {ANTIMATTER_TRANSACTION_LIST, HANDLE_POPUP_LIST, HANDLE_TOKENS} from "../const";
 import {BigNumber} from "bignumber.js";
 import {getNetworkLibrary} from "../hooks/multicall/hooks";
 import TokenFactory from '../web3/abi/TokenFactory.json'
 import ERC20 from '../web3/abi/ERC20.json'
 import {useMulticallContract} from "../web3/useContract";
-const ERC20_INTERFACE = new Interface(ERC20)
+import WHITELIST_TOKENS from '../assets/../assets/tokenlist.json'
 
+const ERC20_INTERFACE = new Interface(ERC20)
 
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
@@ -195,42 +196,48 @@ export const useRemovePopup = () => {
 }
 
 
-export const useTokenList = () =>{
+export const useTokenList = () => {
+    const { dispatch } = useContext(mainContext)
+    const { blockNumber } = useBlockNumber()
     const FactoryChain = 1
-    const tokenFactoryContract = getContract(getNetworkLibrary(FactoryChain), TokenFactory, TOKEN_FACTORY)
-    const multicallContract = useMulticallContract(FactoryChain, getNetworkLibrary(FactoryChain))
+    const tokenFactoryContract = getContract(
+        getNetworkLibrary(FactoryChain),
+        TokenFactory,
+        TOKEN_FACTORY
+    )
+    const multicallContract = useMulticallContract(
+        FactoryChain,
+        getNetworkLibrary(FactoryChain)
+    )
 
-    const [tokensData, setTokensData] = useState()
-
-    const fetchTokens = async () => {
-        const tokens =  await getSingleCallResult(multicallContract, tokenFactoryContract, 'allCertifiedTokens', undefined)
-
-        const names = await getMultipleContractSingleData(multicallContract, tokens? tokens.tokens: [],ERC20_INTERFACE, 'name', undefined)
-
-        const mappingTokens = await getSingleContractMultipleData(multicallContract, tokenFactoryContract, 'chainIdMappingTokenMappeds',tokens && tokens.tokens? tokens.tokens.map(item => {return [item]}):[])
-
-        const decimals = await getMultipleContractSingleData(multicallContract, tokens? tokens.tokens: [],ERC20_INTERFACE, 'decimals', undefined)
-        setTokensData({tokens, names, mappingTokens, decimals})
-    }
-
-    useEffect(()=>{
-        fetchTokens()
-    },[ ])
-
-    return useMemo(()=>{
-        console.log('tokensData', tokensData)
-        return tokensData ? tokensData?.tokens?.symbols.map((item, index) =>{
-            return {
-                symbol: item,
-                address: tokensData.tokens.tokens[index],
-                chainId: parseInt(tokensData.tokens.chainIds[index].toString()),
-                name: tokensData.names?.[index],
-                decimals: tokensData.decimals?.[index],
-                chains: tokensData.mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
-                    return {chainId: parseInt(item), address: tokensData.mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex]}
+    useEffect(() => {
+        const fetchTokens = async () => {
+            const mappingTokens = await getSingleContractMultipleData(
+                multicallContract,
+                tokenFactoryContract,
+                'chainIdMappingTokenMappeds',
+                WHITELIST_TOKENS.map(({ address }) => {
+                    return [address]
                 })
-            }
-        }) : []
-    },[tokensData])
-}
+            )
 
+            const list = WHITELIST_TOKENS.map((item, index) => {
+                return {
+                    ...item,
+                    chains: mappingTokens?.[index]?.['chainIds'].map((item, subIndex) => {
+                        return {
+                            chainId: parseInt(item),
+                            address:
+                                mappingTokens?.[index]?.['mappingTokenMappeds_'][subIndex],
+                        }
+                    }),
+                }
+            })
+            dispatch({ type: HANDLE_TOKENS, tokens: list })
+        }
+
+        if (tokenFactoryContract && blockNumber !== 0) {
+            fetchTokens()
+        }
+    }, [blockNumber, dispatch, multicallContract, tokenFactoryContract])
+}

@@ -1,0 +1,183 @@
+[{
+		"symbol": "MATTER",
+		"address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F",
+		"chainId": 1,
+		"name": "Antimatter.Finance Governance Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "ROOM",
+		"address": "0xAd4f86a25bbc20FfB751f2FAC312A0B4d8F88c64",
+		"chainId": 1,
+		"name": "OptionRoom Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "NORD",
+		"address": "0x6e9730EcFfBed43fD876A264C982e254ef05a0DE",
+		"chainId": 1,
+		"name": "Nord Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "DVG",
+		"address": "0x51e00a95748DBd2a3F47bC5c3b3E7B3F0fea666c",
+		"chainId": 1,
+		"name": "DVGToken",
+		"decimals": "18"
+	},
+	{
+		"symbol": "BLANK",
+		"address": "0xAec7e1f531Bb09115103C53ba76829910Ec48966",
+		"chainId": 1,
+		"name": "Blank Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "DORA",
+		"address": "0xbc4171f45EF0EF66E76F979dF021a34B46DCc81d",
+		"chainId": 1,
+		"name": "Dorayaki",
+		"decimals": "18"
+	},
+	{
+		"symbol": "POLS",
+		"address": "0x83e6f1E41cdd28eAcEB20Cb649155049Fac3D5Aa",
+		"chainId": 1,
+		"name": "PolkastarterToken",
+		"decimals": "18"
+	},
+	{
+		"symbol": "UMB",
+		"address": "0x6fC13EACE26590B80cCCAB1ba5d51890577D83B2",
+		"chainId": 1,
+		"name": "Umbrella",
+		"decimals": "18"
+	},
+	{
+		"symbol": "STRONG",
+		"address": "0x990f341946A3fdB507aE7e52d17851B87168017c",
+		"chainId": 1,
+		"name": "Strong",
+		"decimals": "18"
+	},
+	{
+		"symbol": "POOLZ",
+		"address": "0x69A95185ee2a045CDC4bCd1b1Df10710395e4e23",
+		"chainId": 1,
+		"name": "$Poolz Finance",
+		"decimals": "18"
+	},
+	{
+		"symbol": "VTX",
+		"address": "0xceb286C9604c542d3cc08b41AA6C9675B078A832",
+		"chainId": 1,
+		"name": "Vortex DeFi",
+		"decimals": "18"
+	},
+	{
+		"symbol": "RAZOR",
+		"address": "0x50DE6856358Cc35f3A9a57eAAA34BD4cB707d2cd",
+		"chainId": 1,
+		"name": "RAZOR",
+		"decimals": "18"
+	},
+	{
+		"symbol": "Rai",
+		"address": "0xf30547ff2Df1F1CBE5C8DD758B3dd098C856e38f",
+		"chainId": 1,
+		"name": "Rai.Finance",
+		"decimals": "18"
+	},
+	{
+		"symbol": "ROCKS",
+		"address": "0x92ecE48522E1aCbcda4Aaa8C2fBF2Aa9FB15D624",
+		"chainId": 1,
+		"name": "ROCKS",
+		"decimals": "18"
+	},
+	{
+		"symbol": "FEI",
+		"address": "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
+		"chainId": 1,
+		"name": "Fei USD",
+		"decimals": "18"
+	},
+	{
+		"symbol": "TRIBE",
+		"address": "0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B",
+		"chainId": 1,
+		"name": "Tribe",
+		"decimals": "18"
+	},
+	{
+		"symbol": "WQT",
+		"address": "0x06677Dc4fE12d3ba3C7CCfD0dF8Cd45e4D4095bF",
+		"chainId": 1,
+		"name": "Work Quest Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "FMG",
+		"address": "0x2991341D28Eaea277785D20e1d878D478c7bA4C7",
+		"chainId": 1,
+		"name": "FM Gallery",
+		"decimals": "18"
+	},
+	{
+		"symbol": "KIAN",
+		"address": "0x5ECE3F1542C4e1a06767457e4D8286beA772fc41",
+		"chainId": 1,
+		"name": "Kianite",
+		"decimals": "18"
+	},
+	{
+		"symbol": "TSHP",
+		"address": "0x525794473F7ab5715C81d06d10f52d11cC052804",
+		"chainId": 1,
+		"name": "12Ships",
+		"decimals": "18"
+	},
+	{
+		"symbol": "TOKEN",
+		"address": "0x3B73c1B2ea59835cbfcADade5462b6aB630D9890",
+		"chainId": 1,
+		"name": "ChainSwap.com Governance Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "ORO",
+		"address": "0xc3Eb2622190c57429aac3901808994443b64B466",
+		"chainId": 1,
+		"name": "ORO Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "NAME",
+		"address": "0xe1A4c5BBb704a92599FEdB191f451E0d3a1ed842",
+		"chainId": 1,
+		"name": "Polkadomain Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "BSCS",
+		"address": "0xbcb24AFb019BE7E93EA9C43B7E22Bb55D5B7f45D",
+		"chainId": 56,
+		"name": "BSCS Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "RAGE",
+		"address": "0x94804dc4948184fFd7355f62Ccbb221c9765886F",
+		"chainId": 1,
+		"name": "RageToken",
+		"decimals": "18"
+	},
+	{
+		"symbol": "CHR",
+		"address": "0x8a2279d4a90b6fe1c4b30fa660cc9f926797baa2",
+		"chainId": 1,
+		"name": "Chromia",
+		"decimals": "18"
+	}
+]

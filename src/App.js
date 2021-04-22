@@ -27,7 +27,7 @@ function App() {
             <Web3ReactProvider getLibrary={getLibrary}>
                 <Router>
                     <Switch>
-                        <Route exact path='/'>
+                        <Route path='/'>
                             <Manager />
                         </Route>
                         <Route exact path='/manager'>
