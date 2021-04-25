@@ -24,7 +24,6 @@ const defaultOptions = {
 };
 
 export const Manager = () => {
-    useTokenList()
     const [list, setList] = useState([])
     const { tokens } = useContext(mainContext).state
     console.log('tokens---->', tokens)
@@ -57,7 +56,7 @@ export const Manager = () => {
     }
 
     useEffect(() => {
-        if (tokens && tokens) {
+        if (tokens) {
             fetchData()
         }
     }, [tokens])

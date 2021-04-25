@@ -233,11 +233,12 @@ export const useTokenList = () => {
                     }),
                 }
             })
+            console.log('list---->',list)
             dispatch({ type: HANDLE_TOKENS, tokens: list })
         }
 
-        if (tokenFactoryContract && blockNumber !== 0) {
+        if (tokenFactoryContract) {
             fetchTokens()
         }
-    }, [dispatch, multicallContract, tokenFactoryContract])
+    }, [])
 }
