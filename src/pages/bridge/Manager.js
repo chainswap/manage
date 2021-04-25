@@ -27,9 +27,10 @@ export const Manager = () => {
     useTokenList()
     const [list, setList] = useState([])
     const { tokens } = useContext(mainContext).state
+    console.log('tokens---->', tokens)
+
     const fetchData = async () => {
         const list = await Promise.all(tokens.map(async (item) => {
-            console.log('chain---->', item)
             const amounts = await Promise.all(item.chains.map(async chain => {
                 const contract = getContract(getNetworkLibrary(chain.chainId), MainMatter, chain.address)
                 const amount1 = await contract.authQuotaOf('0x8C46b006D1c01739E8f71119AdB8c6084F739359')
