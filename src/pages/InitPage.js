@@ -4,7 +4,7 @@ import {GALLERY_SELECT_WEB3_CONTEXT} from '../const';
 import {InjectedConnector} from '@web3-react/injected-connector';
 import {WalletConnectConnector} from '@web3-react/walletconnect-connector';
 import {LedgerConnector} from '@web3-react/ledger-connector';
-import {TransactionsUpdater} from "./Hooks";
+import {TransactionsUpdater, useTokenList} from "./Hooks";
 
 const injected = new InjectedConnector({
     supportedChainIds: [1, 3, 4, 5, 56, 42, 128],
@@ -42,6 +42,7 @@ const wallets = {
 export const InitPage = () => {
     const context = useWeb3React();
     const {activate, active} = context;
+    useTokenList()
 
     useEffect(() => {
         const localContent =
