@@ -239,5 +239,5 @@ export const useTokenList = () => {
         if (tokenFactoryContract && blockNumber !== 0) {
             fetchTokens()
         }
-    }, [blockNumber, dispatch, multicallContract, tokenFactoryContract])
+    }, [dispatch, multicallContract, tokenFactoryContract])
 }
