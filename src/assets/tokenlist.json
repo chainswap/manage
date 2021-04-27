@@ -27,6 +27,13 @@
 		"decimals": "18"
 	},
 	{
+		"symbol": "WAR",
+		"address": "0x910651F81a605a6Ef35d05527d24A72fecef8bF0",
+		"chainId": 128,
+		"name": "WeStarter",
+		"decimals": "18"
+	},
+	{
 		"symbol": "BLANK",
 		"address": "0xAec7e1f531Bb09115103C53ba76829910Ec48966",
 		"chainId": 1,
