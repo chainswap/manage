@@ -186,5 +186,26 @@
 		"chainId": 1,
 		"name": "BlackHole.BLACK Mapping Token",
 		"decimals": "18"
+	},
+	{
+		"symbol": "BLACK",
+		"address": "0xd714d91A169127e11D8FAb3665d72E8b7ef9Dbe2",
+		"chainId": 1,
+		"name": "BlackHole.BLACK Mapping Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "UFARM",
+		"address": "0x257565ec9571267962beaaefd02d28969c3eb57f",
+		"chainId": 1,
+		"name": "UNIFARM Token",
+		"decimals": "18"
+	},
+	{
+		"symbol": "DPET",
+		"address": "0xfb62AE373acA027177D1c18Ee0862817f9080d08",
+		"chainId": 56,
+		"name": "My DeFi Pet Token",
+		"decimals": "18"
 	}
 ]
