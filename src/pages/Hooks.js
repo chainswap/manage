@@ -17,8 +17,6 @@ import ERC20 from '../web3/abi/ERC20.json'
 import {useMulticallContract} from "../web3/useContract";
 import WHITELIST_TOKENS from '../assets/../assets/tokenlist.json'
 
-const ERC20_INTERFACE = new Interface(ERC20)
-
 export const useGLFBalance = () => {
     const {account, active, library, chainId} = useActiveWeb3React()
     const [glfBalance, setGLFBalance] = useState()
@@ -198,7 +196,6 @@ export const useRemovePopup = () => {
 
 export const useTokenList = () => {
     const { dispatch } = useContext(mainContext)
-    const { blockNumber } = useBlockNumber()
     const FactoryChain = 1
     const tokenFactoryContract = getContract(
         getNetworkLibrary(FactoryChain),

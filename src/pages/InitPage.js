@@ -7,7 +7,7 @@ import {LedgerConnector} from '@web3-react/ledger-connector';
 import {TransactionsUpdater, useTokenList} from "./Hooks";
 
 const injected = new InjectedConnector({
-    supportedChainIds: [1, 3, 4, 5, 56, 42, 128],
+    supportedChainIds: [1, 3, 4, 5, 56, 66 ,42, 128],
 });
 
 const POLLING_INTERVAL = 12000;

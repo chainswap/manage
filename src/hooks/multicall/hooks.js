@@ -56,6 +56,10 @@ export const BSCNetwork = new NetworkConnector({
   urls: {[56]: 'https://bsc-dataseed4.binance.org'}
 })
 
+export const OKExNetwork = new NetworkConnector({
+  urls: { 66: 'https://exchainrpc.okex.org' },
+})
+
 
 export function getNetworkLibrary(chainId) {
   switch (chainId) {
@@ -67,6 +71,8 @@ export function getNetworkLibrary(chainId) {
       return new Web3Provider(testETHNetwork2.provider)
     case 56:
       return new Web3Provider(BSCNetwork.provider)
+    case 66:
+      return new Web3Provider(OKExNetwork.provider)
     case 128:
       return new Web3Provider(HECONetwork.provider)
     default:

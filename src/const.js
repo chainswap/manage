@@ -5,6 +5,7 @@ import Binance from "./assets/icon/binance.svg";
 import Binnace_logo from "./assets/icon/binance.svg";
 import ETH from "./assets/icon/eth.svg";
 import ETH_logo from "./assets/icon/eth.svg";
+
 export const HANDLE_WEB3_CONTEXT = "HANDLE_WEB3_CONTEXT";
 
 export const HANDLE_MY_NFTS_MODAL = "HANDLE_MY_NFTS_MODAL";
@@ -23,7 +24,7 @@ export const HANDLE_SHOW_STAKED_TOKENS_MODAL = "HANDLE_SHOW_STAKED_TOKENS_MODAL"
 export const HANDLE_SHOW_UNSTAKED_TOKENS_MODAL = "HANDLE_SHOW_UNSTAKED_TOKENS_MODAL";
 export const HANDLE_SHOW_FAILED_TRANSACTION_MODAL = "HANDLE_SHOW_FAILED_TRANSACTION_MODAL";
 export const HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL = "HANDLE_SHOW_WAITING_WALLET_CONFIRM_MODAL";
-export const HANDLE_SHOW_MENUMASK_MODAL="HANDLE_SHOW_MENUMASK_MODAL"
+export const HANDLE_SHOW_MENUMASK_MODAL = "HANDLE_SHOW_MENUMASK_MODAL"
 
 export const HANDLE_SHOW_TRANSACTION_MODAL = "HANDLE_SHOW_TRANSACTION_MODAL"
 
@@ -31,14 +32,22 @@ export const REQUESTING_DATA = "--"
 
 export const GALLERY_SELECT_WEB3_CONTEXT = "ANTIMATTER_SELECT_WEB3_CONTEXT_RELEASE"
 
-export const waitingForInit = {show: false, title: 'Waiting' ,content: '', link: null};
+export const waitingForInit = {show: false, title: 'Waiting', content: '', link: null};
 
 
-export const waitingForApprove = {show: true, title: 'Waiting for Approve' ,content: 'Approving spending limits on your wallet'}
+export const waitingForApprove = {
+  show: true,
+  title: 'Waiting for Approve',
+  content: 'Approving spending limits on your wallet'
+}
 
-export const waitingForConfirm = {show: true, title: 'Waiting For Confirmation' ,content: 'Confirm this transaction in your wallet'}
+export const waitingForConfirm = {
+  show: true,
+  title: 'Waiting For Confirmation',
+  content: 'Confirm this transaction in your wallet'
+}
 
-export const waitingPending = {show: true, title: 'Transaction submitted' ,content: 'View transaction'}
+export const waitingPending = {show: true, title: 'Transaction submitted', content: 'View transaction'}
 
 export const HANDLE_WALLET_MODAL = "HANDLE_WALLET_MODAL";
 export const HANDLE_TX_STATUS = "HANDLE_TX_STATUS";
@@ -71,9 +80,25 @@ export const MODE_TYPE = {
 
 export const ALL_CHAINS = {
   1: {title: 'ETH', chainId: 1, logo: <ETH className="icon"/>, icon: ETH_logo},
-  3: { title: 'Ropsten', chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
+  3: {title: 'Ropsten', chainId: 3, logo: <ETH className="icon"/>, icon: ETH_logo},
   4: {title: 'Rinkeby', chainId: 4, logo: <ETH className="icon"/>, icon: ETH_logo},
   56: {title: 'BSC', chainId: 56, logo: <Binance className="icon"/>, icon: Binnace_logo},
+  66: {
+    title: 'OKEx',
+    chainId: 66,
+    logo: <ETH className="icon"/>,
+    icon: ETH_logo,
+    chainName: 'OKExChain Mainnet',
+    nativeCurrency: {
+      name: 'OKT',
+      symbol: 'OKT',
+      decimals: 18,
+    },
+    rpcUrls: [
+      'https://exchainrpc.okex.org'
+    ],
+    blockExplorerUrls: ['https://www.oklink.com/okexchain'],
+  },
   128: {title: 'HECO', chainId: 128, logo: <Huobi className="icon"/>, icon: Huobi_logo},
 }
 
@@ -87,7 +112,7 @@ export const DEFAULT_TOKEN = {
   "chains": [{
     "chainId": 1,
     "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
-  },{
+  }, {
     "chainId": 128,
     "address": "0x1C9491865a1DE77C5b6e19d2E6a5F1D7a6F2b25F"
   }, {
