@@ -60,6 +60,10 @@ export const OKExNetwork = new NetworkConnector({
   urls: { 66: 'https://exchainrpc.okex.org' },
 })
 
+export const PolygonNetwork = new NetworkConnector({
+  urls: { 137: 'https://matic-mainnet-archive-rpc.bwarelabs.com' },
+})
+
 
 export function getNetworkLibrary(chainId) {
   switch (chainId) {
@@ -75,6 +79,8 @@ export function getNetworkLibrary(chainId) {
       return new Web3Provider(OKExNetwork.provider)
     case 128:
       return new Web3Provider(HECONetwork.provider)
+    case 137:
+      return new Web3Provider(PolygonNetwork.provider)
     default:
   }
 }
