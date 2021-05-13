@@ -6,6 +6,13 @@
 		"decimals": "18"
 	},
 	{
+		"symbol": "COURT",
+		"address": "0x0538A9b4f4dcB0CB01A7fA34e17C0AC947c22553",
+		"chainId": 1,
+		"name": "Court Token",
+		"decimals": "18"
+	},
+	{
 		"symbol": "ROOM",
 		"address": "0xAd4f86a25bbc20FfB751f2FAC312A0B4d8F88c64",
 		"chainId": 1,
